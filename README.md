@@ -241,10 +241,9 @@ sense, but we could apply reserved keys per #type for non-formAPI
 
 @todo Other formatters
 
-
-
 #### Objects
 
+@todo
 
 ### Ignored types: NULL, Resource
 
@@ -266,58 +265,38 @@ How should these be treated as components of a renderable array? And what variat
     NULL        Empty string
     Resource    Empty string
 
+@todo Finish this
 
-Drupal also can render theme components
+* Primitive
+* Primary (traditional theme functions, single-purpose/independent)
+* Component (new theme functions, multi-purpose/collective)
+* Custom (extending our own)
 
-Some of these are HTML elements or element collections.
+@todo Discuss theme component library
 
-Let's start with existing theme functions
-
-Elemental
-Item list
-Link
-Table
-
-Component
-Menu
-Block
-Entity types: Node, Taxa, 
-
-Field formatters
-
-
-Primitive, Elemental, Component, Custom
-
-Independent/Collective
-
-Primitive __toString is extended to higher order formatters
-
-Every callback must return a renderable.
-
-
+@todo Discuss altering API
 
 Appendix A. Resources
 ---------------------
 
 ### Historical documentation
 
-[Render Array documetation](http://drupal.org/node/930760 "Render Arrays in Drupal 7 | drupal.org")
-[Render Array Options](http://drupal.org/node/1776510#comment-6451178 "Render Array Options | drupal.org")
-[Default theme implementations | theme.api.php | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/modules%21system%21theme.api.php/group/themeable/7 "Default theme implementations | theme.api.php | Drupal 7 | Drupal API")
-[hook_element_info | system.api.php | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_element_info/7 "hook_element_info | system.api.php | Drupal 7 | Drupal API")
-[drupal_render | common.inc | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_render/7 "drupal_render | common.inc | Drupal 7 | Drupal API")
+* [Render Array documetation](http://drupal.org/node/930760 "Render Arrays in Drupal 7 | drupal.org")
+* [Render Array Options](http://drupal.org/node/1776510#comment-6451178 "Render Array Options | drupal.org")
+* [Default theme implementations | theme.api.php | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/modules%21system%21theme.api.php/group/themeable/7 "Default theme implementations | theme.api.php | Drupal 7 | Drupal API")
+* [hook_element_info | system.api.php | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_element_info/7 "hook_element_info | system.api.php | Drupal 7 | Drupal API")
+* [drupal_render | common.inc | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_render/7 "drupal_render | common.inc | Drupal 7 | Drupal API")
 
 ### Calls to render in 8.x HEAD
 
-common.inc:5812
-EntityListController.php:149
-EntityListControllerInterface.php:56
-EntityRow.php:136
-ViewListController.php:152
-Environment.php:293
-Template.php:245
-TemplateInterface.php:31
+@todo Add path information
 
-
-
+* common.inc:5812
+* EntityListController.php:149
+* EntityListControllerInterface.php:56
+* EntityRow.php:136
+* ViewListController.php:152
+* Environment.php:293
+* Template.php:245
+* TemplateInterface.php:31
 
