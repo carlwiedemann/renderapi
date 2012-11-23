@@ -30,8 +30,10 @@ class RenderableFactory {
       $type = RenderableFactory::RENDERABLE_TYPE_SCALAR;
       $arg = (string) $arg;
     }
+    // @todo Consider this.
+    // elseif (is_object($arg) && method_exists($arg, '__toString')) {}
     else {
-      // Something we should ignore, i.e. NULL, or Resource.
+      // Something we should ignore, i.e. Object, NULL, or Resource.
       $type = RenderableFactory::RENDERABLE_TYPE_IGNORE;
       $arg = '';
     }

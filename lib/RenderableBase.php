@@ -51,11 +51,10 @@ abstract class RenderableBase {
   static public function validKey($key) {
     return is_numeric($key) || !in_array($key,
       array(
-        '#type',
-        '#cdata',
+        'type',
+        'cdata',
         'attributes',
         'inner',
-        'cdata',
         'value',
         'printed',
       )
