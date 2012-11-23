@@ -330,9 +330,9 @@ Appendix A. Resources
 
 * [Render Array documetation](http://drupal.org/node/930760 "Render Arrays in Drupal 7 | drupal.org")
 * [Render Array Options](http://drupal.org/node/1776510#comment-6451178 "Render Array Options | drupal.org")
-* [Default theme implementations | theme.api.php | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/modules%21system%21theme.api.php/group/themeable/7 "Default theme implementations | theme.api.php | Drupal 7 | Drupal API")
-* [hook_element_info | system.api.php | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_element_info/7 "hook_element_info | system.api.php | Drupal 7 | Drupal API")
-* [drupal_render | common.inc | Drupal 7 | Drupal API](http://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_render/7 "drupal_render | common.inc | Drupal 7 | Drupal API")
+* [Drupal API: Default theme implementations](http://api.drupal.org/api/drupal/modules%21system%21theme.api.php/group/themeable/7 "Default theme implementations | theme.api.php | Drupal 7 | Drupal API")
+* [Drupal API: hook_element_info](http://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_element_info/7 "hook_element_info | system.api.php | Drupal 7 | Drupal API")
+* [Drupal API: drupal_render](http://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_render/7 "drupal_render | common.inc | Drupal 7 | Drupal API")
 
 ### Calls to render in 8.x HEAD
 
