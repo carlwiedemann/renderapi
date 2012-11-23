@@ -1,0 +1,23 @@
+<!-- Base -->
+
+<ul{{ attributes }}>
+  {{ items }}
+</ul>
+
+<!-- Clarification A -->
+
+<ul{{ attributes }}>
+  {% for item in items %}
+    {{ item }}
+  {% endfor %}
+</ul>
+
+<!-- Clarification B -->
+
+<ul{{ attributes }}>
+  {% for item in items %}
+    <li{{ item.attributes }}>
+      {{ item.inner }}
+    </li>
+  {% endfor %}
+</ul>

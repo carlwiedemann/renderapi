@@ -1,0 +1,188 @@
+<!-- Base -->
+
+<table{{ attributes }}>
+  {{ caption }}
+  {{ colgroups }}
+  {{ header }}
+  {{ rows }}
+</table>
+
+<!-- Clarification A -->
+
+<table{{ attributes }}>
+  <caption{{ caption.attributes }}>
+    {{ caption.inner }}
+  </caption>
+  <colgroup{{ colgroup.attributes }}>
+    {{ colgroup.inner }}
+  </colgroup>
+  <thead{{ header.attributes }}>
+    {{ header.inner }}
+  </thead>
+  <tbody{{rows.attributes}}>
+    {{ rows.inner }}
+  </tbody>
+</table>
+
+<!-- Clarification B -->
+
+<table{{ attributes }}>
+  <caption{{ caption.attributes }}>
+    {{ caption.inner }}
+  </caption>
+  <colgroup{{ colgroup.attributes }}>
+  {% for col in colgroup.inner %}
+    {{ col }}
+  {% endfor %}
+  </colgroup>
+  <thead{{ header.attributes }}>
+  {% for row in header.inner %}
+    {{ row }}
+  {% endfor %}
+  </thead>
+  <tbody{{ rows.attributes }}>
+  {% for row in rows.inner %}
+    {{ row }}
+  {% endfor %}
+  </tbody>
+</table>
+
+<!-- Clarification C -->
+
+<table{{ attributes }}>
+  <caption{{ caption.attributes }}>
+    {{ caption.inner }}
+  </caption>
+  <colgroup{{ colgroup.attributes }}>
+  {% for col in colgroup.inner %}
+    <col{{ col.attributes }}>
+      {{ col.inner }}
+    </col>
+  {% endfor %}
+  </colgroup>
+  <thead{{ header.attributes }}>
+  {% for row in header.inner %}
+    <tr{{ row.attributes }}>
+      {{ row.inner }}
+    </tr>
+  {% endfor %}
+  </thead>
+  <tbody{{ rows.attributes }}>
+  {% for row in rows.inner %}
+    <tr{{ row.attributes }}>
+      {{ row.inner }}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<!-- Clarification D -->
+
+<table{{ attributes }}>
+  <caption{{ caption.attributes }}>
+    {{ caption.inner }}
+  </caption>
+  <colgroup{{ colgroup.attributes }}>
+  {% for col in colgroup.inner %}
+    <col{{ col.attributes }}>
+      {{ col.inner }}
+    </col>
+  {% endfor %}
+  </colgroup>
+  <thead{{ header.attributes }}>
+  {% for row in header.inner %}
+    <tr{{ row.attributes }}>
+    {% for cell in row.inner %}
+      {{ cell }}
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </thead>
+  <tbody{{ rows.attributes }}>
+  {% for row in rows.inner %}
+    <tr{{ row.attributes }}>
+    {% for cell in row.inner %}
+      {{ cell }}
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<!-- Clarification E -->
+
+<table{{ attributes }}>
+  <caption{{ caption.attributes }}>
+    {{ caption.inner }}
+  </caption>
+  <colgroup{{ colgroup.attributes }}>
+  {% for col in colgroup.inner %}
+    <col{{ col.attributes }}>
+      {{ col.inner }}
+    </col>
+  {% endfor %}
+  </colgroup>
+  <thead{{ header.attributes }}>
+  {% for row in header.inner %}
+    <tr{{ row.attributes }}>
+    {% for cell in row.inner %}
+      <th{{ cell.attributes}}>
+        {{ cell.inner }}
+      </th>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </thead>
+  <tbody{{ rows.attributes }}>
+  {% for row in rows.inner %}
+    <tr{{ row.attributes }}>
+    {% for cell in row.inner %}
+      <td{{ cell.attributes }}>
+        {{ cell.inner }}
+      </td>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<!-- Clarification F -->
+
+<table{{ attributes }}>
+  {% if caption.inner %}
+  <caption{{ caption.attributes }}>
+    {{ caption.inner }}
+  </caption>
+  {% endif %}
+  {% if colgroup.inner %}
+  <colgroup{{ colgroup.attributes }}>
+  {% for col in colgroup.inner %}
+    <col{{ col.attributes }}>
+      {{ col.inner }}
+    </col>
+  {% endfor %}
+  </colgroup>
+  {% endif %}
+  {% if header.inner %}
+  <thead{{ header.attributes }}>
+    <tr>
+    {% for cell in header.inner %}
+      <th{{ cell.attributes}}>
+        {{ cell.inner }}
+      </th>
+    {% endfor %}
+    </tr>
+  </thead>
+  {% endif %}
+  <tbody{{ rows.attributes }}>
+  {% for row in rows.inner %}
+    <tr{{ row.attributes }}>
+    {% for cell in row.inner %}
+      <td{{ cell.attributes }}>
+        {{ cell.inner }}
+      </td>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
