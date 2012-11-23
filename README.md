@@ -93,6 +93,11 @@ So, let us define our second axiom.
 
 @todo Consider formatting conventions sprintf, datestamps, etc.
 
+### Ignored types: NULL, Resource
+
+For the sake of simplicity, we may simply ignore (for now) NULL and Resource,
+they will render as empty strings.
+
 ### Compound types: Arrays, Objects
 
 #### Arrays
@@ -270,7 +275,7 @@ theme's templates.
       ),
     );
 
-@todo Other formatters
+@todo Other formatters, consider views, display suite, field ui, fences
 Text w/ summary
 Comma delimited
 File list
@@ -291,29 +296,25 @@ More generally, what could __toString need to know for objects?
 Default display modes per Class (i.e. class Node)
 
 
-### @todo Ignored types: NULL, Resource
-
-For the sake of simplicity, we may simply ignore (for now) NULL and Resource,
-they will render as empty strings.
-
 ### @todo Types of data: how they are render
 
 How should these be treated as components of a renderable array? And what variations are expected?
 
-    Type name   
-    ----------------------------
+    Type name   When printed
+    ----------------------------------------------------------------------------
     String      Native
     Int         Convert to String
     Bool        Convert to String
     Float       Convert to String
-    Array       Delegate
-    Object      __toString()
+    Array       Delegate as Renderable class, use __toString()
+    Object      If __toString() exists, convert to string, otherwise empty
     NULL        Empty string
     Resource    Empty string
 
-@todo Finish this
+### @todo Renderable array #type
 
-* Primitive
+* Primitive (e.g. array, scalar, ignore)
+* Elemental (e.g. div (not encouraged, but available))
 * Primary (traditional theme functions, single-purpose/independent)
 * Component (new theme functions, multi-purpose/collective)
 * Custom (extending our own)
@@ -323,7 +324,7 @@ How should these be treated as components of a renderable array? And what variat
 @todo Discuss altering API
 
 Appendix A. Resources
----------------------
+--------------------------------------------------------------------------------
 
 ### Historical documentation
 
