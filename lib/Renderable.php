@@ -47,29 +47,51 @@ class Renderable extends RenderableBase {
 
   public function show() {
     $this->printed = FALSE;
-    foreach ($this->names as $name) {
-      $this->$name->show();
-    }
-    if (isset($this->inner) && !in_array('inner', $this->names)) {
-      $this->inner->show();
-    }
-    if (isset($this->attributes)) {
-      $this->attributes->show();
-    }
+    // @todo Consider what we were doing here :)
+    // foreach ($this->names as $name) {
+    //   $this->$name->show();
+    // }
+    // if (isset($this->inner) && !in_array('inner', $this->names)) {
+    //   $this->inner->show();
+    // }
+    // if (isset($this->attributes)) {
+    //   $this->attributes->show();
+    // }
   }
 
   /**
-   * Renderables will have wrappers.
+   * Renderables will be built as concatenated strings, or invoke templates.
    */
   protected function setValue() {
-    // @todo Consider whether to delegate to Element builder or template engine.
-    $value = new RenderableElement(array(
-      '#type' => $this->type,
-      '#cdata' => $this->cdata,
-      'inner' => $this->inner,
-      'attributes' => $this->attributes,
-    ));
-    $this->value = (string) $value;
+    // Consider whether to delegate to Element builder or template engine.
+    // See if the template is being overridden via the theme engine.
+    if (!RenderableFactory::passiveType($this->type) && engine_override($this->type)) {
+      $this->value = engine_output($this->type, $this);
+    }
+    else {
+      // If the template is not being overridden, simply build as a default
+      // element.
+      $value = new RenderableElement(array(
+        '#type' => $this->type,
+        '#cdata' => $this->cdata,
+        'inner' => $this->inner,
+        'attributes' => $this->attributes,
+      ));
+      $this->value = (string) $value;
+    }
+  }
+
+  // The top-level names for this particlar renderable. Mostly utilized by sub-
+  // classes.
+  function getNames() {
+    $keys = array_merge(array('attributes', 'inner'), $this->names);
+    $resulting_keys = array();
+    foreach ($keys as $key) {
+      if (isset($this->$key)) {
+        $resulting_keys[] = $key;
+      }
+    }
+    return $resulting_keys;
   }
 
 }

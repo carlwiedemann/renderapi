@@ -1,10 +1,17 @@
 <?php
 
+/**
+ * @file A proof of concept.
+ */
+
+// Include what we need.
 include 'renderapi.inc';
+
+
 
 $var = array(
   '#type' => 'table',
-  'attributes' => array('id' => 'test', 'border' => '1'),
+  'attributes' => array('id' => 'test', 'border' => '1', 'class' => array('my-table')),
   'header' => array('One', 'Two', 'Three'),
   'caption' => 'My first Table',
   'colgroups' => array(
@@ -39,7 +46,19 @@ $var = array(
   ),
 );
 
-$table = RenderableFactory::create($var);
+// Renderables could be alterable based on the menu callback.
+foo_PAGE_CALLBACK_render_alter($var);
+function foo_PAGE_CALLBACK_render_alter(&$var) {
+  // Add ID to caption.
+  $var['caption'] = array(
+    '#type' => 'caption',
+    'attributes' => array('id' => 'the-caption'),
+    'inner' => $var['caption'],
+  );
+}
+
+// Create the renderable to be sent to the page template.
+$content = RenderableFactory::create($var);
 
 ?><!DOCTYPE html>
 <html>
@@ -48,27 +67,6 @@ $table = RenderableFactory::create($var);
     <title>I can haz render?</title>
   </head>
   <body>
-    <table<?php r($table->attributes); ?>>
-    <?php r($table->caption); ?>
-      <?php r($table->colgroups); ?>
-      <thead<?php r($table->header->attributes); ?>>
-      <?php foreach ($table->header->inner as &$row): ?>
-        <tr<?php r($row->attributes); ?>>
-        <?php foreach ($row->inner as &$cell): ?>
-          <td<?php r($cell->attributes); ?>><?php r($cell->inner); ?></td>
-        <?php endforeach ?>
-        </tr>
-      <?php endforeach ?>
-      </thead>
-      <tbody<?php r($table->rows->attributes); ?>>
-        <?php foreach ($table->rows->inner as &$row): ?>
-          <tr<?php r($row->attributes); ?>>
-            <?php foreach ($row->inner as &$cell): ?>
-              <td<?php r($cell->attributes); ?>><?php r($cell->inner); ?></td>
-            <?php endforeach ?>
-          </tr>
-        <?php endforeach ?>
-      </tbody>
-    </table>
+    <?php r($content); ?>
   </body>
 </html>

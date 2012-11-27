@@ -4,6 +4,20 @@ Introduction
 Render API in Drupal needs a refresh. The system is inconsistent, vague, and
 not well understood or documented.
 
+tl;dr
+--------------------------------------------------------------------------------
+
+If you want to see an example in action, look at these. The example uses
+something similar to phptemplate even though we are using Twig in D8.
+
+1. ./index.php
+2. ./engines/phptemplate/templates-enabled/table.tpl.php
+
+If you want to then see the internals, look at
+
+1. ./lib/Table.php (for specific example)
+2. ./lib/Renderable*
+
 Purpose of this document
 --------------------------------------------------------------------------------
 
@@ -219,12 +233,84 @@ expected by the associated theme function implementation. Principally speaking,
 one may think of these variables as being tied to addressability in via a
 theme's templates.
 
+Let us assume, generally, that #type will correspond to a given template in our
+theme, so that #type => 'table' indicates table.tpl.php should be used. Let us
+also assume, generally (for a moment), that #type does also represent the
+top-level HTML tag for which our render array produces. This will take a strange
+turn for a moment as we'll see but let's stick with the idea.
+
+For our array, after defining #type, let's will reserve two further keys:
+**attributes**, which will used for the HTML attributes that apply to the
+top-level tag in the renderable, and **inner**, which describes the inner
+content of the top-level tag in the renderable. These will not be hash-prefixed.
+
+    // Example: Link
+    $arr = array(
+      '#type' => 'link',
+      'attributes' => array(
+        'href' => url('http://www.example.com'),
+      ),
+      'inner' => 'Learn more',
+    );
+    // Produces: <a href="http://www.example.com">Learn more</a>
+
+An important aspect about _inner_ is that the render arrays may be nested with
+other render arrays. We shall see that, minimally (with the exception of CDATA),
+we need no other variables to define markup, since the _inner_ parameter could
+include further render arrays (or arrays of render arrays).
+
+This is, of course, at first, simply an abstraction of HTML and may not seem
+useful; as it could appear we'd build an entire DOM tree as an array. Let's
+refer to this as a _base abstraction_.
+
+We certainly **don't** want to use base abstractions everywhere to build our
+render arrays. Instead, let us recall that for every render array, we have
+defined a #type parameter, and we could thus associate a basic set of
+alternative keys that would supersede and construct _inner_ in an alternative
+way.
+
+For example, if we were theming a table of data, we'd perhaps want to define the
+**header**, **rows**, and **caption** and have the internals figure out the rest
+of the markup construction. This principle will seem familiar as it was the
+basic idea behind the DX of Drupal's traditional theme() functions in the first
+place: provide a constrained set of arguments, let the arguments be preprocessed
+and constructed into HTML (via concatenation or a template file). Let's refer to
+this then as a _primary abstraction_.
+
+So, for a given #type, we can provide some internals that will take developer-
+friendly arguments as a primary abstraction to turn them into a base
+abstraction of _attributes_ and _inner_, which will nest further base
+abstraction arrays. The primary abstraction form is the one that will provide
+the most utility and ease.
+
+Let's look at an example. Here's some markup for a table.
+
     // Example: Table
+    //
+    // <table class="admin">
+    //   <thead>
+    //     <tr>
+    //       <th>First</th><th>Second</th><th>Third</th>
+    //     </tr>
+    //   </thead>
+    //   <tbody>
+    //     <tr>
+    //       <td>1</td><td>2</td><td>3</td>
+    //     </tr>
+    //     <tr>
+    //       <td>4</td><td>5</td><td>6</td>
+    //     </tr>
+    //   </tbody>
+    // </table>
+
+Here's the primary abstraction. This is what we'd define as our render array. It
+should look familiar.
+
+    // Example: Table, primary abstraction
     $arr = array(
       '#type' => 'table',
       'attributes' => array(
-        'class' => array('admin','stats'),
-        'data-foo' => 'bar' 
+        'class' => array('admin'),
       ),
       'header => array(
         'First',
@@ -237,6 +323,96 @@ theme's templates.
       ),
     );
 
+Here, then, is what this would be converted to, in the form of a base
+abstraction.
+
+    // Example: Table, base abstraction
+    $arr = array(
+      '#type' => 'table',
+      'attributes' => array(
+        'class' => array('admin'),
+      ),
+      'inner' => array(
+        array(
+          '#type' => 'thead,
+          'attributes' => array(),
+          'inner' => array(
+            '#type' => 'tr',
+            'attributes' => array(),
+            'inner' => array(
+              array(
+                '#type' => 'th',
+                'attributes' => array(),
+                'inner' => 'First',
+              ),
+              array(
+                '#type' => 'th',
+                'attributes' => array(),
+                'inner' => 'Second',
+              ),
+              array(
+                '#type' => 'th',
+                'attributes' => array(),
+                'inner' => 'Third',
+              )
+            ),
+          ),
+        array(
+          '#type' => 'tbody',
+          'attributes' => array(),
+          'inner' => array(
+            array(
+              '#type' => 'tr',
+              'attributes' => array(),
+              'inner' => array(
+                array(
+                  '#type' => 'td',
+                  'attributes' => array(),
+                  'inner' => '1',
+                ),
+                array(
+                  '#type' => 'td',
+                  'attributes' => array(),
+                  'inner' => '2',
+                ),
+                array(
+                  '#type' => 'td',
+                  'attributes' => array(),
+                  'inner' => '3',
+                )
+              ),
+            ),
+            array(
+              '#type' => 'tr',
+              'attributes' => array(),
+              'inner' => array(
+                array(
+                  '#type' => 'td',
+                  'attributes' => array(),
+                  'inner' => '1',
+                ),
+                array(
+                  '#type' => 'td',
+                  'attributes' => array(),
+                  'inner' => '2',
+                ),
+                array(
+                  '#type' => 'td',
+                  'attributes' => array(),
+                  'inner' => '3',
+                )
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+It is clear that a primary abstraction provides a much cleaner (and functional)
+API.
+
+Another example, here's a primary abstraction of an ordered list:
+
     // Example: Ordered list
     $arr = array(
       '#type' => 'ol',
@@ -247,24 +423,13 @@ theme's templates.
       ),
     );
 
-    // Example: Unordered lists
-    $arr = array(
-      '#type' => 'ul',
-      'items' => array(
-        'First',
-        'Second',
-        'Third',
-      ),
-    );
+We can also consider metadata for the render array -- this is information that
+doesn't necessarily have a markup or content equivalent, but tells us something
+to execute when building the primary abstraction. Much like #type, we should
+hash-prefix these to distinguish them as information vs content.
 
-    // Example: Link
-    $arr = array(
-      '#type' => 'link',
-      'attributes' => array(
-        'href' => url('http://www.example.com'),
-      ),
-      'inner' => 'Learn more',
-    );
+For example, when rendering an image, we could provide a #style key that would
+describe the given style.
 
     // Example: Image (with image styles)
     $arr = array(
@@ -275,33 +440,120 @@ theme's templates.
       ),
     );
 
-@todo Other formatters, consider views, display suite, field ui, fences
-Text w/ summary
-Comma delimited
-File list
-File table
-File URL
+From our earlier table example, we could have an #empty key that would provide
+some text in the table when there are now rows. Notice that these hash prefixed
+keys don't represent _content_ but _information about the content_.
 
-#### @todo Objects
+Primary abstractions look very similar to traditional theme functions, but
+unlike traditional theme functions, they do not build markup directly or
+immediately. They are _alterable_. This will be quite advantageous.
 
-What could __toString need to know for nodes?
+Given these ideas, let's establish
 
-* Display mode
+> Axiom vii:
+> Render arrays have keyed parameters that vary with differing degrees of
+> abstraction. The parameters may balance descriptiveness vs simplicity.
 
-More generally, what could __toString need to know for objects?
+One may ask: So why then are base abstractions explored if they are not
+necessarily used by developers first-hand? Why are they build? The necessity is
+two-fold.
 
-* Display mode
-* Class (entity)
+Let's first establish this:
 
-Default display modes per Class (i.e. class Node)
+> Axiom vii:
+> The entire hierarchy of a renderable is be renderable at every step.
+
+That is to say, rendering a table body could be as feasible as 
+
+    <tbody<?php r($rows->attributes)>>
+      <?php r($rows->inner) ?>
+    </tbody>
+
+as would be (taking the next logical step)
+
+    <tbody<?php r($rows->attributes)>>
+      <?php foreach ($rows->inner as $row): ?>
+        <?php r($row) ?>
+      <?php endforeach ?>
+    </tbody>
+
+as would be (taking the next few logical steps)
+
+    <tbody<?php r($header->attributes)>>
+      <?php r($header->inner) ?>
+      <?php foreach ($header->inner as $row): ?>
+        <tr<?php r($row->attributes) ?>>
+          <?php foreach ($row->inner as $cell): ?>
+            <td<?php r($cell->attributes) ?>><?php r($cell->inner) ?></td>
+          <?php endforeach ?>
+        </tr>
+      <?php endforeach ?>
+    </tbody>
+
+_The function r() used here indicates "render and print" though the final_
+_syntax of render api may be different._
+
+So, in order to have this level of control, the base abstraction must be constructed
+at some point internally such that we can drill an expected structure via the 
+existing HTML structure. This is the first necessity of base abstraction.
+
+Let's next establish this:
+
+> Axiom viii:
+> If markup isn't being altered or overridden, it doesn't have to be built in
+> the theme layer.
+
+Many of the #type parameters in our base abstraction are simply HTML tags, with
+some attributes and inner text (or other render array), and it is unlikely that
+these tags themselves would need to be built or altered via a template. That is,
+as an example, theme_table() hasn't traditionally had a theme function for every
+td tag in the table, they were simply built, and then table was the top-level
+themed item. As we move toward using templates everywhere in Drupal, we could,
+via the render internals, decide that if we _haven't_ defined a template that
+corresponds to a given #type, we should simply build the tag via PHP
+concatenation, and it can skip the theme layer entirely.
+
+So, this implies that many aspects of Drupal markup could remain being built via
+concatenation (in the simplest sense, that is, tag, attributes, inner), and we
+would have a registry of which #type render arrays do indeed invoke a template.
+We'd establish a best practice that only higher-order #types (compound tag
+markup) would be good choices for templates.
+
+#### Objects
+
+There is some speculation that the __toString() method of first-citizen Objects
+(like nodes and users) could be established to be used directly in a renderable
+fashion. This seems potentially confusing at the current time of this writing,
+so for now, let us assume that if an given content-related Object has a
+__toString method, it will be evaluated as-is, though render api won't make any
+special considerations for this behavior.
+
+Example
+--------------------------------------------------------------------------------
+
+Please see source of index.php for an example with a table.
+
+### @todo
+
+* Primitive (e.g. array, scalar, ignore)
+* Base (e.g. div (not encouraged, but available))
+* Primary (traditional theme functions, single-purpose/independent)
+* Component (new theme functions, multi-purpose/collective)
+* Custom (extending our own)
+
+@todo Discuss theme component library. We'll take inspiration from Field UI,
+Views, Display Suite, and other layout-driven tools to determine what sorts of
+ #type parameters may be useful in addition to our most traditional theme
+functions.
 
 
-### @todo Types of data: how they are render
+@todo Discuss altering API
 
-How should these be treated as components of a renderable array? And what variations are expected?
+Appendix A. Types of data: how they are render
+--------------------------------------------------------------------------------
 
     Type name   When printed
-    ----------------------------------------------------------------------------
+    ----------------------------------------------------------------------
     String      Native
     Int         Convert to String
     Bool        Convert to String
@@ -311,19 +563,7 @@ How should these be treated as components of a renderable array? And what variat
     NULL        Empty string
     Resource    Empty string
 
-### @todo Renderable array #type
-
-* Primitive (e.g. array, scalar, ignore)
-* Elemental (e.g. div (not encouraged, but available))
-* Primary (traditional theme functions, single-purpose/independent)
-* Component (new theme functions, multi-purpose/collective)
-* Custom (extending our own)
-
-@todo Discuss theme component library
-
-@todo Discuss altering API
-
-Appendix A. Resources
+Appendix B. Resources
 --------------------------------------------------------------------------------
 
 ### Historical documentation
@@ -334,7 +574,7 @@ Appendix A. Resources
 * [Drupal API: hook_element_info](http://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_element_info/7 "hook_element_info | system.api.php | Drupal 7 | Drupal API")
 * [Drupal API: drupal_render](http://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_render/7 "drupal_render | common.inc | Drupal 7 | Drupal API")
 
-### Calls to render in 8.x HEAD
+### @todo Calls to render in 8.x HEAD?
 
 @todo Add path information, update this
 

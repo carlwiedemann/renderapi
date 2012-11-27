@@ -136,17 +136,4 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
   public function value() {
     return $this->value;
   }
-
-  public function show() {
-    foreach ($this->storage as $name => $value) {
-      $value->show();
-    }
-  }
-
-  public function hide() {
-    foreach ($this->storage as $name => $value) {
-      $value->hide();
-    }
-  }
-
 }

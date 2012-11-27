@@ -1,10 +1,22 @@
 <?php
 
+/**
+ * Factory class to digest our argument and return the appropriate parent
+ * instance.
+ */
 class RenderableFactory {
 
   const RENDERABLE_TYPE_ARRAY = 'array';
   const RENDERABLE_TYPE_SCALAR = 'scalar';
   const RENDERABLE_TYPE_IGNORE = 'ignore';
+
+  public function passiveType($type) {
+    return in_array($type, array(
+      RenderableFactory::RENDERABLE_TYPE_ARRAY,
+      RenderableFactory::RENDERABLE_TYPE_SCALAR,
+      RenderableFactory::RENDERABLE_TYPE_IGNORE
+    ));
+  }
 
   /**
    * Convert the renderable if necessary.
@@ -48,6 +60,9 @@ class RenderableFactory {
     return $return;
   }
 
+  /**
+   * This should likely exist through some autodiscovery/hook/registry mechanism.
+   */
   static public function classLookup($type) {
     $class = 'Renderable';
     switch ($type) {
@@ -68,6 +83,9 @@ class RenderableFactory {
     return $class;
   }
 
+  /**
+   * Sometimes our #type and the HTML tag aren't the same. Bug? Feature? :)
+   */
   static public function tagLookup($type) {
     $tag = $type;
     switch ($type) {

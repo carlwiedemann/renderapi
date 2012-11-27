@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * Whether this engine is overriding the given #type.
+ */
+function engine_override($type) {
+  static $types;
+  if (!isset($types[$type])) {
+    $types[$type] = is_file( ENGINE_DIR . '/templates-enabled/' . $type . '.tpl.php');
+  }
+  return $types[$type];
+}
+
+/**
+ * How this engine outputs the given type, registering top-level variables
+ * present in the renderable.
+ */
+function engine_output($type, $renderable) {
+  $vars = array();
+  // Get top-level vars and extract.
+  foreach ($renderable->getNames() as $name) {
+    $vars[$name] = isset($renderable->$name) ? $renderable->$name : '';
+  }
+
+  // Do the PHPTemplate dance.
+  extract($vars, EXTR_SKIP);               // Extract the variables to a local namespace
+  ob_start();                                   // Start output buffering
+  include ENGINE_DIR . '/templates-enabled/' . $type . '.tpl.php';   // Include the template file
+  return ob_get_clean();                        // End buffering and return its contents
+}

@@ -3,7 +3,8 @@
 // namespace RenderAPI\Core;
 
 /**
- * Helper class for building tables.
+ * Helper class for building tables. Turns a primary abstraction into a base
+ * abstraction.
  */
 class Table extends Renderable {
   protected $names = array(

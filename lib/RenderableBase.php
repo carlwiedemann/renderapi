@@ -4,10 +4,20 @@
 
 abstract class RenderableBase {
 
+  /**
+   * Top-level variables that the Renderable will make available in the
+   * template.
+   */
   protected $names = array();
 
+  /**
+   * The #type argument.
+   */
   protected $type;
 
+  /**
+   * Setter
+   */
   public function setType($type) {
     $this->type = $type;
   }
@@ -48,6 +58,9 @@ abstract class RenderableBase {
     $this->printed = TRUE;
   }
 
+  /**
+   * User-provided top-level keys shouldn't collide with our parameters.
+   */
   static public function validKey($key) {
     return is_numeric($key) || !in_array($key,
       array(
@@ -77,6 +90,9 @@ abstract class RenderableBase {
     return $return;
   }
 
+  /**
+   * Will vary whether we are a collection, render array, scalar, or element.
+   */
   abstract protected function setValue();
 
 }

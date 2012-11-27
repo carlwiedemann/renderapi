@@ -2,6 +2,9 @@
 
 // namespace RenderAPI\Core;
 
+/**
+ * Arbitrary HTML tag builder.
+ */
 class RenderableElement extends RenderableBase {
   public $attributes;
 

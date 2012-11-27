@@ -2,6 +2,9 @@
 
 // namespace RenderAPI\Core;
 
+/**
+ * An array of renderables, inspired by Attribute.php
+ */
 class RenderableCollection extends RenderableBase implements \ArrayAccess, \IteratorAggregate {
 
   public $inner = array();
