@@ -285,23 +285,22 @@ the most utility and ease.
 
 Let's look at an example. Here's some markup for a table.
 
-    // Example: Table
-    //
-    // <table class="admin">
-    //   <thead>
-    //     <tr>
-    //       <th>First</th><th>Second</th><th>Third</th>
-    //     </tr>
-    //   </thead>
-    //   <tbody>
-    //     <tr>
-    //       <td>1</td><td>2</td><td>3</td>
-    //     </tr>
-    //     <tr>
-    //       <td>4</td><td>5</td><td>6</td>
-    //     </tr>
-    //   </tbody>
-    // </table>
+    <!-- Example: Table -->
+    <table class="admin">
+      <thead>
+        <tr>
+          <th>First</th><th>Second</th><th>Third</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>2</td><td>3</td>
+        </tr>
+        <tr>
+          <td>4</td><td>5</td><td>6</td>
+        </tr>
+      </tbody>
+    </table>
 
 Here's the primary abstraction. This is what we'd define as our render array. It
 should look familiar.
