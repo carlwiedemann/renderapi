@@ -575,18 +575,18 @@ functions.
 Appendix A. Axioms
 --------------------------------------------------------------------------------
 
-* i: render() receives a single argument.
-* ii: The render() argument may be altered (e.g. a render array) by modules.
-* iii: Int, Float, and Bool arguments will convert to String. Strings arguments
+* Axiom i: render() receives a single argument.
+* Axiom ii: The render() argument may be altered (e.g. a render array) by modules.
+* Axiom iii: Int, Float, and Bool arguments will convert to String. Strings arguments
   will print natively.
-* iv: An array that is not a render array is treated simply as a list of
+* Axiom iv: An array that is not a render array is treated simply as a list of
   arguments.
-* v: A render array is an associative array. An associative array is not
+* Axiom v: A render array is an associative array. An associative array is not
   necessarily a render array.
-* vi: A render array requires the key #type.
-* vii: Render arrays have keyed parameters that vary with differing degrees of
+* Axiom vi: A render array requires the key #type.
+* Axiom vii: Render arrays have keyed parameters that vary with differing degrees of
   abstraction. The parameters may balance descriptiveness vs simplicity.
-* viii: If markup isn't being altered or overridden, it doesn't have to be built
+* Axiom viii: If markup isn't being altered or overridden, it doesn't have to be built
   in the theme layer.
 
 Appendix B. Types of data: how they are render
