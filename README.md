@@ -18,6 +18,32 @@ If you want to then see the internals, look at
 1. ./lib/Table.php (for specific example)
 2. ./lib/Renderable*
 
+Status of this document
+--------------------------------------------------------------------------------
+
+A proof of concept exists, but known issues below prevent me from moving forward
+with a patch to Drupal 8.x HEAD.
+
+Known issues
+--------------------------------------------------------------------------------
+
+The use of RenderableElement, especially in Renderable::setValue is potentially
+problematic due to two side-effects, the principles of which were set forth in
+Axiom vii and Axiom viii.
+
+1. The potential for renderables to be renderable at _every_ level demands
+  that every sub-element declare a #type, even though we may be using a
+  template to define the parent markup. Thus, this is double work for a
+  developer since they have to define a #type in the Renderable and then
+  define a template file as well.
+2. Having #type currently tied to a top-level tag per renderable potentially
+  means that a template could be defined for the most trivial of markup, which
+  could produce some strange templates if the implementor were not familiar
+  with the best practice here. It seems things like li.tpl.php td.tpl.php
+  should be avoided altogether, even though they can potentially exist as of
+  now. This is a balance between constraint and flexibility, though too much
+  flexibility is not a virtue.
+
 Purpose of this document
 --------------------------------------------------------------------------------
 
