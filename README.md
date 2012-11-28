@@ -44,6 +44,10 @@ Axiom vii and Axiom viii.
   now. This is a balance between constraint and flexibility, though too much
   flexibility is not a virtue.
 
+It is feasibly that Axiom vii and Axiom viii, while theoretically intact, over-
+engineer the fundamental needs. I'll explore a separate branch where these
+are removed.
+
 Purpose of this document
 --------------------------------------------------------------------------------
 
