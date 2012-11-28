@@ -513,6 +513,44 @@ so for now, let us assume that if an given content-related Object has a
 __toString method, it will be evaluated as-is, though render api won't make any
 special considerations for this behavior.
 
+Execution steps
+--------------------------------------------------------------------------------
+
+See [https://dl.dropbox.com/u/21427810/render.pdf](https://dl.dropbox.com/u/21427810/render.pdf)
+for a diagram.
+
+Here's a high-level overview of what occurs from building the render array to 
+viewing the final markup.
+
+1. A renderable argument is returned in a page callback. This could be a scalar,
+render array, or array of renderable arguments.
+2. The argument is passed to RenderableFactory::create(), which checks to see
+the data type of the argument and delegates the argument to a class constructor,
+which may include RenderableScalar (for scalars), RenderableCollection, (for
+non-render arrays), Renderable (for render arrays), or a subclass of Renderable
+(such as Table). These specific classes offer different method variations to
+deal with the different data types.
+3. The constructor fleshes-out arguments, including attribute conversion,
+converting primary abstractions into base abstractions. Base abstractions are
+important for template addressiblity and possible theme bypass.
+4. In the case of Renderable sub-classes, top-level variables are created based
+on a defined set. For example, Table provides ->caption, ->colgroups, ->header,
+->rows. By default, this is simply ->inner, and in the absence of ->inner, the
+top-level variables constitute ->inner. Top-level variables and ->inner are
+separately cast as Renderable objects via RenderableFactory::create(). Recursion
+ensues as long as necessary.
+5. The resulting top-level Renderable object will have public member variables
+as other Renderables. Each one of these contains a __toString() method.
+6. The Renderables stay as-is until printed individually, at which point the
+__toString() method establishes the value of the Renderable. Depending on the
+Renderable #type, the value may or may not need to be sent through the theme
+layer since it may not correspond to an established, overridden template (thus
+would be the job of the theme registry). If the value is not needed to be sent
+via the theme layer, it is simply built as a concatenated HTML string with tag, 
+attributes (if necessary), inner content (if necessary, and also recursive). If
+in fact the #type is delegated to a template, this template is called via the
+established theme engine and the markup is returned.
+
 Example
 --------------------------------------------------------------------------------
 
@@ -530,7 +568,6 @@ Please see source of index.php for an example with a table.
 Views, Display Suite, and other layout-driven tools to determine what sorts of
  #type parameters may be useful in addition to our most traditional theme
 functions.
-
 
 @todo Discuss altering API
 
