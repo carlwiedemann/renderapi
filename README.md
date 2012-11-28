@@ -334,70 +334,56 @@ abstraction.
       'inner' => array(
         array(
           '#type' => 'thead,
-          'attributes' => array(),
           'inner' => array(
             '#type' => 'tr',
-            'attributes' => array(),
             'inner' => array(
               array(
                 '#type' => 'th',
-                'attributes' => array(),
                 'inner' => 'First',
               ),
               array(
                 '#type' => 'th',
-                'attributes' => array(),
                 'inner' => 'Second',
               ),
               array(
                 '#type' => 'th',
-                'attributes' => array(),
                 'inner' => 'Third',
               )
             ),
           ),
         array(
           '#type' => 'tbody',
-          'attributes' => array(),
           'inner' => array(
             array(
               '#type' => 'tr',
-              'attributes' => array(),
               'inner' => array(
                 array(
                   '#type' => 'td',
-                  'attributes' => array(),
                   'inner' => '1',
                 ),
                 array(
                   '#type' => 'td',
-                  'attributes' => array(),
                   'inner' => '2',
                 ),
                 array(
                   '#type' => 'td',
-                  'attributes' => array(),
                   'inner' => '3',
                 )
               ),
             ),
             array(
               '#type' => 'tr',
-              'attributes' => array(),
               'inner' => array(
                 array(
                   '#type' => 'td',
-                  'attributes' => array(),
                   'inner' => '1',
                 ),
                 array(
                   '#type' => 'td',
-                  'attributes' => array(),
                   'inner' => '2',
                 ),
                 array(
                   '#type' => 'td',
-                  'attributes' => array(),
                   'inner' => '3',
                 )
               ),
