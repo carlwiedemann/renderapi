@@ -45,8 +45,7 @@ Axiom vii and Axiom viii.
   flexibility is not a virtue.
 
 It is feasibly that Axiom vii and Axiom viii, while theoretically intact, over-
-engineer the fundamental needs. I'll explore a separate branch where these
-are removed.
+engineer the fundamental needs.
 
 Purpose of this document
 --------------------------------------------------------------------------------
