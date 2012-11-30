@@ -32,7 +32,6 @@ include WEBROOT . '/lib/AttributeBoolean.php';
 include WEBROOT . '/lib/AttributeString.php';
 include WEBROOT . '/lib/RenderableBase.php';
 include WEBROOT . '/lib/Renderable.php';
-include WEBROOT . '/lib/RenderableElement.php';
 include WEBROOT . '/lib/RenderableCollection.php';
 include WEBROOT . '/lib/RenderableScalar.php';
 include WEBROOT . '/lib/RenderableFactory.php';

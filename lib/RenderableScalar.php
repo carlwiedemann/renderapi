@@ -15,4 +15,8 @@ class RenderableScalar extends RenderableBase {
     // Value is set in the constructor.
   }
 
+  public function bool() {
+    return $this->value != '';
+  }
+
 }

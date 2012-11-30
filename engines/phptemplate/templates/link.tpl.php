@@ -1,0 +1,1 @@
+<a<?php r($attributes) ?>><?php r($inner) ?></a>

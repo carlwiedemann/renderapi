@@ -65,19 +65,29 @@ class Renderable extends RenderableBase {
   protected function setValue() {
     // Consider whether to delegate to Element builder or template engine.
     // See if the template is being overridden via the theme engine.
-    if (!RenderableFactory::passiveType($this->type) && engine_override($this->type)) {
+    if (!RenderableFactory::passiveType($this->type)) {
       $this->value = engine_output($this->type, $this);
     }
     else {
-      // If the template is not being overridden, simply build as a default
-      // element.
-      $value = new RenderableElement(array(
-        '#type' => $this->type,
-        '#cdata' => $this->cdata,
-        'inner' => $this->inner,
-        'attributes' => $this->attributes,
-      ));
-      $this->value = (string) $value;
+      $this->value = (string) $this->inner;
+    }
+  }
+
+  static protected function parseInner($var, $default = NULL) {
+    if (is_array($var) && !isset($var['#type']) && isset($var['inner'])) {
+      return $var['inner'];
+    }
+    else {
+      return isset($default) ? $default : $var;
+    }
+  }
+
+  static protected function parseAttributes($var, $default = NULL) {
+    if (is_array($var) && !isset($var['#type']) && isset($var['attributes'])) {
+      return $var['attributes'];
+    }
+    else {
+      return isset($default) ? $default : array();
     }
   }
 
@@ -92,6 +102,12 @@ class Renderable extends RenderableBase {
       }
     }
     return $resulting_keys;
+  }
+
+  public function bool() {
+    $has_attributes = isset($this->attributes) && !empty($this->attributes);
+    $inner_exists = isset($this->inner) && $this->inner->bool();
+    return $has_attributes || $inner_exists;
   }
 
 }

@@ -72,4 +72,18 @@ class RenderableCollection extends RenderableBase implements \ArrayAccess, \Iter
     $this->value = implode($this->inner);
   }
 
+  public function bool() {
+    $has_attributes = isset($this->attributes) && !empty($this->attributes);
+    $inner_exists = FALSE;
+    if (!$has_attributes) {
+      foreach ($this->getIterator() as $key => $value) {
+        if ($value->bool()) {
+          $inner_exists = TRUE;
+          break;
+        }
+      }
+    }
+    return $has_attributes || $inner_exists;
+  }
+
 }

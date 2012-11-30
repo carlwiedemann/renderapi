@@ -26,6 +26,7 @@ abstract class RenderableBase {
    * The inner contents, Mixed type.
    */
   public $inner;
+  public $attributes;
 
   /**
    * The value of the Renderable when printed. Will be shown via __toString().
@@ -73,6 +74,11 @@ abstract class RenderableBase {
       )
     );
   }
+
+  // Check for existence. Existence would be given if:
+  // * attributes is not empty and
+  // * inner->bool() is true
+  abstract public function bool();
 
   /**
    * This should return our value.

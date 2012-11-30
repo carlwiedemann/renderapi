@@ -7,13 +7,11 @@
 // Include what we need.
 include 'renderapi.inc';
 
-
-
 $var = array(
   '#type' => 'table',
   'attributes' => array('id' => 'test', 'border' => '1', 'class' => array('my-table')),
   'header' => array('One', 'Two', 'Three'),
-  'caption' => 'My first Table',
+  // 'caption' => 'My first Table',
   'colgroups' => array(
     array(
       'attributes' => array('style' => 'background-color: green'),
@@ -35,7 +33,6 @@ $var = array(
       3),
     array(4,
       array(
-        '#type' => 'td',
         'attributes' => array(
           'colspan' => '2',
           'align' => 'center',
@@ -47,15 +44,16 @@ $var = array(
 );
 
 // Renderables could be alterable based on the menu callback.
-foo_PAGE_CALLBACK_render_alter($var);
-function foo_PAGE_CALLBACK_render_alter(&$var) {
-  // Add ID to caption.
-  $var['caption'] = array(
-    '#type' => 'caption',
-    'attributes' => array('id' => 'the-caption'),
-    'inner' => $var['caption'],
-  );
-}
+// foo_PAGE_CALLBACK_render_alter($var);
+// function foo_PAGE_CALLBACK_render_alter(&$var) {
+//   // Add ID to caption.
+//   if (isset($var['caption'])) {
+//     $var['caption'] = array(
+//       'attributes' => array('id' => 'the-caption'),
+//       'inner' => $var['caption'],
+//     );
+//   }
+// }
 
 // Create the renderable to be sent to the page template.
 $content = RenderableFactory::create($var);
@@ -67,6 +65,8 @@ $content = RenderableFactory::create($var);
     <title>I can haz render?</title>
   </head>
   <body>
+    
     <?php r($content); ?>
+    
   </body>
 </html>
