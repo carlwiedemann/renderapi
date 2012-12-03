@@ -26,7 +26,7 @@
     <?php endforeach ?>
     </thead>
   <?php endif ?>
-  <?php if ($rows->bool() || TRUE): ?>
+  <?php if ($rows->bool()): ?>
     <tbody<?php r($rows->attributes); ?>>
       <?php foreach ($rows->inner as $row): ?>
         <tr<?php r($row->attributes); ?>>

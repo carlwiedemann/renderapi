@@ -73,6 +73,10 @@ class Renderable extends RenderableBase {
     }
   }
 
+  // For a given variable, determine if inner is made available, and extract
+  // only if the variable is not a stand-alone renderable (i.e., #type is
+  // defined). This is used to cast attributes onto child items in renderables
+  // that have assumed types (like td inside of tables).
   static protected function parseInner($var, $default = NULL) {
     if (is_array($var) && !isset($var['#type']) && isset($var['inner'])) {
       return $var['inner'];
@@ -82,6 +86,10 @@ class Renderable extends RenderableBase {
     }
   }
 
+  // For a given variable, determine if attributes are made available, and
+  // extract only if the variable is not a stand-alone renderable (i.e., #type
+  // is defined). This is used to cast attributes onto child items in
+  // renderables that have assumed types (like td inside of tables).
   static protected function parseAttributes($var, $default = NULL) {
     if (is_array($var) && !isset($var['#type']) && isset($var['attributes'])) {
       return $var['attributes'];

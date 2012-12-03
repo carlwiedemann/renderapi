@@ -21,31 +21,8 @@ If you want to then see the internals, look at
 Status of this document
 --------------------------------------------------------------------------------
 
-A proof of concept exists, but known issues below prevent me from moving forward
-with a patch to Drupal 8.x HEAD.
-
-Known issues
---------------------------------------------------------------------------------
-
-The use of RenderableElement, especially in Renderable::setValue is potentially
-problematic due to two side-effects, the principles of which were set forth in
-Axiom vii and Axiom viii.
-
-1. The potential for renderables to be renderable at _every_ level demands
-  that every sub-element declare a #type, even though we may be using a
-  template to define the parent markup. Thus, this is double work for a
-  developer since they have to define a #type in the Renderable and then
-  define a template file as well.
-2. Having #type currently tied to a top-level tag per renderable potentially
-  means that a template could be defined for the most trivial of markup, which
-  could produce some strange templates if the implementor were not familiar
-  with the best practice here. It seems things like li.tpl.php td.tpl.php
-  should be avoided altogether, even though they can potentially exist as of
-  now. This is a balance between constraint and flexibility, though too much
-  flexibility is not a virtue.
-
-It is feasibly that Axiom vii and Axiom viii, while theoretically intact, over-
-engineer the fundamental needs.
+A proof of concept exists, looking to attempt a patch to Drupal 8.x HEAD.
+Various considerations to existing APIs and performance should be considered.
 
 Purpose of this document
 --------------------------------------------------------------------------------
@@ -56,10 +33,10 @@ examples and implementations for RenderAPI.
 Goals for Render API
 --------------------------------------------------------------------------------
 
-* Everything a renderable
+* Hierarchical approach
 * Visible API
-* Conventions (wrapper methods, protected namespaces)
-* Array API, OO-driven internals
+* Conventions (wrapper methods, reserved keys)
+* OO-driven internals
 
 API data model
 --------------------------------------------------------------------------------
@@ -263,15 +240,12 @@ one may think of these variables as being tied to addressability in via a
 theme's templates.
 
 Let us assume, generally, that #type will correspond to a given template in our
-theme, so that #type => 'table' indicates table.tpl.php should be used. Let us
-also assume, generally (for a moment), that #type does also represent the
-top-level HTML tag for which our render array produces. This will take a strange
-turn for a moment as we'll see but let's stick with the idea.
+theme, so that #type => 'table' indicates table.tpl.php should be used, and that
+every #type should correspond to a given template file.
 
-For our array, after defining #type, let's will reserve two further keys:
-**attributes**, which will used for the HTML attributes that apply to the
-top-level tag in the renderable, and **inner**, which describes the inner
-content of the top-level tag in the renderable. These will not be hash-prefixed.
+Generally speaking, let's reserve two other keys for render arrays:
+**attributes**, used for HTML attributes, and **inner**, which describes the
+inner content of some part of the renderable. These will not be hash-prefixed.
 
     // Example: Link
     $arr = array(
@@ -283,34 +257,29 @@ content of the top-level tag in the renderable. These will not be hash-prefixed.
     );
     // Produces: <a href="http://www.example.com">Learn more</a>
 
-An important aspect about _inner_ is that the render arrays may be nested with
-other render arrays. We shall see that, minimally (with the exception of CDATA),
-we need no other variables to define markup, since the _inner_ parameter could
-include further render arrays (or arrays of render arrays).
+These keys are handled specially: _attributes_ is converted into an Attributes
+object, and _inner_ acts recursively such that render arrays may be nested with
+other render arrays.
 
-This is, of course, at first, simply an abstraction of HTML and may not seem
-useful; as it could appear we'd build an entire DOM tree as an array. Let's
-refer to this as a _base abstraction_.
+Remaining keys in the render array will be used to specify the content and
+information of the template file. For a given #type, these keys will exist that
+help to define the internal content of the renderable. For example, if we were
+theming a table of data, we'd perhaps want to define the **header**, **rows**,
+and **caption** and have the internals figure out the rest of the markup
+construction. This principle will seem familiar as it was the DX of Drupal's
+traditional theme() functions: provide a constrained set of arguments, let the
+arguments be preprocessed and constructed into HTML elsewhere in a template (or
+concatenation).
 
-We certainly **don't** want to use base abstractions everywhere to build our
-render arrays. Instead, let us recall that for every render array, we have
-defined a #type parameter, and we could thus associate a basic set of
-alternative keys that would supersede and construct _inner_ in an alternative
-way.
+Therefore, we can expect that when provided a particular #type, we'll have
+expected keys and expected markup. This, restated:
 
-For example, if we were theming a table of data, we'd perhaps want to define the
-**header**, **rows**, and **caption** and have the internals figure out the rest
-of the markup construction. This principle will seem familiar as it was the
-basic idea behind the DX of Drupal's traditional theme() functions in the first
-place: provide a constrained set of arguments, let the arguments be preprocessed
-and constructed into HTML (via concatenation or a template file). Let's refer to
-this then as a _primary abstraction_.
+> Axiom vii: For a given #type, the internal structure should be well-defined.
 
-So, for a given #type, we can provide some internals that will take developer-
-friendly arguments as a primary abstraction to turn them into a base
-abstraction of _attributes_ and _inner_, which will nest further base
-abstraction arrays. The primary abstraction form is the one that will provide
-the most utility and ease.
+For a given #type, these developer-friendly keys arguments will be refered to as
+a _primary abstraction_. The internals will then rework these to turn them into
+a _base abstraction_ (composed only of _attributes_ and _inner_). This
+conversion step provides a drillable hierarchy.
 
 Let's look at an example. Here's some markup for a table.
 
@@ -362,57 +331,43 @@ abstraction.
       ),
       'inner' => array(
         array(
-          '#type' => 'thead,
           'inner' => array(
-            '#type' => 'tr',
             'inner' => array(
               array(
-                '#type' => 'th',
                 'inner' => 'First',
               ),
               array(
-                '#type' => 'th',
                 'inner' => 'Second',
               ),
               array(
-                '#type' => 'th',
                 'inner' => 'Third',
               )
             ),
           ),
         array(
-          '#type' => 'tbody',
           'inner' => array(
             array(
-              '#type' => 'tr',
               'inner' => array(
                 array(
-                  '#type' => 'td',
                   'inner' => '1',
                 ),
                 array(
-                  '#type' => 'td',
                   'inner' => '2',
                 ),
                 array(
-                  '#type' => 'td',
                   'inner' => '3',
                 )
               ),
             ),
             array(
-              '#type' => 'tr',
               'inner' => array(
                 array(
-                  '#type' => 'td',
                   'inner' => '1',
                 ),
                 array(
-                  '#type' => 'td',
                   'inner' => '2',
                 ),
                 array(
-                  '#type' => 'td',
                   'inner' => '3',
                 )
               ),
@@ -422,8 +377,42 @@ abstraction.
       ),
     );
 
+Finally, here is what the template (could) look like. Here, the function r()
+indicates "render and print" though the final syntax of render api may be
+different (i.e. Twig provides this automatically).
+
+    <table<?php r($attributes); ?>>
+      <thead<?php r($header->attributes); ?>>
+      <?php foreach ($header->inner as $row): ?>
+        <tr<?php r($row->attributes); ?>>
+        <?php foreach ($row->inner as $cell): ?>
+          <th<?php r($cell->attributes); ?>><?php r($cell->inner); ?></th>
+        <?php endforeach ?>
+        </tr>
+      <?php endforeach ?>
+      </thead>
+      <tbody<?php r($rows->attributes); ?>>
+        <?php foreach ($rows->inner as $row): ?>
+          <tr<?php r($row->attributes); ?>>
+            <?php foreach ($row->inner as $cell): ?>
+              <td<?php r($cell->attributes); ?>><?php r($cell->inner); ?></td>
+            <?php endforeach ?>
+          </tr>
+        <?php endforeach ?>
+      </tbody>
+    </table>
+
 It is clear that a primary abstraction provides a much cleaner (and functional)
-API.
+API for developers while the base abstraction provides a drillable structure
+in the template. Notice that in the base abstraction, there is nothing that
+clarifies the #type of each item in the hierarchy aside from 'table' at the very
+top -- this comes from Axiom vii, we have a well-defined structure for a #table
+type.
+
+Primary abstractions look very similar to traditional theme functions, but
+unlike traditional theme functions, they do not build markup directly or
+immediately. They are _alterable_, so that other modules can refine output for
+a given callback.
 
 Another example, here's a primary abstraction of an ordered list:
 
@@ -458,80 +447,8 @@ From our earlier table example, we could have an #empty key that would provide
 some text in the table when there are now rows. Notice that these hash prefixed
 keys don't represent _content_ but _information about the content_.
 
-Primary abstractions look very similar to traditional theme functions, but
-unlike traditional theme functions, they do not build markup directly or
-immediately. They are _alterable_. This will be quite advantageous.
-
-Given these ideas, let's establish
-
-> Axiom vii:
-> Render arrays have keyed parameters that vary with differing degrees of
-> abstraction. The parameters may balance descriptiveness vs simplicity.
-
-One may ask: So why then are base abstractions explored if they are not
-necessarily used by developers first-hand? Why are they build? The necessity is
-two-fold.
-
-Let's first establish this:
-
-> Axiom vii:
-> The entire hierarchy of a renderable is be renderable at every step.
-
-That is to say, rendering a table body could be as feasible as 
-
-    <tbody<?php r($rows->attributes)>>
-      <?php r($rows->inner) ?>
-    </tbody>
-
-as would be (taking the next logical step)
-
-    <tbody<?php r($rows->attributes)>>
-      <?php foreach ($rows->inner as $row): ?>
-        <?php r($row) ?>
-      <?php endforeach ?>
-    </tbody>
-
-as would be (taking the next few logical steps)
-
-    <tbody<?php r($header->attributes)>>
-      <?php r($header->inner) ?>
-      <?php foreach ($header->inner as $row): ?>
-        <tr<?php r($row->attributes) ?>>
-          <?php foreach ($row->inner as $cell): ?>
-            <td<?php r($cell->attributes) ?>><?php r($cell->inner) ?></td>
-          <?php endforeach ?>
-        </tr>
-      <?php endforeach ?>
-    </tbody>
-
-_The function r() used here indicates "render and print" though the final_
-_syntax of render api may be different._
-
-So, in order to have this level of control, the base abstraction must be constructed
-at some point internally such that we can drill an expected structure via the 
-existing HTML structure. This is the first necessity of base abstraction.
-
-Let's next establish this:
-
-> Axiom viii:
-> If markup isn't being altered or overridden, it doesn't have to be built in
-> the theme layer.
-
-Many of the #type parameters in our base abstraction are simply HTML tags, with
-some attributes and inner text (or other render array), and it is unlikely that
-these tags themselves would need to be built or altered via a template. That is,
-as an example, theme_table() hasn't traditionally had a theme function for every
-td tag in the table, they were simply built, and then table was the top-level
-themed item. As we move toward using templates everywhere in Drupal, we could,
-via the render internals, decide that if we _haven't_ defined a template that
-corresponds to a given #type, we should simply build the tag via PHP
-concatenation, and it can skip the theme layer entirely.
-
-So, this implies that many aspects of Drupal markup could remain being built via
-concatenation (in the simplest sense, that is, tag, attributes, inner), and we
-would have a registry of which #type render arrays do indeed invoke a template.
-We'd establish a best practice that only higher-order #types (compound tag
-markup) would be good choices for templates.
+> Axiom viii: Metadata in a render array is provided by #hash-prefixed keys.
+> Content in a render array is provided by non-#hash-prefixed keys.
 
 #### Objects
 
@@ -561,7 +478,7 @@ non-render arrays), Renderable (for render arrays), or a subclass of Renderable
 deal with the different data types.
 3. The constructor fleshes-out arguments, including attribute conversion,
 converting primary abstractions into base abstractions. Base abstractions are
-important for template addressiblity and possible theme bypass.
+important for template addressiblity.
 4. In the case of Renderable sub-classes, top-level variables are created based
 on a defined set. For example, Table provides ->caption, ->colgroups, ->header,
 ->rows. By default, this is simply ->inner, and in the absence of ->inner, the
@@ -571,13 +488,8 @@ ensues as long as necessary.
 5. The resulting top-level Renderable object will have public member variables
 as other Renderables. Each one of these contains a __toString() method.
 6. The Renderables stay as-is until printed individually, at which point the
-__toString() method establishes the value of the Renderable. Depending on the
-Renderable #type, the value may or may not need to be sent through the theme
-layer since it may not correspond to an established, overridden template (thus
-would be the job of the theme registry). If the value is not needed to be sent
-via the theme layer, it is simply built as a concatenated HTML string with tag, 
-attributes (if necessary), inner content (if necessary, and also recursive). If
-in fact the #type is delegated to a template, this template is called via the
+__toString() method establishes the value of the Renderable. For a render array
+with a given #type the output is delegated to a template called via the
 established theme engine and the markup is returned.
 
 Example
@@ -605,18 +517,18 @@ Appendix A. Axioms
 --------------------------------------------------------------------------------
 
 * Axiom i: render() receives a single argument.
-* Axiom ii: The render() argument may be altered (e.g. a render array) by modules.
-* Axiom iii: Int, Float, and Bool arguments will convert to String. Strings arguments
-  will print natively.
+* Axiom ii: The render() argument may be altered (e.g. a render array) by
+  modules.
+* Axiom iii: Int, Float, and Bool arguments will convert to String. Strings
+  arguments will print natively.
 * Axiom iv: An array that is not a render array is treated simply as a list of
   arguments.
 * Axiom v: A render array is an associative array. An associative array is not
   necessarily a render array.
 * Axiom vi: A render array requires the key #type.
-* Axiom vii: Render arrays have keyed parameters that vary with differing degrees of
-  abstraction. The parameters may balance descriptiveness vs simplicity.
-* Axiom viii: If markup isn't being altered or overridden, it doesn't have to be built
-  in the theme layer.
+* Axiom vii: For a given #type, the internal structure should be well-defined.
+* Axiom viii: Metadata in a render array is provided by #hash-prefixed keys.
+  Content in a render array is provided by non-#hash-prefixed keys.
 
 Appendix B. Types of data: how they are render
 --------------------------------------------------------------------------------
