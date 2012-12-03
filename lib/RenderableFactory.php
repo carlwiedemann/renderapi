@@ -6,6 +6,7 @@
  */
 class RenderableFactory {
 
+  const RENDERABLE_TYPE_DUMMY = 'dummy';
   const RENDERABLE_TYPE_ARRAY = 'array';
   const RENDERABLE_TYPE_SCALAR = 'scalar';
   const RENDERABLE_TYPE_IGNORE = 'ignore';
@@ -13,6 +14,7 @@ class RenderableFactory {
   public function passiveType($type) {
     return in_array($type, array(
       RenderableFactory::RENDERABLE_TYPE_ARRAY,
+      RenderableFactory::RENDERABLE_TYPE_DUMMY,
       RenderableFactory::RENDERABLE_TYPE_SCALAR,
       RenderableFactory::RENDERABLE_TYPE_IGNORE
     ));
@@ -28,9 +30,9 @@ class RenderableFactory {
     }
 
     if (is_array($arg)) {
-      if (isset($arg['#type'])) {
+      if (isset($arg['#type']) || isset($arg['attributes']) || isset($arg['inner'])) {
         // A Renderable array, which we will delegate to a separate class.
-        $type = $arg['#type'];
+        $type = isset($arg['#type']) ? $arg['#type']:RenderableFactory::RENDERABLE_TYPE_DUMMY;
       }
       else {
         // A RenderableCollection, simply an array of renderables.
@@ -76,27 +78,7 @@ class RenderableFactory {
       case 'table':
         $class = 'Table';
         break;
-      // case 'image':
-      //   $class = 'Image';
-      //   break;
     }
     return $class;
   }
-
-  /**
-   * Sometimes our #type and the HTML tag aren't the same. Bug? Feature? :)
-   */
-  static public function tagLookup($type) {
-    $tag = $type;
-    switch ($type) {
-      case 'link':
-        $tag = 'a';
-        break;
-      case 'image':
-        $tag = 'img';
-        break;
-    }
-    return $tag;
-  }
-
 }
