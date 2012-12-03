@@ -11,7 +11,7 @@ If you want to see an example in action, look at these. The example uses
 something similar to phptemplate even though we are using Twig in D8.
 
 1. ./index.php
-2. ./engines/phptemplate/templates-enabled/table.tpl.php
+2. ./engines/phptemplate/templates/table.tpl.php
 
 If you want to then see the internals, look at
 
