@@ -1,72 +1,45 @@
 <?php
 
 /**
- * @file A proof of concept.
+ * @file Let's pretend we are Drupal, at least very, very vaguely. :)
  */
 
-// Include what we need.
-include 'renderapi.inc';
+include('./fake-drupal/fake-drupal.php');
 
-$var = array(
-  '#type' => 'table',
-  'attributes' => array('id' => 'test', 'border' => '1', 'class' => array('my-table')),
-  'header' => array('One', 'Two', 'Three'),
-  // 'caption' => 'My first Table',
-  'colgroups' => array(
-    array(
-      'attributes' => array('style' => 'background-color: green'),
-      'inner' => array(
-        array('attributes' => array()),
-        array('attributes' => array('style' => 'background-color: yellow')),
-        array('attributes' => array()),
-      ),
-    ),
-  ),
-  'rows' => array(
-    array(
-      array(
-        '#type' => 'link',
-        'attributes' => array('href' => 'http://www.google.com'),
-        'inner' => 'Google',
-        ),
-      2,
-      3),
-    array(4,
-      array(
-        'attributes' => array(
-          'colspan' => '2',
-          'align' => 'center',
-        ),
-        'inner' => 5,
-      ),
-    ),
-  ),
-);
+// Get some build, as if it came from a menu callback.
+$build = new RenderableBuilder('ThemeFullNode', array(
+  'node' => node_load(123),
+));
 
-// Renderables could be alterable based on the menu callback.
-// foo_PAGE_CALLBACK_render_alter($var);
-// function foo_PAGE_CALLBACK_render_alter(&$var) {
-//   // Add ID to caption.
-//   if (isset($var['caption'])) {
-//     $var['caption'] = array(
-//       'attributes' => array('id' => 'the-caption'),
-//       'inner' => $var['caption'],
-//     );
-//   }
-// }
 
-// Create the renderable to be sent to the page template.
-$content = RenderableFactory::create($var);
+function deliver($build) {
+  // Call any altering functions.
+  // foreach (getAlterCallbacks() as $alterCallback) {
+  //   // Alter callbacks receive the RenderableBuilder, can call methods, and
+  //   // change build class.
+  //   $alterCallback($build);
+  // }
 
-?><!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>I can haz render?</title>
-  </head>
-  <body>
-    
-    <?php r($content); ?>
-    
-  </body>
-</html>
+  // All altering has been done. So build the object, and subobjects.
+  $renderable = $build->create();
+
+
+
+  // 
+  // // Now that the renderable exists, we need to decorate it based on other
+  // // modules via decorator registry.
+  // foreach (getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
+  //   $renderable = new $moduleDecoratorClass($renderable);
+  // }
+  // // Decorate with the theme.
+  // if ($themeDecoratorClass = getThemeDecoratorClass($renderable)) {
+  //   $renderable = new $themeDecoratorClass($renderable);
+  // }
+
+  // At this point, we are ready to render everything.
+  return $renderable;
+}
+
+print deliver($build);
+
+
