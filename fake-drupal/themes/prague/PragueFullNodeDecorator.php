@@ -1,18 +1,20 @@
 <?php
 
 /**
- * @file Something that we'd see in prague.theme.
+ * @file Theme decorator class for ThemeFullNode.
  */
 
-/**
- * Implemented as a decorator via theme registry.
- */
 class PragueFullNodeDecorator extends RenderableDecorator {
-  static function getRegisteredTemplate() {
+  // Provide template override.
+  function getRegisteredTemplate() {
     return './fake-drupal/themes/prague/node.tpl.php';
   }
+
+  // Provide variable overrides.
   function prepare() {
+    // Get varaibles from parent templates.
     parent::prepare();
-    $this->set('subtitle', $this->get('title') . ' is the title, for real.');
+    // Create new variables.
+    $this->set('subtitle', 'Here is a subtitle.');
   }
 }

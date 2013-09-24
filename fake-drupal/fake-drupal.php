@@ -5,7 +5,6 @@
  */
 
 include './lib/RenderableBuilder.php';
-include './lib/RenderableInterface.php';
 include './lib/Renderable.php';
 include './lib/RenderableDecorator.php';
 
@@ -20,7 +19,7 @@ include './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
 function node_load($nid) {
   return (object) array(
     'nid' => $nid,
-    'title' => 'I am a node.',
+    'title' => 'I am a node',
   );
 }
 
@@ -29,7 +28,7 @@ function node_load($nid) {
  */
 function getAlterCallbacks() {
   return array(
-    // 'mymodule_alter_node_view',
+    'mymodule_alter_node_view',
   );
 }
 
@@ -38,13 +37,13 @@ function getAlterCallbacks() {
  */
 function getModuleDecoratorClasses($renderable) {
   $classes = array();
-  // switch ($renderable->getOriginalBuildClass()) {
-  //   case 'ThemeFullNode':
-  //     $classes = array(
-  //       'MyModuleFullNodeDecorator',
-  //     );
-  //     break;
-  // }
+  switch ($renderable->getBuildClass()) {
+    case 'ThemeFullNode':
+      $classes = array(
+        'MyModuleFullNodeDecorator',
+      );
+      break;
+  }
   return $classes;
 }
 
@@ -53,16 +52,11 @@ function getModuleDecoratorClasses($renderable) {
  */
 function getThemeDecoratorClass($renderable) {
   $class = NULL;
-  // switch ($renderable->getOriginalBuildClass()) {
-  //   case 'ThemeFullNode':
-  //     // $class = 'PragueFullNodeDecorator';
-  //     break;
-  // }
+  switch ($renderable->getBuildClass()) {
+    case 'ThemeFullNode':
+    case 'MyModuleFullNodeDecorator':
+      $class = 'PragueFullNodeDecorator';
+      break;
+  }
   return $class;
-}
-
-function getRegistredTemplate($renderable) {
-  $classes = $renderable->getBuildClasses();
-  $build_class = $classes[count($classes) - 1];
-  return $build_class::getRegisteredTemplate();
 }

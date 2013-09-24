@@ -13,7 +13,6 @@ class RenderableBuilder {
 
   // Provide initial build class and parameters.
   function __construct($buildClass, $params) {
-    $this->setOriginalBuildClass($buildClass);
     $this->setBuildClass($buildClass);
     foreach ($params as $name => $value) {
       $this->setParam($name, $value);
@@ -55,14 +54,6 @@ class RenderableBuilder {
     return $this->buildClasses;
   }
 
-  function setOriginalBuildClass($buildClass) {
-    $this->originalBuildClass = $buildClass;
-  }
-
-  function getOriginalBuildClass() {
-    return $this->originalBuildClass;
-  }
-
   // Parse given parameters as built subclasses.
   static function parseParams($params) {
     $parsed_params = array();
@@ -79,9 +70,29 @@ class RenderableBuilder {
 
   // Build the subclassed instance.
   function create() {
-    // Create any params as necessary.
+
+    // Call any altering functions.
+    foreach (getAlterCallbacks() as $alterCallback) {
+      // Alter callbacks receive the RenderableBuilder, can call methods, and
+      // change build class.
+      $alterCallback($this);
+    }
+
+    // Based on the parameters, build the Renderable.
     $this->setParsedParams(RenderableBuilder::parseParams($this->getParams()));
     $buildClass = $this->getBuildClass();
-    return new $buildClass($this->getParsedParams(), $this->getBuildClasses(), $this->getOriginalBuildClass());
+    $renderable = new $buildClass($this->getParsedParams(), $this->getBuildClasses());
+
+    // Decorate the renderable with applicable modules.
+    foreach (getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
+      $renderable = new $moduleDecoratorClass($renderable, $moduleDecoratorClass);
+    }
+
+    // Decorate the renderable with the theme.
+    if ($themeDecoratorClass = getThemeDecoratorClass($renderable)) {
+      $renderable = new $themeDecoratorClass($renderable, $themeDecoratorClass);
+    }
+
+    return $renderable;
   }
 }

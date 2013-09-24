@@ -1,31 +1,29 @@
 <?php
 
-// The thing that is actually rendered, the equivalent of the executed component
-// of a render array.
-abstract class Renderable implements RenderableInterface {
+/**
+ * @file The Renderable class represents the data component of a render array.
+ */
+abstract class Renderable {
 
   private $params = array();
-  private $originalBuildClass;
-  private $prepared = FALSE;
+  private $buildClass; 
 
   function __construct($params, $buildClasses) {
-    $this->setOriginalBuildClass($buildClasses[0]);
-    $this->setBuildClasses($buildClasses);
+    foreach ($buildClasses as $buildClass) {
+      $this->setBuildClass($buildClass);
+    }
     foreach ($params as $name => $value) {
       $this->set($name, $value);
     }
   }
 
-  private function setOriginalBuildClass($buildClass) {
-    $this->originalBuildClass = $buildClass;
+  public function setBuildClass($buildClass) {
+    $this->buildClass = $buildClass;
+    $this->buildClasses[] = $buildClass;
   }
 
-  private function setBuildClasses($buildClasses) {
-    $this->buildClasses = $buildClasses;
-  }
-
-  public function getOriginalBuildClass() {
-    return $this->originalBuildClass;
+  function getBuildClass() {
+    return $this->buildClass;
   }
 
   public function getBuildClasses() {
@@ -37,15 +35,19 @@ abstract class Renderable implements RenderableInterface {
   }
 
   public function get($name) {
-    // This needs to implement a drillable structure.
-    return $this->$params[$name];
+    // @todo This needs to implement a drillable structure.
+    return $this->params[$name];
+  }
+
+  public function getParams() {
+    return $this->params;
   }
 
   public function render() {
 
-    $template = getRegistredTemplate($this);
+    $template = $this->getRegisteredTemplate();
 
-    extract($this->params, EXTR_SKIP);
+    extract($this->getParams(), EXTR_SKIP);
 
     // Start output buffering.
     ob_start();

@@ -1,5 +1,5 @@
-Foo.
+<h2>I am a foo.tpl.php</h2>
 
-<h1><?php print $title; ?></h1>
+<h1>$title: <?php print $title; ?></h1>
 
-<h2><?php print $foo; ?></h2>
+<h1>$foo: <?php print $foo; ?></h1>
