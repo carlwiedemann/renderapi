@@ -8,7 +8,6 @@
 abstract class RenderableDecorator extends Renderable {
   private $renderable;
 
-  // Set child.
   function __construct($renderable, $buildClass) {
     $this->renderable = $renderable;
     $this->renderable->setBuildClass($buildClass);
@@ -44,25 +43,9 @@ abstract class RenderableDecorator extends Renderable {
     return $this->renderable->prepare();
   }
 
+  // Delegate to child.
   function getRegisteredTemplate() {
     return $this->renderable->getRegisteredTemplate();
-  }
-
-  // Delegate to child.
-  public function render() {
-
-    $template = $this->getRegisteredTemplate();
-
-    extract($this->getParams(), EXTR_SKIP);
-
-    // Start output buffering.
-    ob_start();
-
-    // Include the template file.
-    include $template;
-
-    // End buffering and return its contents.
-    return ob_get_clean();
   }
 
 }

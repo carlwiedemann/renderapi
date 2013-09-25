@@ -8,28 +8,31 @@ include './lib/RenderableBuilder.php';
 include './lib/Renderable.php';
 include './lib/RenderableDecorator.php';
 
+// Load our fake node module.
+include './fake-drupal/modules/node/node.module.php';
 include './fake-drupal/modules/node/ThemeFullNode.php';
 
-include './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
-
+// Load our fake custom module.
 include './fake-drupal/modules/mymodule/mymodule.module.php';
 include './fake-drupal/modules/mymodule/ThemeFoo.php';
 include './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
 
-function node_load($nid) {
-  return (object) array(
-    'nid' => $nid,
-    'title' => 'I am a node',
-  );
-}
+// Load our fake theme.
+include './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
 
 /**
  * Dummy registry for callbacks that would alter our builder.
  */
-function getAlterCallbacks() {
-  return array(
-    'mymodule_alter_node_view',
-  );
+function getAlterCallbacks($builder) {
+  $callbacks = array();
+  // switch ($builder->getBuildClass()) {
+  //   case 'ThemeFullNode':
+  //     $callbacks = array(
+  //       'mymodule_alter_node_view',
+  //     );
+  //     break;
+  // }
+  return $callbacks;
 }
 
 /**
@@ -37,13 +40,13 @@ function getAlterCallbacks() {
  */
 function getModuleDecoratorClasses($renderable) {
   $classes = array();
-  switch ($renderable->getBuildClass()) {
-    case 'ThemeFullNode':
-      $classes = array(
-        'MyModuleFullNodeDecorator',
-      );
-      break;
-  }
+  // switch ($renderable->getBuildClass()) {
+  //   case 'ThemeFullNode':
+  //     $classes = array(
+  //       'MyModuleFullNodeDecorator',
+  //     );
+  //     break;
+  // }
   return $classes;
 }
 
@@ -52,11 +55,11 @@ function getModuleDecoratorClasses($renderable) {
  */
 function getThemeDecoratorClass($renderable) {
   $class = NULL;
-  switch ($renderable->getBuildClass()) {
-    case 'ThemeFullNode':
-    case 'MyModuleFullNodeDecorator':
-      $class = 'PragueFullNodeDecorator';
-      break;
-  }
+  // switch ($renderable->getBuildClass()) {
+  //   case 'ThemeFullNode':
+  //   case 'MyModuleFullNodeDecorator':
+  //     $class = 'PragueFullNodeDecorator';
+  //     break;
+  // }
   return $class;
 }

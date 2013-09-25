@@ -5,8 +5,14 @@
  */
 abstract class Renderable {
 
+  // Container for the variables that the renderable will store.
   private $params = array();
+
+  // The built class of the renderable.
   private $buildClass; 
+
+  // Store list of classes for later registry checks.
+  private $buildClasses = array();
 
   function __construct($params, $buildClasses) {
     foreach ($buildClasses as $buildClass) {
@@ -15,19 +21,6 @@ abstract class Renderable {
     foreach ($params as $name => $value) {
       $this->set($name, $value);
     }
-  }
-
-  public function setBuildClass($buildClass) {
-    $this->buildClass = $buildClass;
-    $this->buildClasses[] = $buildClass;
-  }
-
-  function getBuildClass() {
-    return $this->buildClass;
-  }
-
-  public function getBuildClasses() {
-    return $this->buildClasses;
   }
 
   public function set($name, $value) {
@@ -39,15 +32,37 @@ abstract class Renderable {
     return $this->params[$name];
   }
 
-  public function getParams() {
+  public function setBuildClass($buildClass) {
+    $this->buildClass = $buildClass;
+    // Append to build classes.
+    $this->buildClasses[] = $buildClass;
+  }
+
+  function getBuildClass() {
+    return $this->buildClass;
+  }
+
+  public function getBuildClasses() {
+    return $this->buildClasses;
+  }
+
+  public function getAll() {
     return $this->params;
   }
 
+  public function prepare() {
+    // This is empty since this is an abstract class.
+  }
+
+  // Invoke the given template and render. Will later depend on some theme
+  // engine.
   public function render() {
+    // Prepare variables.
+    $this->prepare();
 
     $template = $this->getRegisteredTemplate();
 
-    extract($this->getParams(), EXTR_SKIP);
+    extract($this->getAll(), EXTR_SKIP);
 
     // Start output buffering.
     ob_start();
@@ -59,8 +74,9 @@ abstract class Renderable {
     return ob_get_clean();
   }
 
+  // Casting to string invokes render function.
   function __tostring() {
-    $this->prepare();
+    // Return theme function.
     return $this->render();
   }
 

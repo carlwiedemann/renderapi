@@ -5,7 +5,7 @@
  */
 
 class ThemeFoo extends Renderable {
-  // Provide template.
+  // Provide template via some dummy registry.
   function getRegisteredTemplate() {
     return './fake-drupal/modules/mymodule/foo.tpl.php';
   }

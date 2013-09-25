@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file Yay.
+ * @file A fake custom module.
  */
 
 /**

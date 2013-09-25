@@ -6,41 +6,35 @@
  */
 class RenderableBuilder {
 
-  private $buildClasses = array();
-  private $buildClass;
+  // Container for the pre-built variables of the builder.
   private $params = array();
-  private $parsed_params = array();
+
+  // Class of the eventually built renderable.
+  private $buildClass;
+
+  // Store list of classes for later registry checks.
+  private $buildClasses = array();
 
   // Provide initial build class and parameters.
   function __construct($buildClass, $params) {
     $this->setBuildClass($buildClass);
     foreach ($params as $name => $value) {
-      $this->setParam($name, $value);
+      $this->set($name, $value);
     }
   }
 
-  // Generalized setters and getters for basic params.
-  function setParam($name, $value) {
+  function set($name, $value) {
     $this->params[$name] = $value;
   }
 
-  function getParam($name) {
+  function get($name) {
     return $this->params[$name];
   }
 
-  function getParams() {
+  function getAll() {
     return $this->params;
   }
 
-  function setParsedParams($parsed_params) {
-    $this->parsed_params = $parsed_params;
-  }
-
-  function getParsedParams() {
-    return $this->parsed_params;
-  }
-
-  // Finalized class.
   function setBuildClass($buildClass) {
     $this->buildClass = $buildClass;
     $this->buildClasses[] = $buildClass;
@@ -54,10 +48,22 @@ class RenderableBuilder {
     return $this->buildClasses;
   }
 
-  // Parse given parameters as built subclasses.
-  static function parseParams($params) {
+  // Build the subclassed instance.
+  function create() {
+
+    // Builder model: Call any altering functions.
+    foreach (getAlterCallbacks($this) as $alterCallback) {
+      // Alter callbacks receive the RenderableBuilder, can call methods, and
+      // change build class.
+      $alterCallback($this);
+    }
+
+    // Based on the parameters, build the Renderable.
+    $buildClass = $this->getBuildClass();
+
+    // Build sub-parameters if they are renderables.
     $parsed_params = array();
-    foreach ($params as $key => $value) {
+    foreach ($this->getAll() as $key => $value) {
       if ($value instanceOf RenderableBuilder) {
         $parsed_params[$key] = $value->create();
       }
@@ -65,30 +71,18 @@ class RenderableBuilder {
         $parsed_params[$key] = $value;
       }
     }
-    return $parsed_params;
-  }
 
-  // Build the subclassed instance.
-  function create() {
+    // Build the renderable based on the parsed params.
+    $renderable = new $buildClass($parsed_params, $this->getBuildClasses());
 
-    // Call any altering functions.
-    foreach (getAlterCallbacks() as $alterCallback) {
-      // Alter callbacks receive the RenderableBuilder, can call methods, and
-      // change build class.
-      $alterCallback($this);
-    }
-
-    // Based on the parameters, build the Renderable.
-    $this->setParsedParams(RenderableBuilder::parseParams($this->getParams()));
-    $buildClass = $this->getBuildClass();
-    $renderable = new $buildClass($this->getParsedParams(), $this->getBuildClasses());
-
-    // Decorate the renderable with applicable modules.
+    // Decorator model. Given some registry, decorate the renderable via
+    // applicable modules.
     foreach (getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
       $renderable = new $moduleDecoratorClass($renderable, $moduleDecoratorClass);
     }
 
-    // Decorate the renderable with the theme.
+    // Decorator model. Given some registry, decorate the renderable via the
+    // theme.
     if ($themeDecoratorClass = getThemeDecoratorClass($renderable)) {
       $renderable = new $themeDecoratorClass($renderable, $themeDecoratorClass);
     }
