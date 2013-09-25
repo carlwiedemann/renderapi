@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Build a thing we can render. Essentially is the equivalent of the storage
- * component of a render array.
+ * @file A builder class to generate a renderable object.
+ *
+ * Essentially is the equivalent of the storage component of a D8 render array.
  */
 class RenderableBuilder {
 
@@ -58,10 +59,7 @@ class RenderableBuilder {
       $alterCallback($this);
     }
 
-    // Based on the parameters, build the Renderable.
-    $buildClass = $this->getBuildClass();
-
-    // Build sub-parameters if they are renderables.
+    // Parse sub-parameters if they are RenderableBuilders.
     $parsed_params = array();
     foreach ($this->getAll() as $key => $value) {
       if ($value instanceOf RenderableBuilder) {
@@ -73,6 +71,7 @@ class RenderableBuilder {
     }
 
     // Build the renderable based on the parsed params.
+    $buildClass = $this->getBuildClass();
     $renderable = new $buildClass($parsed_params, $this->getBuildClasses());
 
     // Decorator model. Given some registry, decorate the renderable via
@@ -89,4 +88,5 @@ class RenderableBuilder {
 
     return $renderable;
   }
+
 }

@@ -4,8 +4,8 @@
  * @file Decorator class to allow modules and themes to alter parameters for
  * templates.
  */
-
 abstract class RenderableDecorator extends Renderable {
+  // The child object to decorate.
   private $renderable;
 
   function __construct($renderable, $buildClass) {

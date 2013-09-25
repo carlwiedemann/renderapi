@@ -4,6 +4,7 @@
  * @file I am fake Drupal.
  */
 
+// Dummy load our renderable classes.
 include './lib/RenderableBuilder.php';
 include './lib/Renderable.php';
 include './lib/RenderableDecorator.php';
@@ -62,4 +63,25 @@ function getThemeDecoratorClass($renderable) {
   //     break;
   // }
   return $class;
+}
+
+/**
+ * Dummy markup delivery mechanism.
+ */
+function deliver($build) {
+
+  // Concatenate components
+  // @todo Weight?
+  if (is_array($build)) {
+    $markup = '';
+    foreach ($build as $sub_build) {
+      $markup .= (string) $sub_build->create();
+    }
+  }
+  else {
+    $markup = (string) $build->create();
+  }
+
+  // At this point, we are ready to render everything.
+  return $markup;
 }

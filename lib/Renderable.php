@@ -1,7 +1,9 @@
 <?php
 
 /**
- * @file The Renderable class represents the data component of a render array.
+ * @file A renderable object.
+ *
+ * Represents the runtime content and execution of a render array.
  */
 abstract class Renderable {
 
