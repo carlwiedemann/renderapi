@@ -10,9 +10,6 @@ abstract class Renderable {
   // Container for the variables that the renderable will store.
   private $params = array();
 
-  // The built class of the renderable.
-  private $buildClass; 
-
   function __construct($params) {
     foreach ($params as $name => $value) {
       $this->set($name, $value);
@@ -29,7 +26,7 @@ abstract class Renderable {
   }
 
   function getBuildClass() {
-    return get_class($this);
+    return get_called_class();
   }
 
   public function getAll() {
