@@ -12,6 +12,8 @@ class ThemeFullNode extends Renderable {
 
   // Provide variable overrides.
   function prepare() {
+    // Prepare variables from parent objects.
+    parent::prepare();
     // Set a title variable.
     $this->set('title', $this->get('node')->title);
   }

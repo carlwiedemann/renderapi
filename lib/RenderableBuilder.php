@@ -21,28 +21,28 @@ class RenderableBuilder {
     }
   }
 
-  function set($name, $value) {
+  public function set($name, $value) {
     $this->params[$name] = $value;
   }
 
-  function get($name) {
+  public function get($name) {
     return $this->params[$name];
   }
 
-  function getAll() {
+  public function getAll() {
     return $this->params;
   }
 
-  function setBuildClass($buildClass) {
+  public function setBuildClass($buildClass) {
     $this->buildClass = $buildClass;
   }
 
-  function getBuildClass() {
+  public function getBuildClass() {
     return $this->buildClass;
   }
 
   // Build the subclassed instance.
-  function create() {
+  public function create() {
 
     // Builder model: Call any altering functions.
     foreach (getAlterCallbacks($this) as $alterCallback) {

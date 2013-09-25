@@ -12,6 +12,9 @@ class ThemeFoo extends Renderable {
 
   // Prepare variables for the foo.tpl.php template.
   function prepare() {
+    // Prepare variables from parent objects.
+    parent::prepare();
+    // Change title variable.
     $this->set('title', $this->get('node')->title . ' overridden by ThemeFoo');
   }
 }

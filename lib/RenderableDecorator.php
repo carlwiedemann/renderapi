@@ -33,12 +33,12 @@ abstract class RenderableDecorator extends Renderable {
   }
 
   // Delegate to child.
-  function prepare() {
+  public function prepare() {
     return $this->renderable->prepare();
   }
 
   // Delegate to child.
-  function getRegisteredTemplate() {
+  public function getRegisteredTemplate() {
     return $this->renderable->getRegisteredTemplate();
   }
 

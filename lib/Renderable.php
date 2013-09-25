@@ -10,6 +10,8 @@ abstract class Renderable {
   // Container for the variables that the renderable will store.
   private $params = array();
 
+  private $isPrepared = FALSE;
+
   function __construct($params) {
     foreach ($params as $name => $value) {
       $this->set($name, $value);
@@ -20,12 +22,28 @@ abstract class Renderable {
     $this->params[$name] = $value;
   }
 
+  public function exists($name) {
+    return isset($this->params[$name]);
+  }
+
   public function get($name) {
-    // @todo This needs to implement a drillable structure.
+    // Since this needs to implement a drillable structure, prepare the variables
+    // if they are not prepared.
+    if (!$this->isPrepared()) {
+      $this->prepare();
+    }
     return $this->params[$name];
   }
 
-  function getBuildClass() {
+  public function isPrepared() {
+    return $this->isPrepared;
+  }
+
+  private function setPrepared() {
+    $this->isPrepared = TRUE;
+  }
+
+  public function getBuildClass() {
     return get_called_class();
   }
 
@@ -33,15 +51,17 @@ abstract class Renderable {
     return $this->params;
   }
 
-  public function prepare() {
-    // This is empty since this is an abstract class.
+  protected function prepare() {
+    $this->setPrepared();
   }
 
   // Invoke the given template and render. Will later depend on some theme
   // engine.
   public function render() {
     // Prepare variables.
-    $this->prepare();
+    if (!$this->isPrepared()) {
+      $this->prepare();
+    }
 
     $template = $this->getRegisteredTemplate();
 
