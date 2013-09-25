@@ -10,10 +10,9 @@ class ThemeFullNode extends Renderable {
     return './fake-drupal/modules/node/node.tpl.php';
   }
 
+  // Provide variable overrides.
   function prepare() {
-    // Get varaibles from parent templates.
-    parent::prepare();
-    // Prep variables for the template.
+    // Set a title variable.
     $this->set('title', $this->get('node')->title);
   }
 }

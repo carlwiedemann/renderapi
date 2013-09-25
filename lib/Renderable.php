@@ -13,13 +13,7 @@ abstract class Renderable {
   // The built class of the renderable.
   private $buildClass; 
 
-  // Store list of classes for later registry checks.
-  private $buildClasses = array();
-
-  function __construct($params, $buildClasses) {
-    foreach ($buildClasses as $buildClass) {
-      $this->setBuildClass($buildClass);
-    }
+  function __construct($params) {
     foreach ($params as $name => $value) {
       $this->set($name, $value);
     }
@@ -34,18 +28,8 @@ abstract class Renderable {
     return $this->params[$name];
   }
 
-  public function setBuildClass($buildClass) {
-    $this->buildClass = $buildClass;
-    // Append to build classes.
-    $this->buildClasses[] = $buildClass;
-  }
-
   function getBuildClass() {
-    return $this->buildClass;
-  }
-
-  public function getBuildClasses() {
-    return $this->buildClasses;
+    return get_class($this);
   }
 
   public function getAll() {

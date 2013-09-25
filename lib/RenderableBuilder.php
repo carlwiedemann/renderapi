@@ -13,9 +13,6 @@ class RenderableBuilder {
   // Class of the eventually built renderable.
   private $buildClass;
 
-  // Store list of classes for later registry checks.
-  private $buildClasses = array();
-
   // Provide initial build class and parameters.
   function __construct($buildClass, $params) {
     $this->setBuildClass($buildClass);
@@ -38,15 +35,10 @@ class RenderableBuilder {
 
   function setBuildClass($buildClass) {
     $this->buildClass = $buildClass;
-    $this->buildClasses[] = $buildClass;
   }
 
   function getBuildClass() {
     return $this->buildClass;
-  }
-
-  function getBuildClasses() {
-    return $this->buildClasses;
   }
 
   // Build the subclassed instance.
@@ -72,18 +64,18 @@ class RenderableBuilder {
 
     // Build the renderable based on the parsed params.
     $buildClass = $this->getBuildClass();
-    $renderable = new $buildClass($parsed_params, $this->getBuildClasses());
+    $renderable = new $buildClass($parsed_params);
 
     // Decorator model. Given some registry, decorate the renderable via
     // applicable modules.
     foreach (getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
-      $renderable = new $moduleDecoratorClass($renderable, $moduleDecoratorClass);
+      $renderable = new $moduleDecoratorClass($renderable);
     }
 
     // Decorator model. Given some registry, decorate the renderable via the
     // theme.
     if ($themeDecoratorClass = getThemeDecoratorClass($renderable)) {
-      $renderable = new $themeDecoratorClass($renderable, $themeDecoratorClass);
+      $renderable = new $themeDecoratorClass($renderable);
     }
 
     return $renderable;

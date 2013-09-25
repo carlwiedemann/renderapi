@@ -1,20 +1,20 @@
 <?php
 
 /**
- * @file Something that we'd see in a custom module
+ * @file Theme decorator class for ThemeFullNode.
  */
 
-/**
- * Implemented as a decorator via theme registry.
- */
 class MyModuleFullNodeDecorator extends RenderableDecorator {
+  // Simply use parent template definition.
   function getRegisteredTemplate() {
     return parent::getRegisteredTemplate();
   }
 
+  // Provide variable overrides.
   function prepare() {
-    // Prepare default variables.
+    // Prepare variables from parent objects.
     parent::prepare();
+    // Change title variable.
     $this->set('title', $this->get('node')->title . ' modified by MyModuleFullNodeDecorator');
   }
 }

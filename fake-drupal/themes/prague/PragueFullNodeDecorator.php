@@ -12,9 +12,9 @@ class PragueFullNodeDecorator extends RenderableDecorator {
 
   // Provide variable overrides.
   function prepare() {
-    // Get varaibles from parent templates.
+    // Prepare variables from parent objects.
     parent::prepare();
-    // Create new variables.
+    // Create a new variable.
     $this->set('subtitle', 'Here is a subtitle.');
   }
 }

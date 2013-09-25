@@ -8,14 +8,8 @@ abstract class RenderableDecorator extends Renderable {
   // The child object to decorate.
   private $renderable;
 
-  function __construct($renderable, $buildClass) {
+  function __construct($renderable) {
     $this->renderable = $renderable;
-    $this->renderable->setBuildClass($buildClass);
-  }
-
-  // Delegate to child.
-  public function getBuildClasses() {
-    return $this->renderable->getBuildClasses();
   }
 
   // Delegate to child.
@@ -34,8 +28,8 @@ abstract class RenderableDecorator extends Renderable {
   }
 
   // Delegate to child.
-  public function getParams() {
-    return $this->renderable->getParams();
+  public function getAll() {
+    return $this->renderable->getAll();
   }
 
   // Delegate to child.
