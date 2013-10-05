@@ -1,5 +1,15 @@
 # Object-Oriented Drupal RenderAPI
 
+## Installing
+
+You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](http://getcomposer.org/):
+
+    $> cd path/to/renderapi
+    $> curl -sS https://getcomposer.org/installer | php
+    $> php composer.phar install
+
+## Getting started
+
 * ./index.php returns some a sample renderables at various URLs.
 * ./fake-drupal is just a dummy Drupal skeleton to give some conceptual basis. 
   In fake-drupal.php, explore un-commenting the lines in: `getAlterCallbacks()`,
