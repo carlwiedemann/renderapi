@@ -50,7 +50,13 @@
         <?php print render($content); ?>
       </div></section>
       <aside>
-        <section id="sidebar-first"><div class="inner"><?php print render($sidebar_first); ?></div></section>
+        <section id="sidebar-first"><div class="inner"><?php
+        // @todo Figure out some sort of collection accessor pattern rather
+        // than using arrays.
+        // $items = $sidebar_first[1]->find('items');
+        // print render($items[2]->find('title')); // Drillability!
+        print render($sidebar_first);
+        ?></div></section>
         <section id="sidebar-second"><div class="inner"><?php print render($sidebar_second); ?></div></section>
       </aside>
     </div>

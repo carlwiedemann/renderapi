@@ -42,7 +42,7 @@ class RenderableBuilder {
     return $this->weight;
   }
 
-  function isWeighted() {
+  public function isWeighted() {
     return $this->weighted;
   }
 
@@ -50,12 +50,46 @@ class RenderableBuilder {
     $this->params[$name] = $value;
   }
 
-  public function exists($name) {
+  private function exists($name) {
     return isset($this->params[$name]);
   }
 
   public function get($name) {
+    // Consider what constitutes creation of the renderable.
+
+    // The real drillability issue: we may wish to drill into structure
+    // that pertains to the finalized renderable state, subject to variables
+    // created in the preprocessors, not yet available in the builder.
+
+    // Let's assume that if a parameter exists, we'll use it, and if it doesn't
+    // exist, we'll delegate to the finalized Renderable (the object of type
+    // $this->buildClass). There are some quetsions here in terms of execution
+    // order, that is, if this should be delegated prior to the invocation of
+    // the theme layer itself.
+
+    // It may make sense to have a check whether the implementor can dig into
+    // the structure if it is coming from the theme layer, or a separate method
+    // altogether. @see find().
+
     return $this->params[$name];
+  }
+
+  // Suppose we have a separate method similar to get() that is used
+  // exclusively via the them layer. Consider whether there should exist a
+  // global constraint.
+  public function find($name) {
+    if (!$this->exists($name)) {
+      // If this doesn't exist, assume it will be invoked in the preprocessor.
+      // Therefore, create the renderable. It is feasible that the renderable
+      // *could* be statically cached as a property of the instance for
+      // performance reasons.
+      $renderable = RenderableBuilder::create($this);
+      $return = $renderable->get($name);
+    }
+    else {
+      $return = $this->get($name);
+    }
+    return $return;
   }
 
   public function getAll() {
@@ -72,7 +106,7 @@ class RenderableBuilder {
 
   // Factory to build the subclassed instance. The builder in this case may be:
   // * A scalar.
-  // * A renderable builder.
+  // * A RenderableBuilder object.
   // * An array of either of the above.
   static public function create($builder) {
 

@@ -65,7 +65,9 @@ $app->get('/built-page', function() use($app) {
         'items' => array(
           'first',
           'second',
-          'third',
+          new RenderableBuilder('ThemeFullNode', array(
+            'node' => node_load(456),
+          )),
         ),
       )),
     ),

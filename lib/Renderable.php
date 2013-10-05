@@ -10,6 +10,7 @@ abstract class Renderable {
   // Container for the variables that the renderable will store.
   private $params = array();
 
+  // Whether the template variables have been prepared or not.
   private $isPrepared = FALSE;
 
   function __construct($params) {
@@ -22,7 +23,7 @@ abstract class Renderable {
     $this->params[$name] = $value;
   }
 
-  public function exists($name) {
+  protected function exists($name) {
     return isset($this->params[$name]);
   }
 
