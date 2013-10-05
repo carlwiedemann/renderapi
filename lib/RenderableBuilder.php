@@ -81,4 +81,10 @@ class RenderableBuilder {
     return $renderable;
   }
 
+  // Casting the Builder to a string creates the Renderable and returns it
+  // as a string.
+  function __toString() {
+    return (string) $this->create();
+  }
+
 }
