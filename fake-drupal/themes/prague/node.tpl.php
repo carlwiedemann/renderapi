@@ -1,5 +1,5 @@
-<h2>I am ./themes/prague/node.tpl.php</h2>
+<strong>I am ./themes/prague/node.tpl.php</strong>
 
-<h1>$title: <?php print render($title); ?></h1>
+<h2>$title: <?php print render($title); ?></h2>
 
-<h1>$subtitle: <?php print render($subtitle); ?></h1>
+<h2>$subtitle: <?php print render($subtitle); ?></h2>

@@ -1,6 +1,6 @@
-<h2>I am ./modules/node/node.tpl.php</h2>
+<strong>I am ./modules/node/node.tpl.php</strong>
 
-<h1>$title: <?php print render($title); ?></h1>
+<h2>$title: <?php print render($title); ?></h2>
 
 <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
 
