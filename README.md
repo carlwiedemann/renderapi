@@ -44,9 +44,10 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
   RenderableBuilder to Renderable.
 * 2013-10-05 Weight support for RenderableBuilder.
 * 2013-10-05 Silex and composer integration.
-* 2013-09-25 Version 2.0 - Complete rewrite via Builder and Decorator patterns.
-* 2012-12-03 Version 1.1 - Looser coupling with HTML tags, but still not quite
-  there.
+* 2013-09-25 Version 2.0 - After many moons, a complete rewrite via Builder and
+  Decorator patterns.
+* 2012-12-03 Version 1.1 - Somewhat looser coupling with HTML tags, still not
+  really what we want.
 * 2012-11-30 Version 1.0 - Basically an abstracted HTML builder. Not really what
   we want.
 
