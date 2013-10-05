@@ -28,11 +28,11 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## Render workflow for D9
 
-1. Define renderable. `$build = new RenderableBuilder('ThemeFoo', array('foo' => $foo));`
-2. Alter renderable. `$build->set('param', $myParam); $build->setThemeClass('ThemeBar');`
-3. Render renderable. `$renderable = $build->create(); $renderable instanceOf ThemeBar;`
-   A. Prepare/alter vars. `$renderable = new BazThemeBarDecorator($renderable);`
-   B. Invoke theme engine & template. `print (string) $renderable;`
+* (1) Define renderable. `$build = new RenderableBuilder('ThemeFoo', array('foo' => $foo));`
+* (2) Alter renderable. `$build->set('param', $myParam); $build->setThemeClass('ThemeBar');`
+* (3) Render renderable. `$renderable = $build->create(); $renderable instanceOf ThemeBar;`
+   * (A) Prepare/alter vars. `$renderable = new BazThemeBarDecorator($renderable);`
+   * (B) Invoke theme engine & template. `print (string) $renderable;`
 
 ## Wishlist
 
