@@ -10,6 +10,5 @@ class ThemePage extends Renderable {
   }
 
   function prepare() {
-    parent::prepare();
   }
 }

@@ -11,7 +11,6 @@ class ThemeItemList extends Renderable {
   }
 
   function prepare() {
-    parent::prepare();
     // Default to unordered list.
     if (!$this->exists('type')) {
       $this->set('type', 'ul');

@@ -79,12 +79,12 @@ function getThemeDecoratorClass($renderable) {
  */
 function render($build) {
 
+  $markup = '';
   // Concatenate components
   if (is_array($build)) {
 
     render_sort($build);
 
-    $markup = '';
     foreach ($build as $sub_build) {
       $markup .= render($sub_build);
     }
