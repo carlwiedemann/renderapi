@@ -18,6 +18,9 @@ include './fake-drupal/modules/mymodule/mymodule.module.php';
 include './fake-drupal/modules/mymodule/ThemeFoo.php';
 include './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
 
+// Load fake common components.
+include './fake-drupal/includes/theme/ThemeItemList.php';
+
 // Load our fake theme.
 include './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
 
@@ -30,6 +33,11 @@ function getAlterCallbacks($builder) {
   //   case 'ThemeFullNode':
   //     $callbacks = array(
   //       'mymodule_alter_node_view',
+  //     );
+  //     break;
+  //   case 'ThemeItemList':
+  //     $callbacks = array(
+  //       'mymodule_alter_item_list',
   //     );
   //     break;
   // }
@@ -75,11 +83,11 @@ function deliver($build) {
   if (is_array($build)) {
     $markup = '';
     foreach ($build as $sub_build) {
-      $markup .= (string) $sub_build->create();
+      $markup .= (string) $sub_build;
     }
   }
   else {
-    $markup = (string) $build->create();
+    $markup = (string) $build;
   }
 
   // At this point, we are ready to render everything.
