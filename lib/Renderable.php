@@ -29,17 +29,20 @@ abstract class Renderable {
   public function get($name) {
     // Since this needs to implement a drillable structure, prepare the variables
     // if they are not prepared.
-    if (!$this->isPrepared()) {
-      $this->prepare();
+    if ($this->exists($name)) {
+      return $this->params[$name];
     }
-    return $this->params[$name];
+    else {
+      $this->prepare();
+      return $this->exists($name) ? $this->params[$name] : NULL;
+    }
   }
 
   public function isPrepared() {
     return $this->isPrepared;
   }
 
-  private function setPrepared() {
+  protected function setPrepared() {
     $this->isPrepared = TRUE;
   }
 
@@ -49,10 +52,6 @@ abstract class Renderable {
 
   public function getAll() {
     return $this->params;
-  }
-
-  protected function prepare() {
-    $this->setPrepared();
   }
 
   // Invoke the given template and render. Will later depend on some theme

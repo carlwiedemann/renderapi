@@ -22,9 +22,18 @@ abstract class RenderableDecorator extends Renderable {
     $this->renderable->set($name, $value);
   }
 
-  // Delegate to child.
+  // Check for local existence.
   public function get($name) {
+    // If we haven't prepared the variables yet, prepare them.
+    if (!$this->exists($name) && !$this->isPrepared()) {
+      $this->prepare();
+      $this->setPrepared();
+    }
     return $this->renderable->get($name);
+  }
+
+  public function exists($name) {
+    return $this->renderable->exists($name);
   }
 
   // Delegate to child.

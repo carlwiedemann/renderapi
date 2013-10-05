@@ -70,50 +70,57 @@ class RenderableBuilder {
     return $this->buildClass;
   }
 
-  // Build the subclassed instance.
-  public function create() {
+  // Factory to build the subclassed instance. The builder in this case may be:
+  // * A scalar.
+  // * A renderable builder.
+  // * An array of either of the above.
+  static public function create($builder) {
 
-    // Builder model: Call any altering functions.
-    foreach (getAlterCallbacks($this) as $alterCallback) {
-      // Alter callbacks receive the RenderableBuilder, can call methods, and
-      // change build class.
-      $alterCallback($this);
+    $return = NULL;
+
+    if (is_scalar($builder)) {
+      $return = $builder;
     }
-
-    // Parse sub-parameters if they are RenderableBuilders.
-    $parsed_params = array();
-    foreach ($this->getAll() as $key => $value) {
-      if ($value instanceOf RenderableBuilder) {
-        $parsed_params[$key] = $value->create();
-      }
-      else {
-        $parsed_params[$key] = $value;
+    elseif (is_array($builder)) {
+      $return = array();
+      foreach ($builder as $key => $value) {
+        $return[$key] = RenderableBuilder::create($value);
       }
     }
+    elseif ($builder instanceOf RenderableBuilder) {
+      // Builder model: Call any altering functions.
+      foreach (getAlterCallbacks($builder) as $alterCallback) {
+        // Alter callbacks receive the RenderableBuilder, can call methods, and
+        // change build class.
+        $alterCallback($builder);
+      }
 
-    // Build the renderable based on the parsed params.
-    $buildClass = $this->getBuildClass();
-    $renderable = new $buildClass($parsed_params);
+      // Build the renderable based on the parsed params.
+      $buildClass = $builder->getBuildClass();
+      $renderable = new $buildClass($builder->getAll());
 
-    // Decorator model. Given some registry, decorate the renderable via
-    // applicable modules.
-    foreach (getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
-      $renderable = new $moduleDecoratorClass($renderable);
+      // Decorator model. Given some registry, decorate the renderable via
+      // applicable modules.
+      foreach (getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
+        $renderable = new $moduleDecoratorClass($renderable);
+      }
+
+      // Decorator model. Given some registry, decorate the renderable via the
+      // theme.
+      if ($themeDecoratorClass = getThemeDecoratorClass($renderable)) {
+        $renderable = new $themeDecoratorClass($renderable);
+      }
+
+      $return = $renderable;
     }
 
-    // Decorator model. Given some registry, decorate the renderable via the
-    // theme.
-    if ($themeDecoratorClass = getThemeDecoratorClass($renderable)) {
-      $renderable = new $themeDecoratorClass($renderable);
-    }
-
-    return $renderable;
+    return $return;
   }
 
   // Casting the Builder to a string creates the Renderable and returns it
   // as a string.
   function __toString() {
-    return (string) $this->create();
+    return (string) RenderableBuilder::create($this);
   }
 
 }
