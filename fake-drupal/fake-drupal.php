@@ -79,7 +79,6 @@ function getThemeDecoratorClass($renderable) {
 function deliver($build) {
 
   // Concatenate components
-  // @todo Weight?
   if (is_array($build)) {
 
     deliver_sort($build);
