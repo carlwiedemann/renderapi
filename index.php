@@ -11,6 +11,8 @@ include('./fake-drupal/fake-drupal.php');
 
 $app = new Silex\Application();
 
+$app['debug'] = TRUE;
+
 $app->get('/hello/{name}', function($name) use($app) {
     return 'Hello ' . $app->escape($name);
 });
@@ -30,26 +32,24 @@ $app->get('/itemList/{items}', function($items) use($app) {
 });
 
 $app->get('/something-fancy', function() use($app) {
-  $build = new RenderableBuilder('ThemeItemList', array(
-    'items' => array(
+  $build = array(
       new RenderableBuilder('ThemeFullNode', array(
         'node' => node_load(123),
-      )),
+      ), -1),
       new RenderableBuilder('ThemeFullNode', array(
         'node' => node_load(456),
-      )),
+      ), 3),
       new RenderableBuilder('ThemeFullNode', array(
         'node' => node_load(789),
-      )),
+      ), 0),
       new RenderableBuilder('ThemeItemList', array(
         'items' => array(
           'red',
           'green',
           'blue',
-        )
-      )),
-    ),
-  ));
+        ),
+      ), -1),
+    );
   return deliver($build);
 });
 

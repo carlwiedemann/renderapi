@@ -81,6 +81,9 @@ function deliver($build) {
   // Concatenate components
   // @todo Weight?
   if (is_array($build)) {
+
+    deliver_sort($build);
+
     $markup = '';
     foreach ($build as $sub_build) {
       $markup .= (string) $sub_build;
@@ -92,4 +95,39 @@ function deliver($build) {
 
   // At this point, we are ready to render everything.
   return $markup;
+}
+
+function deliver_sort(&$builds) {
+  $sortable = FALSE;
+
+  foreach ($builds as $key => $build) {
+    if (is_array($build)) {
+      $builds[$key] = deliver_sort($build);
+    }
+    elseif ($build instanceOf RenderableBuilder) {
+      // Check if weight parameter exists.
+      if ($build->isWeighted()) {
+        $sortable = TRUE;
+      }
+    }
+  }
+
+  if ($sortable) {
+    uasort($builds, 'renderable_sort');
+  }
+}
+
+function renderable_sort($a, $b) {
+  $a_weight = 0;
+  $b_weight = 0;
+  if ($a instanceOf RenderableBuilder) {
+    $a_weight = $a->getWeight();
+  }
+  if ($b instanceOf RenderableBuilder) {
+    $b_weight = $b->getWeight();
+  }
+  if ($a_weight == $b_weight) {
+    return 0;
+  }
+  return ($a_weight < $b_weight) ? -1 : 1;
 }

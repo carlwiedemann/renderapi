@@ -13,16 +13,45 @@ class RenderableBuilder {
   // Class of the eventually built renderable.
   private $buildClass;
 
+  // If this exists in an array structure, allow for a weight parameter.
+  private $weight = 0;
+
+  // Whether a weight was set manually or not.
+  private $weighted = FALSE;
+
   // Provide initial build class and parameters.
-  function __construct($buildClass, $params) {
+  function __construct($buildClass, $params, $weight = NULL) {
     $this->setBuildClass($buildClass);
     foreach ($params as $name => $value) {
       $this->set($name, $value);
     }
+    if (isset($weight)) {
+      $this->weighted = TRUE;
+      $this->setWeight($weight);
+    }
+    else {
+      $this->setWeight(0);
+    }
+  }
+
+  public function setWeight($weight) {
+    $this->weight = (int) $weight;
+  }
+
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  function isWeighted() {
+    return $this->weighted;
   }
 
   public function set($name, $value) {
     $this->params[$name] = $value;
+  }
+
+  public function exists($name) {
+    return isset($this->params[$name]);
   }
 
   public function get($name) {
