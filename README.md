@@ -40,6 +40,8 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## Changelog
 
+* 2013-10-05 Drillable syntax via find() method to delegate from
+  RenderableBuilder to Renderable.
 * 2013-10-05 Weight support for RenderableBuilder.
 * 2013-10-05 Silex and composer integration.
 * 2013-09-25 Version 2.0 - Complete rewrite via Builder and Decorator patterns.
