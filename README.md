@@ -1,6 +1,6 @@
-# Some proof-of-concept for a Object-Oriented Drupal 9.x RenderAPI
+# Object-Oriented Drupal RenderAPI
 
-* ./index.php pretends to build and return a sample renderable.
+* ./index.php returns some a sample renderables at various URLs.
 * ./fake-drupal is just a dummy Drupal skeleton to give some conceptual basis. 
   In fake-drupal.php, explore un-commenting the lines in: `getAlterCallbacks()`,
   `getModuleDecoratorClasses()`, and `getThemeDecoratorClass()` to explore how
@@ -9,7 +9,8 @@
 ## Things we need
 
 * Logical template-based markup that can be extended and overridden.
-   * `hook_theme()`, PHPTemplate (Twig), `template_preprocess()`, hook suggestions, theme registry
+   * `hook_theme()`, PHPTemplate (Twig), `template_preprocess()`, hook
+     suggestions, theme registry
 * Abstracted, alterable structure.
    * Render arrays, `hook_node_view()`, `hook_page_alter()`
 * Sensible, accessible, API.
@@ -26,6 +27,15 @@
 ## Wishlist
 
 "Make it faster. Don't break caching." -- Moshe
+
+## Changelog
+
+* 2013-10-05 Silex and composer integration.
+* 2013-09-25 Version 2.0 - Complete rewrite via Builder and Decorator patterns.
+* 2012-12-03 Version 1.1 - Looser coupling with HTML tags, but still not quite
+  there.
+* 2012-11-30 Version 1.0 - Basically an abstracted HTML builder. Not really what
+  we want.
 
 ## Acknowledgements
 
