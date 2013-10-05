@@ -23,7 +23,7 @@ abstract class Renderable {
     $this->params[$name] = $value;
   }
 
-  protected function exists($name) {
+  public function exists($name) {
     return isset($this->params[$name]);
   }
 

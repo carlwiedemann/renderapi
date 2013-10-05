@@ -50,7 +50,7 @@ class RenderableBuilder {
     $this->params[$name] = $value;
   }
 
-  private function exists($name) {
+  public function exists($name) {
     return isset($this->params[$name]);
   }
 
