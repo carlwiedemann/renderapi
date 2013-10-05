@@ -21,14 +21,14 @@ $app->get('/node/{id}', function($id) use($app) {
   $build = new RenderableBuilder('ThemeFullNode', array(
     'node' => node_load($id),
   ));
-  return deliver($build);
+  return render($build);
 });
 
 $app->get('/itemList/{items}', function($items) use($app) {
   $build = new RenderableBuilder('ThemeItemList', array(
     'items' => explode(',', $items),
   ));
-  return deliver($build);
+  return render($build);
 });
 
 $app->get('/something-fancy', function() use($app) {
@@ -50,7 +50,26 @@ $app->get('/something-fancy', function() use($app) {
         ),
       ), -1),
     );
-  return deliver($build);
+  return render($build);
+});
+
+$app->get('/built-page', function() use($app) {
+  $build = new RenderableBuilder('ThemePage', array(
+    'head_title' => 'Hello',
+    'content' => new RenderableBuilder('ThemeFullNode', array(
+      'node' => node_load(123),
+    )),
+    'sidebar_first' => array(
+      'Some block',
+      new RenderableBuilder('ThemeItemList', array(
+        'items' => array('first', 'second', 'third')
+      )),
+    ),
+    'sidebar_second' => 'Sidebar second',
+    'header' => 'Some header',
+    'footer' => 'Some footer',
+  ));
+  return render($build);
 });
 
 $app->run();

@@ -20,6 +20,7 @@ include './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
 
 // Load fake common components.
 include './fake-drupal/includes/theme/ThemeItemList.php';
+include './fake-drupal/includes/theme/ThemePage.php';
 
 // Load our fake theme.
 include './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
@@ -74,21 +75,21 @@ function getThemeDecoratorClass($renderable) {
 }
 
 /**
- * Dummy markup delivery mechanism.
+ * Dummy markup render mechanism.
  */
-function deliver($build) {
+function render($build) {
 
   // Concatenate components
   if (is_array($build)) {
 
-    deliver_sort($build);
+    render_sort($build);
 
     $markup = '';
     foreach ($build as $sub_build) {
-      $markup .= (string) $sub_build;
+      $markup .= render($sub_build);
     }
   }
-  else {
+  elseif (is_scalar($build) || $build instanceOf RenderableBuilder || $build instanceOf Renderable) {
     $markup = (string) $build;
   }
 
@@ -96,12 +97,12 @@ function deliver($build) {
   return $markup;
 }
 
-function deliver_sort(&$builds) {
+function render_sort(&$builds) {
   $sortable = FALSE;
 
   foreach ($builds as $key => $build) {
     if (is_array($build)) {
-      $builds[$key] = deliver_sort($build);
+      $builds[$key] = render_sort($build);
     }
     elseif ($build instanceOf RenderableBuilder) {
       // Check if weight parameter exists.
