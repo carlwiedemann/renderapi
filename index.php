@@ -62,10 +62,14 @@ $app->get('/built-page', function() use($app) {
     'sidebar_first' => array(
       'Some block',
       new RenderableBuilder('ThemeItemList', array(
-        'items' => array('first', 'second', 'third')
+        'items' => array(
+          'first',
+          'second',
+          'third',
+        ),
       )),
     ),
-    'sidebar_second' => 'Sidebar second',
+    'sidebar_second' => 'Some other block',
     'header' => 'Some header',
     'footer' => 'Some footer',
   ));
