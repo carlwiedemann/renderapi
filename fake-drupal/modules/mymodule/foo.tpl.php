@@ -1,5 +1,5 @@
-<h2>I am ./modules/mymodule/foo.tpl.php</h2>
+<strong>I am ./modules/mymodule/foo.tpl.php</strong>
 
-<h1>$title: <?php print render($title); ?></h1>
+<h2>$title: <?php print render($title); ?></h2>
 
-<h1>$foo: <?php print render($foo); ?></h1>
+<h2>$foo: <?php print render($foo); ?></h2>
