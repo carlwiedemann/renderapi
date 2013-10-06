@@ -13,8 +13,9 @@ $app = new Silex\Application();
 
 $app['debug'] = TRUE;
 
-$app->get('/hello/{name}', function($name) use($app) {
-    return 'Hello ' . $app->escape($name);
+$app->get('/', function() use($app) {
+  $build = new RenderableBuilder('ThemeSomeExamples');
+  return render($build);
 });
 
 $app->get('/node/{id}', function($id) use($app) {

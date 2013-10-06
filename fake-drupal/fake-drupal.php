@@ -19,6 +19,7 @@ include './fake-drupal/modules/mymodule/ThemeFoo.php';
 include './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
 
 // Load fake common components.
+include './fake-drupal/includes/theme/ThemeSomeExamples.php';
 include './fake-drupal/includes/theme/ThemeItemList.php';
 include './fake-drupal/includes/theme/ThemePage.php';
 
