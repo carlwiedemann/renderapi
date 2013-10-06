@@ -20,7 +20,7 @@ class RenderableBuilder {
   private $weighted = FALSE;
 
   // Provide initial build class and parameters.
-  function __construct($buildClass, $params, $weight = NULL) {
+  function __construct($buildClass, $params = array(), $weight = NULL) {
     $this->setBuildClass($buildClass);
     foreach ($params as $name => $value) {
       $this->set($name, $value);
