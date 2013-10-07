@@ -14,7 +14,16 @@ $app = new Silex\Application();
 $app['debug'] = TRUE;
 
 $app->get('/', function() use($app) {
-  $build = new RenderableBuilder('ThemeSomeExamples');
+  $build = new RenderableBuilder('ThemeSomeExamples', array(
+      'examples' => new RenderableBuilder('ThemeItemList', array(
+        'items' => array(
+          '<a href="/node/123">Node via ThemeFullNode</a>',
+          '<a href="/itemList/first,second,third">Item list via ThemeItemList</a>',
+          '<a href="/something-fancy">Compound builder</a>',
+          '<a href="/built-page">Sample page template</a>',
+        ),
+      )),
+    ));
   return render($build);
 });
 

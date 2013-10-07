@@ -8,6 +8,8 @@ abstract class RenderableDecorator extends Renderable {
   // The child object to decorate.
   private $renderable;
 
+  private $preparing = FALSE;
+
   function __construct($renderable) {
     $this->renderable = $renderable;
   }
@@ -24,12 +26,13 @@ abstract class RenderableDecorator extends Renderable {
 
   // Check for local existence.
   public function get($name) {
-    // If we haven't prepared the variables yet, prepare them.
-    if (!$this->exists($name) && !$this->isPrepared()) {
-      $this->prepare();
-      $this->setPrepared();
+    if ($this->exists($name)) {
+      return $this->renderable->get($name);
     }
-    return $this->renderable->get($name);
+    else {
+      $this->prepareOnce();
+      return $this->exists($name) ? $this->renderable->get($name) : NULL;
+    }
   }
 
   public function exists($name) {

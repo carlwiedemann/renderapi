@@ -11,7 +11,11 @@ abstract class Renderable {
   private $params = array();
 
   // Whether the template variables have been prepared or not.
-  private $isPrepared = FALSE;
+  private $prepared = FALSE;
+
+  // Whether the prepare function is being run so that we do not re-run the
+  // prepare function.
+  private $preparing = FALSE;
 
   function __construct($params) {
     foreach ($params as $name => $value) {
@@ -34,17 +38,13 @@ abstract class Renderable {
       return $this->params[$name];
     }
     else {
-      $this->prepare();
+      $this->prepareOnce();
       return $this->exists($name) ? $this->params[$name] : NULL;
     }
   }
 
   public function isPrepared() {
-    return $this->isPrepared;
-  }
-
-  protected function setPrepared() {
-    $this->isPrepared = TRUE;
+    return $this->prepared;
   }
 
   public function getBuildClass() {
@@ -55,13 +55,20 @@ abstract class Renderable {
     return $this->params;
   }
 
+  protected function prepareOnce() {
+    if (!$this->prepared && !$this->preparing) {
+      $this->preparing = TRUE;
+      $this->prepare();
+      $this->preparing = FALSE;
+      $this->prepared = TRUE;
+    }
+  }
+
   // Invoke the given template and render. Will later depend on some theme
   // engine.
   public function render() {
     // Prepare variables.
-    if (!$this->isPrepared()) {
-      $this->prepare();
-    }
+    $this->prepareOnce();
 
     $template = $this->getRegisteredTemplate();
 
