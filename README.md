@@ -29,6 +29,8 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## @todo
 
+* Twig integration
+* Front-end template example
 * Optimization
 * DX
 * Unit tests
