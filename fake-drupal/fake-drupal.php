@@ -8,6 +8,7 @@
 include './lib/RenderableBuilder.php';
 include './lib/Renderable.php';
 include './lib/RenderableDecorator.php';
+include './lib/Accessor.php';
 
 // Load our fake node module.
 include './fake-drupal/modules/node/node.module.php';

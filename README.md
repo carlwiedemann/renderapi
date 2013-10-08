@@ -15,6 +15,23 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
   In fake-drupal.php, explore un-commenting the lines in: `getAlterCallbacks()`,
   `getModuleDecoratorClasses()`, and `getThemeDecoratorClass()` to explore how
   extensibility via Builder and Decorator methods.
+* Querystring parameters:
+  * `path` delegates the response to return JSON per an accessor-like syntax
+    to represent the hierarchical tree of a given renderable. For example:
+    `/node/123?path=.` will return a JSON interpretation of the
+    renderable, while `/node/123?path=node.title` will just return the title
+    of the node. (This does not yet distinguish sanitized variables).
+  * `themed` provided along with `path` processes the RenderableBuilder as a
+    Renderable preparing any relevant template variables per the final
+    rendered state. For example: if a later preprocessor provides a `subtitle`
+    variable to the node template, this can be available via
+    `/node/123?path=subtitle&themed=1`.
+
+## @todo
+
+* Optimization
+* DX
+* Sandbox integration
 
 ## Things we need
 
@@ -26,7 +43,7 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 * Sensible, accessible, API.
    * `theme()`, `drupal_render()`, `render()`/`hide()`/`show()`
 
-## Render workflow for D9
+## Render workflow
 
 * (1) Define renderable. `$build = new RenderableBuilder('ThemeFoo', array('foo' => $foo));`
 * (2) Alter renderable. `$build->set('param', $myParam); $build->setThemeClass('ThemeBar');`
@@ -40,6 +57,8 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## Changelog
 
+* 2013-10-08 Version 2.1 Accessor class and URL-based API to access for themed
+  and non-themed structure.
 * 2013-10-05 Drillable syntax via find() method to delegate from
   RenderableBuilder to Renderable.
 * 2013-10-05 Weight support for RenderableBuilder.
