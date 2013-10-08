@@ -25,7 +25,7 @@ function delegate_response($build, Request $request, Application $app) {
     // If we have ?themed set, we'll delegate to Renderables.
     $accessor = Accessor::create($build, $request->query->get('themed'));
     // Parse path to send to accessor.
-    $params = array_filter(explode('.', $request->query->get('path')), function($a) { return isset($a); });
+    $params = array_filter(explode('.', $request->query->get('path')), function($a) { return $a !== ''; });
     // Churn through accessor.
     foreach ($params as $param) {
       $accessor = $accessor->get($param);
