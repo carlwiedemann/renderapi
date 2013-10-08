@@ -31,7 +31,8 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 * Optimization
 * DX
-* Sandbox integration
+* Unit tests
+* Drupal sandbox integration
 
 ## Things we need
 
