@@ -115,11 +115,12 @@ class RenderableBuilder {
     if (is_scalar($builder)) {
       $return = $builder;
     }
-    elseif (is_array($builder)) {
-      $return = array();
-      foreach ($builder as $key => $value) {
-        $return[$key] = RenderableBuilder::create($value);
+    elseif ($builder instanceOf RenderableBuilderCollection) {
+      $parameters = array();
+      foreach ($builder->getAllByWeight() as $key => $value) {
+        $parameters[$key] = RenderableBuilder::create($value);
       }
+      $return = new RenderableCollection($parameters);
     }
     elseif ($builder instanceOf RenderableBuilder) {
       // Builder model: Call any altering functions.

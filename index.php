@@ -62,7 +62,7 @@ $app->get('/', function(Request $request, Application $app) {
         'Sample page template',
       ),
     ) as $callback) {
-      $items[] = array(
+      $items[] = new RenderableBuilderCollection(array(
         '<strong>' . $callback[1] . '</strong>',
         new RenderableBuilder('ThemeItemList', array(
         'items' => array(
@@ -70,7 +70,7 @@ $app->get('/', function(Request $request, Application $app) {
           '<a href="' . $callback[0] . '?path=.">As JSON</a>',
           '<a href="' . $callback[0] . '?path=.&themed=1">As JSON with template variables</a>',
         ))),
-      );
+      ));
   }
 
   $build = new RenderableBuilder('ThemeSomeExamples', array(
@@ -136,7 +136,7 @@ $app->get('/built-page', function(Request $request, Application $app) {
     'content' => new RenderableBuilder('ThemeFullNode', array(
       'node' => node_load(123),
     )),
-    'sidebar_first' => array(
+    'sidebar_first' => new RenderableBuilderCollection(array(
       'Some block',
       new RenderableBuilder('ThemeItemList', array(
         'items' => array(
@@ -147,7 +147,7 @@ $app->get('/built-page', function(Request $request, Application $app) {
           )),
         ),
       )),
-    ),
+    )),
     'sidebar_second' => 'Some other block',
     'header' => 'Some header',
     'footer' => 'Some footer',

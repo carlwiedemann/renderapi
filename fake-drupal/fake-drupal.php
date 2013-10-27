@@ -7,7 +7,13 @@
 // Dummy load our renderable classes.
 include './lib/RenderableBuilder.php';
 include './lib/Renderable.php';
+
+include './lib/AbstractCollection.php';
+include './lib/RenderableBuilderCollection.php';
+include './lib/RenderableCollection.php';
+
 include './lib/RenderableDecorator.php';
+
 include './lib/Accessor.php';
 
 // Load our fake node module.
@@ -82,54 +88,10 @@ function getThemeDecoratorClass($renderable) {
 function render($build) {
 
   $markup = '';
-  // Concatenate components
-  if (is_array($build)) {
 
-    render_sort($build);
-
-    foreach ($build as $sub_build) {
-      $markup .= render($sub_build);
-    }
-  }
-  elseif (is_scalar($build) || $build instanceOf RenderableBuilder || $build instanceOf Renderable) {
+  if (is_scalar($build) || $build instanceOf RenderableBuilder || $build instanceOf Renderable || $build instanceOf RenderableBuilderCollection || $build instanceOf RenderableCollection) {
     $markup = (string) $build;
   }
 
-  // At this point, we are ready to render everything.
   return $markup;
-}
-
-function render_sort(&$builds) {
-  $sortable = FALSE;
-
-  foreach ($builds as $key => $build) {
-    if (is_array($build)) {
-      $builds[$key] = render_sort($build);
-    }
-    elseif ($build instanceOf RenderableBuilder) {
-      // Check if weight parameter exists.
-      if ($build->isWeighted()) {
-        $sortable = TRUE;
-      }
-    }
-  }
-
-  if ($sortable) {
-    uasort($builds, 'renderable_sort');
-  }
-}
-
-function renderable_sort($a, $b) {
-  $a_weight = 0;
-  $b_weight = 0;
-  if ($a instanceOf RenderableBuilder) {
-    $a_weight = $a->getWeight();
-  }
-  if ($b instanceOf RenderableBuilder) {
-    $b_weight = $b->getWeight();
-  }
-  if ($a_weight == $b_weight) {
-    return 0;
-  }
-  return ($a_weight < $b_weight) ? -1 : 1;
 }

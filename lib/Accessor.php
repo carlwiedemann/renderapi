@@ -33,9 +33,13 @@ class Accessor {
    * Getter function.
    */
   public function get($param) {
+
+    // Return null for scalars and anything else.
+    $return = NULL;
+
     if (is_array($this->value) && isset($this->value[$param])) {
       // If this is a component of an array, recurse.
-      return Accessor::create($this->value[$param], $this->themed);
+      $return = Accessor::create($this->value[$param], $this->themed);
     }
     elseif (is_object($this->value)) {
       // If this is a Renderable or a Renderable builder, call the get() method.
@@ -47,17 +51,16 @@ class Accessor {
         else {
           $value = $this->value;
         }
-        return Accessor::create($value->get($param), $this->themed);
+        $return = Accessor::create($value->get($param), $this->themed);
       }
       elseif (isset($this->value->$param)) {
         // If this is a struct, treat as much.
-        return Accessor::create($this->value->$param, $this->themed);
+        $return = Accessor::create($this->value->$param, $this->themed);
       }
     }
-    else {
-      // Return null for scalars and anything else.
-      return NULL;
-    }
+
+
+
   }
 
   /**

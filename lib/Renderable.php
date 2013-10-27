@@ -8,7 +8,7 @@
 abstract class Renderable {
 
   // Container for the variables that the renderable will store.
-  private $params = array();
+  private $parameters = array();
 
   // Whether the template variables have been prepared or not.
   private $prepared = FALSE;
@@ -17,44 +17,53 @@ abstract class Renderable {
   // prepare function.
   private $preparing = FALSE;
 
-  function __construct($params) {
-    foreach ($params as $name => $value) {
+  // Receives an array of parameters to store.
+  function __construct($parameters) {
+    foreach ($parameters as $name => $value) {
       $this->set($name, $value);
     }
   }
 
+  // Sets a parameter.
   public function set($name, $value) {
-    $this->params[$name] = $value;
+    $this->parameters[$name] = $value;
   }
 
+  // Whether the named parameter exists.
   public function exists($name) {
-    return isset($this->params[$name]);
+    return isset($this->parameters[$name]);
   }
 
+  // Returns a parameter by name.
   public function get($name) {
-    // Since this needs to implement a drillable structure, prepare the variables
-    // if they are not prepared.
     if ($this->exists($name)) {
-      return $this->params[$name];
+      return $this->parameters[$name];
     }
     else {
+      // Since this needs to implement a drillable structure, attempt to prepare
+      // the variables if they are not yet prepared.
       $this->prepareOnce();
-      return $this->exists($name) ? $this->params[$name] : NULL;
+      return $this->exists($name) ? $this->parameters[$name] : NULL;
     }
   }
 
+  // Return all parameters.
+  public function getAll() {
+    return $this->parameters;
+  }
+
+  // Whether this renderable has been prepared.
   public function isPrepared() {
     return $this->prepared;
   }
 
+  // Returns the called class of this renderable.
   public function getBuildClass() {
     return get_called_class();
   }
 
-  public function getAll() {
-    return $this->params;
-  }
-
+  // Prepare the variables only if they are not yet prepared
+  // (or being prepared).
   protected function prepareOnce() {
     if (!$this->prepared && !$this->preparing) {
       $this->preparing = TRUE;
@@ -65,7 +74,7 @@ abstract class Renderable {
   }
 
   // Invoke the given template and render. Will later depend on some theme
-  // engine.
+  // engine. @todo Dependency inject.
   public function render() {
     // Prepare variables.
     $this->prepareOnce();
@@ -84,9 +93,8 @@ abstract class Renderable {
     return ob_get_clean();
   }
 
-  // Casting to string invokes render function.
+  // Casting to string invokes render().
   function __tostring() {
-    // Return theme function.
     return $this->render();
   }
 
