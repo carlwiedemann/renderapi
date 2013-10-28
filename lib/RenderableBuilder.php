@@ -70,7 +70,6 @@ class RenderableBuilder {
     // It may make sense to have a check whether the implementor can dig into
     // the structure if it is coming from the theme layer, or a separate method
     // altogether. @see find().
-
     return $this->params[$name];
   }
 

@@ -19,7 +19,7 @@ class Accessor {
 
   function __construct($value, $themed = FALSE) {
     $this->value = $value;
-    $this->themed = $themed;
+    $this->themed = (bool) $themed;
   }
 
   /**
@@ -37,30 +37,28 @@ class Accessor {
     // Return null for scalars and anything else.
     $return = NULL;
 
-    if (is_array($this->value) && isset($this->value[$param])) {
+    if ($this->value instanceOf RenderableCollection || $this->value instanceOf RenderableBuilderCollection) {
       // If this is a component of an array, recurse.
+      $return = Accessor::create($this->value->get($param), $this->themed);
+    }
+    elseif ($this->value instanceOf Renderable || $this->value instanceOf RenderableBuilder) {
+      // If this is a Renderable or a Renderable builder, call the get() method.
+      if ($this->themed && $this->value instanceOf RenderableBuilder) {
+        $value = RenderableBuilder::create($this->value);
+      }
+      else {
+        $value = $this->value;
+      }
+      $return = Accessor::create($value->get($param), $this->themed);
+    }
+    elseif (is_object($this->value) && isset($this->value->$param)) {
+      // If this is a struct, treat as much.
+      $return = Accessor::create($this->value->$param, $this->themed);
+    }
+    elseif (is_array($this->value) && isset($this->value[$param])) {
       $return = Accessor::create($this->value[$param], $this->themed);
     }
-    elseif (is_object($this->value)) {
-      // If this is a Renderable or a Renderable builder, call the get() method.
-      if ($this->value instanceOf Renderable || $this->value instanceOf RenderableBuilder) {
-        // If necessary, create the renderable so that we can access the values.
-        if ($this->themed && $this->value instanceOf RenderableBuilder) {
-          $value = RenderableBuilder::create($this->value);
-        }
-        else {
-          $value = $this->value;
-        }
-        $return = Accessor::create($value->get($param), $this->themed);
-      }
-      elseif (isset($this->value->$param)) {
-        // If this is a struct, treat as much.
-        $return = Accessor::create($this->value->$param, $this->themed);
-      }
-    }
-
-
-
+    return $return;
   }
 
   /**
@@ -68,7 +66,7 @@ class Accessor {
    * response.
    */
   static public function convert($value, $themed) {
-    if (is_object($value) && ($value instanceOf Renderable || $value instanceOf RenderableBuilder)) {
+    if ($value instanceOf Renderable || $value instanceOf RenderableBuilder) {
       $return = array();
       // Builders get converted into Renderables.
       if ($themed && $value instanceOf RenderableBuilder) {
@@ -79,6 +77,22 @@ class Accessor {
         $return[$param_key] = Accessor::convert($param_value, $themed);
       }
       return (object) $return;
+    }
+    elseif ($value instanceOf RenderableBuilderCollection) {
+      // An array of potential values.
+      $return = array();
+      foreach ($value->getAllByWeight() as $param_key => $param_value) {
+        $return[$param_key] = Accessor::convert($param_value, $themed);
+      }
+      return $return;
+    }
+    elseif ($value instanceOf RenderableCollection) {
+      // An array of potential values.
+      $return = array();
+      foreach ($value->getAll() as $param_key => $param_value) {
+        $return[$param_key] = Accessor::convert($param_value, $themed);
+      }
+      return $return;
     }
     elseif (is_array($value)) {
       // An array of potential values.
