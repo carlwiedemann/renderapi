@@ -111,7 +111,7 @@ class RenderableBuilder extends AbstractCollection implements WeightedInterface 
     return $return;
   }
 
-  // Casting the Builder to a string creates the Renderable and returns it
+  // Casting the Builder to a string creates the renderable and returns it
   // as a string.
   function __toString() {
     return (string) RenderableBuilder::create($this);

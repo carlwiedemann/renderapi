@@ -41,8 +41,8 @@ class Accessor {
       // If this is a component of an array, recurse.
       $return = Accessor::create($this->value->get($key), $this->themed);
     }
-    elseif ($this->value instanceOf Renderable || $this->value instanceOf RenderableBuilder) {
-      // If this is a Renderable or a Renderable builder, call the get() method.
+    elseif ($this->value instanceOf AbstractRenderable || $this->value instanceOf RenderableBuilder) {
+      // If this is a AbstractRenderable or a RenderableBuilder, call the get() method.
       if ($this->themed && $this->value instanceOf RenderableBuilder) {
         $value = RenderableBuilder::create($this->value);
       }
@@ -66,7 +66,7 @@ class Accessor {
    * response.
    */
   static public function convert($variable, $themed) {
-    if ($variable instanceOf Renderable || $variable instanceOf RenderableBuilder) {
+    if ($variable instanceOf AbstractRenderable || $variable instanceOf RenderableBuilder) {
       $return = array();
       // Builders get converted into Renderables.
       if ($themed && $variable instanceOf RenderableBuilder) {
