@@ -5,13 +5,11 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
 
   protected $parameters;
 
-  protected $weight = 0;
+  protected $weight;
 
-  function __construct(Array $parameters, $weight = NULL) {
+  function __construct(Array $parameters, $weight = 0) {
     $this->parameters = $parameters;
-    if (isset($weight)) {
-      $this->setWeight($weight);
-    }
+    $this->setWeight($weight);
   }
 
   public function setWeight($weight) {

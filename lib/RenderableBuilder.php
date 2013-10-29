@@ -13,17 +13,13 @@ class RenderableBuilder extends AbstractCollection implements WeightedInterface 
   // The renderable this represents.
   private $renderable;
 
-  private $weight = 0;
+  private $weight;
 
   // Provide initial build class and parameters.
-  function __construct($buildClass, $parameters = array(), $weight = 0) {
+  function __construct($buildClass, Array $parameters = array(), $weight = 0) {
     $this->setBuildClass($buildClass);
-    foreach ($parameters as $key => $value) {
-      $this->set($key, $value);
-    }
-    if (isset($weight)) {
-      $this->setWeight($weight);
-    }
+    $this->parameters = $parameters;
+    $this->setWeight($weight);
   }
 
   public function setWeight($weight) {
