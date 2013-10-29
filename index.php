@@ -106,7 +106,7 @@ $app->get('/itemList/{items}', function($items, Request $request, Application $a
  * A compound builder showing weights, similar to a view.
  */
 $app->get('/something-fancy', function(Request $request, Application $app) {
-  $build = array(
+  $build = new RenderableBuilderCollection(array(
       new RenderableBuilder('ThemeFullNode', array(
         'node' => node_load(123),
       ), -1),
@@ -123,7 +123,7 @@ $app->get('/something-fancy', function(Request $request, Application $app) {
           'blue',
         ),
       ), -1),
-    );
+    ));
   return delegate_response($build, $request, $app);
 });
 
