@@ -1,20 +1,32 @@
 <?php
 
 /**
- * @file A renderable object.
+ * @file Abstract class for a Renderable object.
  *
  * Represents the runtime content and execution of a render array.
  */
 abstract class AbstractRenderable extends AbstractCollection {
 
-  // Whether the template variables have been prepared or not.
+  /**
+   * Whether the template variables have been prepared or not.
+   *
+   * @var boolean
+   */
   protected $prepared = FALSE;
 
-  // Whether the prepare function is being run so that we do not re-run the
-  // prepare function.
+  /**
+   * Whether the prepare function is being run so that we do not re-run the
+   * prepare function.
+   *
+   * @var boolean
+   */
   protected $preparing = FALSE;
 
-  // Returns a parameter by key.
+  /**
+   * Returns a parameter by key.
+   *
+   * @return mixed
+   */
   public function get($key) {
     if ($this->exists($key)) {
       return $this->parameters[$key];
@@ -27,18 +39,30 @@ abstract class AbstractRenderable extends AbstractCollection {
     }
   }
 
-  // Whether this renderable has been prepared.
+  /**
+   * Whether this renderable has been prepared.
+   *
+   * @return boolean
+   */
   public function isPrepared() {
     return $this->prepared;
   }
 
-  // Returns the called class of this renderable.
+  /**
+   * Returns the called class of this renderable.
+   *
+   * @return string
+   */
   public function getBuildClass() {
     return get_called_class();
   }
 
-  // Prepare the variables only if they are not yet prepared
-  // (or being prepared).
+  /**
+   * Prepare the variables only if they are not yet prepared
+   * (or being prepared).
+   *
+   * @return void
+   */
   protected function prepareOnce() {
     if (!$this->prepared && !$this->preparing) {
       $this->preparing = TRUE;
@@ -48,8 +72,13 @@ abstract class AbstractRenderable extends AbstractCollection {
     }
   }
 
-  // Invoke the given template and render. Will later depend on some theme
-  // engine. @todo Dependency inject.
+  /**
+   *  Invoke the given template and render. Will later depend on some theme
+   * engine.
+   *
+   * @todo Dependency inject
+   * @return string
+   */
   public function render() {
     // Prepare variables.
     $this->prepareOnce();
@@ -68,7 +97,9 @@ abstract class AbstractRenderable extends AbstractCollection {
     return ob_get_clean();
   }
 
-  // Casting to string invokes render().
+  /**
+   * Casting to string invokes render().
+   */
   function __tostring() {
     return $this->render();
   }
