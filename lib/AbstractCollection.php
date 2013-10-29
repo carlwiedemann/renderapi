@@ -3,7 +3,7 @@
 abstract class AbstractCollection {
   protected $parameters;
 
-  function __construct($parameters) {
+  function __construct($parameters = array()) {
     $this->parameters = $parameters;
   }
 
