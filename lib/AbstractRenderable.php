@@ -73,6 +73,13 @@ abstract class AbstractRenderable extends AbstractCollection {
   }
 
   /**
+   * Child objects must call prepare.
+   *
+   * @return void
+   */
+  abstract public function prepare();
+
+  /**
    *  Invoke the given template and render. Will later depend on some theme
    * engine.
    *
