@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @file Interface for weighted object.
+ * @file Weighted interface.
  */
 interface WeightedInterface {
 
   /**
-   * Sets integer weight parameter.
+   * Sets weight.
    *
    * @param $integer
    */
@@ -18,7 +18,7 @@ interface WeightedInterface {
   public function getWeight();
 
   /**
-   * Determines if the object has been initialized to be weighted.
+   * Whether this object has a non-zero weight.
    */
   public function isWeighted();
 
