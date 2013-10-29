@@ -32,14 +32,14 @@ class Accessor {
   /**
    * Getter function.
    */
-  public function get($param) {
+  public function get($key) {
 
     // Return null for scalars and anything else.
     $return = NULL;
 
     if ($this->value instanceOf RenderableCollection || $this->value instanceOf RenderableBuilderCollection) {
       // If this is a component of an array, recurse.
-      $return = Accessor::create($this->value->get($param), $this->themed);
+      $return = Accessor::create($this->value->get($key), $this->themed);
     }
     elseif ($this->value instanceOf Renderable || $this->value instanceOf RenderableBuilder) {
       // If this is a Renderable or a Renderable builder, call the get() method.
@@ -49,62 +49,62 @@ class Accessor {
       else {
         $value = $this->value;
       }
-      $return = Accessor::create($value->get($param), $this->themed);
+      $return = Accessor::create($value->get($key), $this->themed);
     }
-    elseif (is_object($this->value) && isset($this->value->$param)) {
+    elseif (is_object($this->value) && isset($this->value->$key)) {
       // If this is a struct, treat as much.
-      $return = Accessor::create($this->value->$param, $this->themed);
+      $return = Accessor::create($this->value->$key, $this->themed);
     }
-    elseif (is_array($this->value) && isset($this->value[$param])) {
-      $return = Accessor::create($this->value[$param], $this->themed);
+    elseif (is_array($this->value) && isset($this->value[$key])) {
+      $return = Accessor::create($this->value[$key], $this->themed);
     }
     return $return;
   }
 
   /**
-   * Recursively converts a given value into a something to be sent to a JSON
+   * Recursively converts a given variable into a something to be sent to a JSON
    * response.
    */
-  static public function convert($value, $themed) {
-    if ($value instanceOf Renderable || $value instanceOf RenderableBuilder) {
+  static public function convert($variable, $themed) {
+    if ($variable instanceOf Renderable || $variable instanceOf RenderableBuilder) {
       $return = array();
       // Builders get converted into Renderables.
-      if ($themed && $value instanceOf RenderableBuilder) {
-        $value = RenderableBuilder::create($value);
-        $value->prepare();
+      if ($themed && $variable instanceOf RenderableBuilder) {
+        $variable = RenderableBuilder::create($variable);
+        $variable->prepare();
       }
-      foreach ($value->getAll() as $param_key => $param_value) {
-        $return[$param_key] = Accessor::convert($param_value, $themed);
+      foreach ($variable->getAll() as $key => $value) {
+        $return[$key] = Accessor::convert($value, $themed);
       }
       return (object) $return;
     }
-    elseif ($value instanceOf RenderableBuilderCollection) {
+    elseif ($variable instanceOf RenderableBuilderCollection) {
       // An array of potential values.
       $return = array();
-      foreach ($value->getAllByWeight() as $param_key => $param_value) {
-        $return[$param_key] = Accessor::convert($param_value, $themed);
+      foreach ($variable->getAllByWeight() as $key => $value) {
+        $return[$key] = Accessor::convert($value, $themed);
       }
       return $return;
     }
-    elseif ($value instanceOf RenderableCollection) {
+    elseif ($variable instanceOf RenderableCollection) {
       // An array of potential values.
       $return = array();
-      foreach ($value->getAll() as $param_key => $param_value) {
-        $return[$param_key] = Accessor::convert($param_value, $themed);
+      foreach ($variable->getAll() as $key => $value) {
+        $return[$key] = Accessor::convert($value, $themed);
       }
       return $return;
     }
-    elseif (is_array($value)) {
+    elseif (is_array($variable)) {
       // An array of potential values.
       $return = array();
-      foreach ($value as $param_key => $param_value) {
-        $return[$param_key] = Accessor::convert($param_value, $themed);
+      foreach ($variable as $key => $value) {
+        $return[$key] = Accessor::convert($value, $themed);
       }
       return $return;
     }
     else {
       // This is likely a scalar or stdClass.
-      return $value;
+      return $variable;
     }
   }
 
