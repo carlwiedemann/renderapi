@@ -7,36 +7,71 @@
  */
 class RenderableBuilder extends AbstractCollection implements WeightedInterface {
 
-  // Class of the eventually built renderable.
+  /**
+   * Class name of the eventually built renderable.
+   *
+   * @var string
+   */
   private $buildClass;
 
-  // The renderable this represents.
+  /**
+   * The renderable this represents. This is stored for later access.
+   *
+   * @var AbstractRenderable
+   */
   private $renderable;
 
+  /**
+   * Given weight of the builder.
+   *
+   * @var boolean
+   */
   private $weight;
 
-  // Provide initial build class and parameters.
+  /**
+   * Provide initial build class and parameters.
+   *
+   * @param string $buildClass
+   * @param array $parameters
+   * @param integer $weight
+   * @return void
+   */
   function __construct($buildClass, Array $parameters = array(), $weight = 0) {
     $this->setBuildClass($buildClass);
     $this->parameters = $parameters;
     $this->setWeight($weight);
   }
 
+  /**
+   * @param integer $weight
+   * @return void
+   */
   public function setWeight($weight) {
     $this->weight = (int) $weight;
   }
 
+  /**
+   * @return integer
+   */
   public function getWeight() {
     return $this->weight;
   }
 
+  /**
+   * @return boolean
+   */
   public function isWeighted() {
     return $this->weight !== 0;
   }
 
-  // Suppose we have a separate method similar to get() that is used
-  // exclusively via the them layer. Consider whether there should exist a
-  // global constraint.
+  /**
+   * Suppose we have a separate method similar to get() that is used
+   * exclusively via the them layer. Consider whether there should exist a
+   * global constraint.
+   *
+   * @param string $key
+   * @return mixed
+   */
   public function find($key) {
     $return = NULL;
     if ($this->exists($key)) {
@@ -55,18 +90,27 @@ class RenderableBuilder extends AbstractCollection implements WeightedInterface 
     return $return;
   }
 
+  /**
+   * @param string
+   * @return void
+   */
   public function setBuildClass($buildClass) {
     $this->buildClass = $buildClass;
   }
 
+  /**
+   * @return string
+   */
   public function getBuildClass() {
     return $this->buildClass;
   }
 
-  // Factory to build the subclassed instance. The builder in this case may be:
-  // * A scalar.
-  // * A RenderableBuilder object.
-  // * An array of either of the above.
+  /**
+   * Factory to build the subclassed instance.
+   *
+   * @param mixed $builder
+   * @return 
+   */
   static public function create($builder) {
 
     $return = NULL;
@@ -111,8 +155,12 @@ class RenderableBuilder extends AbstractCollection implements WeightedInterface 
     return $return;
   }
 
-  // Casting the Builder to a string creates the renderable and returns it
-  // as a string.
+  /**
+   * Casting the Builder to a string creates the renderable and returns it
+   * as a string.
+   *
+   * @return string
+   */
   function __toString() {
     return (string) RenderableBuilder::create($this);
   }
