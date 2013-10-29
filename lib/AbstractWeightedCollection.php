@@ -20,7 +20,7 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
   protected $parameters_sorted;
 
   /**
-   * The weight of the given colleciton.
+   * The weight of the given collection.
    *
    * @var integer
    */
@@ -74,32 +74,48 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
    *
    * @return void
    */
-  public function sortParameters() {
+  protected function sortParameters() {
     if (!isset($this->parameters_sorted)) {
-      $this->parameters_sorted = $this->parameters;
       $sortable = FALSE;
-      foreach ($this->parameters_sorted as $key => $parameter) {
+      foreach ($this->parameters as $parameter) {
         if ($parameter instanceOf WeightedInterface && $parameter->isWeighted()) {
           $sortable = TRUE;
           break;
         }
       }
+      $this->parameters_sorted = $this->parameters;
       if ($sortable) {
-        uasort($this->parameters_sorted, array('AbstractWeightedCollection', 'uasort'));
+        if (AbstractWeightedCollection::isAssociative($this->parameters)) {
+          uasort($this->parameters_sorted, array('AbstractWeightedCollection', 'sort'));
+        }
+        else {
+          usort($this->parameters_sorted, array('AbstractWeightedCollection', 'sort'));
+        }
       }
     }
   }
 
   /**
-   * Callback for uasort().
+   * Callback for usort().
    *
    * @see AbstractWeightedCollection::sortParameters().
    * @return int
    */
-  static public function uasort($a, $b) {
+  static public function sort($a, $b) {
     $a_weight = $a instanceOf WeightedInterface ? $a->getWeight() : 0;
     $b_weight = $b instanceOf WeightedInterface ? $b->getWeight() : 0;
     return ($a_weight == $b_weight) ? 0 : (($a_weight < $b_weight) ? -1 : 1);
+  }
+
+  /**
+   * Check whether a given array is associative or not.
+   *
+   * @param array $array
+   * @return boolean
+   */
+  static public function isAssociative($array) {
+    for ($k = 0, reset($array) ; $k === key($array) ; next($array)) ++$k;
+    return $k !== count($array);
   }
 
 }

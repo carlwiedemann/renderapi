@@ -3,7 +3,7 @@
 /**
  * @file Collection of AbstractRenderable (or subclasses).
  */
-class RenderableCollection extends AbstractCollection {
+class RenderableCollection extends AbstractWeightedCollection {
 
   /**
    * Simply cast all parameters to strings and concatenate.
