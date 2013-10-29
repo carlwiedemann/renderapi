@@ -5,32 +5,24 @@
  *
  * Essentially is the equivalent of the storage component of a D8 render array.
  */
-class RenderableBuilder {
-
-  // Container for the pre-built variables of the builder.
-  private $params = array();
+class RenderableBuilder extends AbstractCollection implements WeightedInterface {
 
   // Class of the eventually built renderable.
   private $buildClass;
 
-  // If this exists in an array structure, allow for a weight parameter.
+  // The renderable this represents.
+  private $renderable;
+
   private $weight = 0;
 
-  // Whether a weight was set manually or not.
-  private $weighted = FALSE;
-
   // Provide initial build class and parameters.
-  function __construct($buildClass, $params = array(), $weight = NULL) {
+  function __construct($buildClass, $parameters = array(), $weight = NULL) {
     $this->setBuildClass($buildClass);
-    foreach ($params as $key => $value) {
+    foreach ($parameters as $key => $value) {
       $this->set($key, $value);
     }
     if (isset($weight)) {
-      $this->weighted = TRUE;
       $this->setWeight($weight);
-    }
-    else {
-      $this->setWeight(0);
     }
   }
 
@@ -43,56 +35,28 @@ class RenderableBuilder {
   }
 
   public function isWeighted() {
-    return $this->weighted;
-  }
-
-  public function set($key, $value) {
-    $this->params[$key] = $value;
-  }
-
-  public function exists($key) {
-    return isset($this->params[$key]);
-  }
-
-  public function get($key) {
-    // Consider what constitutes creation of the renderable.
-
-    // The real drillability issue: we may wish to drill into structure
-    // that pertains to the finalized renderable state, subject to variables
-    // created in the preprocessors, not yet available in the builder.
-
-    // Let's assume that if a parameter exists, we'll use it, and if it doesn't
-    // exist, we'll delegate to the finalized Renderable (the object of type
-    // $this->buildClass). There are some quetsions here in terms of execution
-    // order, that is, if this should be delegated prior to the invocation of
-    // the theme layer itself.
-
-    // It may make sense to have a check whether the implementor can dig into
-    // the structure if it is coming from the theme layer, or a separate method
-    // altogether. @see find().
-    return $this->params[$key];
+    return $this->weight !== 0;
   }
 
   // Suppose we have a separate method similar to get() that is used
   // exclusively via the them layer. Consider whether there should exist a
   // global constraint.
   public function find($key) {
-    if (!$this->exists($key)) {
+    $return = NULL;
+    if ($this->exists($key)) {
+      $return = $this->get($key);
+    }
+    elseif (!isset($this->renderable)) {
       // If this doesn't exist, assume it will be invoked in the preprocessor.
       // Therefore, create the renderable. It is feasible that the renderable
       // *could* be statically cached as a property of the instance for
       // performance reasons.
-      $renderable = RenderableBuilder::create($this);
-      $return = $renderable->get($key);
+      $this->renderable = RenderableBuilder::create($this);
     }
-    else {
-      $return = $this->get($key);
+    if ($this->renderable->exists($key)) {
+      $return = $this->renderable->get($get);
     }
     return $return;
-  }
-
-  public function getAll() {
-    return $this->params;
   }
 
   public function setBuildClass($buildClass) {
@@ -129,7 +93,7 @@ class RenderableBuilder {
         $alterCallback($builder);
       }
 
-      // Build the renderable based on the parsed params.
+      // Build the renderable based on the parsed parameters.
       $buildClass = $builder->getBuildClass();
       $renderable = new $buildClass($builder->getAll());
 
