@@ -5,10 +5,14 @@
  */
 
 // Dummy load our renderable classes.
+
+include './lib/WeightedInterface.php';
+include './lib/AbstractCollection.php';
+include './lib/AbstractWeightedCollection.php';
+
 include './lib/RenderableBuilder.php';
 include './lib/Renderable.php';
 
-include './lib/AbstractCollection.php';
 include './lib/RenderableBuilderCollection.php';
 include './lib/RenderableCollection.php';
 
