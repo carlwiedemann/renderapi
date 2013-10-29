@@ -1,7 +1,7 @@
 <?php
 
 abstract class AbstractCollection {
-  private $parameters;
+  protected $parameters;
 
   function __construct($parameters) {
     $this->parameters = $parameters;

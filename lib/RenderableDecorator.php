@@ -19,24 +19,24 @@ abstract class RenderableDecorator extends Renderable {
   }
 
   // Delegates to child.
-  public function set($name, $value) {
-    $this->renderable->set($name, $value);
+  public function set($key, $value) {
+    $this->renderable->set($key, $value);
   }
 
   // Delegates to child.
-  public function get($name) {
-    if ($this->exists($name)) {
-      return $this->renderable->get($name);
+  public function get($key) {
+    if ($this->exists($key)) {
+      return $this->renderable->get($key);
     }
     else {
       $this->prepareOnce();
-      return $this->exists($name) ? $this->renderable->get($name) : NULL;
+      return $this->exists($key) ? $this->renderable->get($key) : NULL;
     }
   }
 
   // Delegates to child.
-  public function exists($name) {
-    return $this->renderable->exists($name);
+  public function exists($key) {
+    return $this->renderable->exists($key);
   }
 
   // Delegates to child.

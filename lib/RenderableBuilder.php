@@ -22,8 +22,8 @@ class RenderableBuilder {
   // Provide initial build class and parameters.
   function __construct($buildClass, $params = array(), $weight = NULL) {
     $this->setBuildClass($buildClass);
-    foreach ($params as $name => $value) {
-      $this->set($name, $value);
+    foreach ($params as $key => $value) {
+      $this->set($key, $value);
     }
     if (isset($weight)) {
       $this->weighted = TRUE;
@@ -46,15 +46,15 @@ class RenderableBuilder {
     return $this->weighted;
   }
 
-  public function set($name, $value) {
-    $this->params[$name] = $value;
+  public function set($key, $value) {
+    $this->params[$key] = $value;
   }
 
-  public function exists($name) {
-    return isset($this->params[$name]);
+  public function exists($key) {
+    return isset($this->params[$key]);
   }
 
-  public function get($name) {
+  public function get($key) {
     // Consider what constitutes creation of the renderable.
 
     // The real drillability issue: we may wish to drill into structure
@@ -70,23 +70,23 @@ class RenderableBuilder {
     // It may make sense to have a check whether the implementor can dig into
     // the structure if it is coming from the theme layer, or a separate method
     // altogether. @see find().
-    return $this->params[$name];
+    return $this->params[$key];
   }
 
   // Suppose we have a separate method similar to get() that is used
   // exclusively via the them layer. Consider whether there should exist a
   // global constraint.
-  public function find($name) {
-    if (!$this->exists($name)) {
+  public function find($key) {
+    if (!$this->exists($key)) {
       // If this doesn't exist, assume it will be invoked in the preprocessor.
       // Therefore, create the renderable. It is feasible that the renderable
       // *could* be statically cached as a property of the instance for
       // performance reasons.
       $renderable = RenderableBuilder::create($this);
-      $return = $renderable->get($name);
+      $return = $renderable->get($key);
     }
     else {
-      $return = $this->get($name);
+      $return = $this->get($key);
     }
     return $return;
   }

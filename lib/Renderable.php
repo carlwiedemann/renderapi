@@ -8,42 +8,42 @@
 abstract class Renderable {
 
   // Container for the variables that the renderable will store.
-  private $parameters = array();
+  protected $parameters = array();
 
   // Whether the template variables have been prepared or not.
-  private $prepared = FALSE;
+  protected $prepared = FALSE;
 
   // Whether the prepare function is being run so that we do not re-run the
   // prepare function.
-  private $preparing = FALSE;
+  protected $preparing = FALSE;
 
   // Receives an array of parameters to store.
   function __construct($parameters) {
-    foreach ($parameters as $name => $value) {
-      $this->set($name, $value);
+    foreach ($parameters as $key => $value) {
+      $this->set($key, $value);
     }
   }
 
   // Sets a parameter.
-  public function set($name, $value) {
-    $this->parameters[$name] = $value;
+  public function set($key, $value) {
+    $this->parameters[$key] = $value;
   }
 
-  // Whether the named parameter exists.
-  public function exists($name) {
-    return isset($this->parameters[$name]);
+  // Whether a given parameter exists.
+  public function exists($key) {
+    return isset($this->parameters[$key]);
   }
 
-  // Returns a parameter by name.
-  public function get($name) {
-    if ($this->exists($name)) {
-      return $this->parameters[$name];
+  // Returns a parameter by key.
+  public function get($key) {
+    if ($this->exists($key)) {
+      return $this->parameters[$key];
     }
     else {
       // Since this needs to implement a drillable structure, attempt to prepare
       // the variables if they are not yet prepared.
       $this->prepareOnce();
-      return $this->exists($name) ? $this->parameters[$name] : NULL;
+      return $this->exists($key) ? $this->parameters[$key] : NULL;
     }
   }
 

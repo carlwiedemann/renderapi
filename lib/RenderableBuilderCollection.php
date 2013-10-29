@@ -1,7 +1,6 @@
 <?php
 
-class RenderableBuilderCollection {
-  private $parameters;
+class RenderableBuilderCollection extends AbstractCollection {
 
   private $parameters_sorted;
 
@@ -26,14 +25,6 @@ class RenderableBuilderCollection {
 
   public function isWeighted() {
     return $this->weighted;
-  }
-
-  public function get($key) {
-    return $this->parameters[$key];
-  }
-
-  public function getAll() {
-    return $this->parameters;
   }
 
   public function getAllByWeight() {
@@ -70,14 +61,6 @@ class RenderableBuilderCollection {
       return 0;
     }
     return ($a_weight < $b_weight) ? -1 : 1;
-  }
-
-  public function set($key, $value) {
-    $this->parameters[$key] = $value;
-  }
-
-  public function exists($key) {
-    return isset($this->parameters[$key]);
   }
 
   public function find($key) {
