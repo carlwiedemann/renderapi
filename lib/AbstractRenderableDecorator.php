@@ -9,7 +9,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable {
   private $renderable;
 
   // Receive the renderable to decorate.
-  function __construct($renderable) {
+  function __construct(AbstractRenderable $renderable) {
     $this->renderable = $renderable;
   }
 
