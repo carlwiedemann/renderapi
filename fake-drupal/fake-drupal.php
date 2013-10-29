@@ -10,13 +10,13 @@ include './lib/WeightedInterface.php';
 include './lib/AbstractCollection.php';
 include './lib/AbstractWeightedCollection.php';
 
+include './lib/AbstractRenderable.php';
 include './lib/RenderableBuilder.php';
-include './lib/Renderable.php';
+include './lib/AbstractRenderableDecorator.php';
 
 include './lib/RenderableBuilderCollection.php';
 include './lib/RenderableCollection.php';
 
-include './lib/RenderableDecorator.php';
 
 include './lib/Accessor.php';
 
@@ -87,15 +87,8 @@ function getThemeDecoratorClass($renderable) {
 }
 
 /**
- * Dummy markup render mechanism.
+ * Convert string to build.
  */
 function render($build) {
-
-  $markup = '';
-
-  if (is_scalar($build) || $build instanceOf RenderableBuilder || $build instanceOf Renderable || $build instanceOf RenderableBuilderCollection || $build instanceOf RenderableCollection) {
-    $markup = (string) $build;
-  }
-
-  return $markup;
+  return (string) $build;
 }

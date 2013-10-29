@@ -5,7 +5,7 @@
  *
  * Represents the runtime content and execution of a render array.
  */
-abstract class Renderable extends AbstractCollection {
+abstract class AbstractRenderable extends AbstractCollection {
 
   // Whether the template variables have been prepared or not.
   protected $prepared = FALSE;

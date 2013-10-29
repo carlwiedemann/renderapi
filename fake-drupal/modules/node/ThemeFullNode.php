@@ -4,7 +4,7 @@
  * @file Theme class for node.tpl.php
  */
 
-class ThemeFullNode extends Renderable {
+class ThemeFullNode extends AbstractRenderable {
   // Provide template via some dummy registry.
   function getRegisteredTemplate() {
     return './fake-drupal/modules/node/node.tpl.php';

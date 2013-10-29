@@ -4,7 +4,7 @@
  * @file Theme decorator class for ThemeFullNode.
  */
 
-class PragueFullNodeDecorator extends RenderableDecorator {
+class PragueFullNodeDecorator extends AbstractRenderableDecorator {
   // Provide template override.
   function getRegisteredTemplate() {
     return './fake-drupal/themes/prague/node.tpl.php';

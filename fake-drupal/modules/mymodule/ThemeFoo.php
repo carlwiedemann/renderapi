@@ -4,7 +4,7 @@
  * @file Theme class for foo.tpl.php.
  */
 
-class ThemeFoo extends Renderable {
+class ThemeFoo extends AbstractRenderable {
   // Provide template via some dummy registry.
   function getRegisteredTemplate() {
     return './fake-drupal/modules/mymodule/foo.tpl.php';
