@@ -5,10 +5,7 @@
  *
  * Represents the runtime content and execution of a render array.
  */
-abstract class Renderable {
-
-  // Container for the variables that the renderable will store.
-  protected $parameters = array();
+abstract class Renderable extends AbstractCollection {
 
   // Whether the template variables have been prepared or not.
   protected $prepared = FALSE;
@@ -16,23 +13,6 @@ abstract class Renderable {
   // Whether the prepare function is being run so that we do not re-run the
   // prepare function.
   protected $preparing = FALSE;
-
-  // Receives an array of parameters to store.
-  function __construct($parameters) {
-    foreach ($parameters as $key => $value) {
-      $this->set($key, $value);
-    }
-  }
-
-  // Sets a parameter.
-  public function set($key, $value) {
-    $this->parameters[$key] = $value;
-  }
-
-  // Whether a given parameter exists.
-  public function exists($key) {
-    return isset($this->parameters[$key]);
-  }
 
   // Returns a parameter by key.
   public function get($key) {
@@ -45,11 +25,6 @@ abstract class Renderable {
       $this->prepareOnce();
       return $this->exists($key) ? $this->parameters[$key] : NULL;
     }
-  }
-
-  // Return all parameters.
-  public function getAll() {
-    return $this->parameters;
   }
 
   // Whether this renderable has been prepared.
