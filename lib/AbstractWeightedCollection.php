@@ -1,6 +1,6 @@
 <?php
 
-class WeightedCollection extends AbstractCollection implements WeightedInterface {
+abstract class AbstractWeightedCollection extends AbstractCollection implements WeightedInterface {
   protected $parameters_sorted;
 
   protected $parameters;
@@ -42,7 +42,7 @@ class WeightedCollection extends AbstractCollection implements WeightedInterface
         }
       }
       if ($sortable) {
-        uasort($this->parameters_sorted, array('WeightedCollection', 'uasort'));
+        uasort($this->parameters_sorted, array('AbstractWeightedCollection', 'uasort'));
       }
     }
   }
