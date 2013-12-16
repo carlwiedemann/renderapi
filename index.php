@@ -40,6 +40,47 @@ function delegate_response($build, Request $request, Application $app) {
 }
 
 /**
+ * Shortcut for factory for DX purposes.
+ *
+ * @param mixed
+ *   The first parameter could be either the classname (if creating a
+ *   RenderableBuilder object) or an array of RenderableBuilder objects (if creating
+ *   a RenderableBuilderCollection object).
+ *
+ * @param mixed
+ *   The second parameter could either be the array of arguments (if creating a
+ *   RenderableBuilder object) or the weight (if creating a
+ *   RenderableBuilderCollection object).
+ *
+ * @param mixed
+ *   The third parameter is the weight if creating a RenderableBuilder object.
+ *
+ * @return Will either return a RenderableBuilder or a
+ * RenderableBuilderCollection depending on arguments.
+ */
+function r() {
+  $args = func_get_args();
+  // If the first argument is a string, this follows what we'd expect for
+  // a RenderableBuilder.
+  if (is_string($args[0])) {
+    $class = $args[0];
+    $params = isset($args[1]) ? $args[1] : NULL;
+    $weight = isset($args[2]) ? $args[2] : NULL;
+    return new RenderableBuilder($class, $params, $weight);
+  }
+  // If the first argument is an array, this follows what we'd expect for
+  // a RenderableBuilderCollection.
+  elseif (is_array($args[0])) {
+    $params = $args[0];
+    $weight = isset($args[1]) ? $args[1] : NULL;
+    return new RenderableBuilderCollection($params, $weight);
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
  * Show some examples, complete with JSON equivalence.
  */
 $app->get('/', function(Request $request, Application $app) {
@@ -62,9 +103,9 @@ $app->get('/', function(Request $request, Application $app) {
         'Sample page template',
       ),
     ) as $callback) {
-      $items[] = new RenderableBuilderCollection(array(
+      $items[] = r(array(
         '<strong>' . $callback[1] . '</strong>',
-        new RenderableBuilder('ThemeItemList', array(
+        r('ThemeItemList', array(
         'items' => array(
           '<a href="' . $callback[0] . '">HTML</a>',
           '<a href="' . $callback[0] . '?path=.">As JSON</a>',
@@ -73,8 +114,8 @@ $app->get('/', function(Request $request, Application $app) {
       ));
   }
 
-  $build = new RenderableBuilder('ThemeSomeExamples', array(
-      'examples' => new RenderableBuilder('ThemeItemList', array(
+  $build = r('ThemeSomeExamples', array(
+      'examples' => r('ThemeItemList', array(
         'items' => $items,
       )),
     ));
@@ -86,9 +127,11 @@ $app->get('/', function(Request $request, Application $app) {
  * Simply a node.
  */
 $app->get('/node/{id}', function($id, Request $request, Application $app) {
-  $build = new RenderableBuilder('ThemeFullNode', array(
+
+  $build = r('ThemeFullNode', array(
     'node' => node_load($id),
   ));
+
   return delegate_response($build, $request, $app);
 });
 
@@ -96,9 +139,11 @@ $app->get('/node/{id}', function($id, Request $request, Application $app) {
  * Simply an ItemList.
  */
 $app->get('/itemList/{items}', function($items, Request $request, Application $app) {
-  $build = new RenderableBuilder('ThemeItemList', array(
+
+  $build = r('ThemeItemList', array(
     'items' => explode(',', $items),
   ));
+
   return delegate_response($build, $request, $app);
 });
 
@@ -106,17 +151,18 @@ $app->get('/itemList/{items}', function($items, Request $request, Application $a
  * A compound builder showing weights, similar to a view.
  */
 $app->get('/something-fancy', function(Request $request, Application $app) {
-  $build = new RenderableBuilderCollection(array(
-      new RenderableBuilder('ThemeFullNode', array(
+
+  $build = r(array(
+      r('ThemeFullNode', array(
         'node' => node_load(123),
       ), -1),
-      new RenderableBuilder('ThemeFullNode', array(
+      r('ThemeFullNode', array(
         'node' => node_load(456),
       ), 3),
-      new RenderableBuilder('ThemeFullNode', array(
+      r('ThemeFullNode', array(
         'node' => node_load(789),
       ), 0),
-      new RenderableBuilder('ThemeItemList', array(
+      r('ThemeItemList', array(
         'items' => array(
           'red',
           'green',
@@ -124,6 +170,7 @@ $app->get('/something-fancy', function(Request $request, Application $app) {
         ),
       ), -1),
     ));
+
   return delegate_response($build, $request, $app);
 });
 
@@ -131,18 +178,19 @@ $app->get('/something-fancy', function(Request $request, Application $app) {
  * A more involved page.
  */
 $app->get('/built-page', function(Request $request, Application $app) {
-  $build = new RenderableBuilder('ThemePage', array(
+
+  $build = r('ThemePage', array(
     'head_title' => 'Hello',
-    'content' => new RenderableBuilder('ThemeFullNode', array(
+    'content' => r('ThemeFullNode', array(
       'node' => node_load(123),
     )),
-    'sidebar_first' => new RenderableBuilderCollection(array(
+    'sidebar_first' => r(array(
       'Some block',
-      new RenderableBuilder('ThemeItemList', array(
+      r('ThemeItemList', array(
         'items' => array(
           'first',
           'second',
-          new RenderableBuilder('ThemeFullNode', array(
+          r('ThemeFullNode', array(
             'node' => node_load(456),
           )),
         ),
@@ -152,6 +200,7 @@ $app->get('/built-page', function(Request $request, Application $app) {
     'header' => 'Some header',
     'footer' => 'Some footer',
   ));
+
   return delegate_response($build, $request, $app);
 });
 
