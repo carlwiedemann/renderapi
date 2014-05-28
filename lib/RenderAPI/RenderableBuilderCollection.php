@@ -28,6 +28,10 @@ class RenderableBuilderCollection extends AbstractWeightedCollection {
     return $return;
   }
 
+  public function render() {
+    return (string) RenderableBuilder::create($this);
+  }
+
   /**
    * Casting the Builder to a string creates the renderable and returns it
    * as a string.
@@ -35,7 +39,7 @@ class RenderableBuilderCollection extends AbstractWeightedCollection {
    * @return string
    */
   function __toString() {
-    return (string) RenderableBuilder::create($this);
+    return $this->render();
   }
 
 }

@@ -7,11 +7,6 @@
 use RenderAPI\AbstractRenderableDecorator;
 
 class MyModuleFullNodeDecorator extends AbstractRenderableDecorator {
-  // Simply use parent template definition.
-  function getRegisteredTemplate() {
-    return parent::getRegisteredTemplate();
-  }
-
   // Provide variable overrides.
   function prepare() {
     // Prepare variables from parent objects.

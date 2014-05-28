@@ -7,10 +7,8 @@
 use RenderAPI\AbstractRenderable;
 
 class ThemeItemList extends AbstractRenderable {
-  // Provide template via some dummy registry.
-  function getRegisteredTemplate() {
-    return './fake-drupal/includes/theme/templates/item-list.tpl.php';
-  }
+
+  protected $templateName = 'item-list';
 
   function prepare() {
     // Default to unordered list.

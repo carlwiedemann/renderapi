@@ -1,0 +1,17 @@
+{% if items %}
+  {% if type == 'ol' %}
+  <ol>
+  {% else %}
+  <ul>
+  {% endif %}
+
+  {% for item in items %}
+    <li>{{ item }}</li>
+  {% endfor %}
+
+  {% if type == 'ol' %}
+  </ol>
+  {% else %}
+  </ul>
+  {% endif %}
+{% endif %}

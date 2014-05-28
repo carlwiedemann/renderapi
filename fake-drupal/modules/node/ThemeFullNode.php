@@ -7,10 +7,8 @@
 use RenderAPI\AbstractRenderable;
 
 class ThemeFullNode extends AbstractRenderable {
-  // Provide template via some dummy registry.
-  function getRegisteredTemplate() {
-    return './fake-drupal/modules/node/node.tpl.php';
-  }
+
+  protected $templateName = 'node';
 
   // Provide variable overrides.
   function prepare() {

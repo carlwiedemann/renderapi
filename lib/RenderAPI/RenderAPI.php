@@ -2,10 +2,13 @@
 
 namespace RenderAPI;
 
+use Silex\Application;
 use RenderAPI\RenderableBuilder;
 use RenderAPI\RenderableBuilderCollection;
 
 class RenderAPI {
+
+  const ENGINE_NAME = 'twig';
 
   /**
    * Render factory method.
@@ -26,7 +29,7 @@ class RenderAPI {
    * @return Will either return a RenderableBuilder or a
    * RenderableBuilderCollection depending on arguments.
    */
-  static function create() {
+  public static function create() {
     $args = func_get_args();
     // If the first argument is a string, this follows what we'd expect for
     // a RenderableBuilder.
@@ -46,6 +49,86 @@ class RenderAPI {
     else {
       return NULL;
     }
+  }
+
+  public function getEngineName() {
+    return RenderAPI::ENGINE_NAME;
+  }
+
+  public static function setApp(Application $app = NULL) {
+    static $_app;
+    if (isset($app)) {
+      $_app = $app;
+    }
+    return $_app;
+  }
+
+  public static function getApp() {
+    return RenderAPI::setApp();
+  }
+
+  public static function renderFromTemplate($renderable) {
+
+    $templates = RenderAPI::getTemplateNames($renderable);
+    $template = $templates[RenderAPI::getEngineName()];
+    $vars = $renderable->getAll();
+
+    switch (RenderAPI::getEngineName()) {
+      case 'phptemplate':
+        return RenderAPI::renderPHPTemplateTemplate($template, $vars);
+        break;
+      case 'twig':
+        return RenderAPI::renderTwigTemplate($template, $vars);
+        break;
+    }
+  }
+
+  /**
+   * Get template file names based on various engines.
+   */
+  public function getTemplateNames($renderable) {
+    if (!$renderable->isTemplateNameSet()) {
+      // throw new Exception('No templateName defined!');
+      die('No templateName defined in ' . get_class($renderable) . '!');
+    }
+
+    return array(
+      'phptemplate' => $renderable->getTemplateDir() . '/' . $renderable->getTemplateName() . '.tpl.php',
+      'twig' => $renderable->getTemplateName()   . '.html.twig',
+    );
+  }
+
+  private static function renderPHPTemplateTemplate($template, $vars) {
+    // This is PHPTemplate for now.
+    extract($vars, EXTR_SKIP);
+
+    // Start output buffering.
+    ob_start();
+
+    // Include the template file.
+    include $template;
+
+    // End buffering and return its contents.
+    return ob_get_clean();
+  }
+
+  private static function renderTwigTemplate($template, $vars) {
+    $app = RenderAPI::getApp();
+    if (!isset($app)) {
+      die('No application defined!');
+    }
+    // Check if template exists?
+    $exists = FALSE;
+    foreach (getTwigThemeDirectories() as $dir) {
+      if (file_exists($dir . '/' . $template)) {
+        $exists = TRUE;
+        break;
+      }
+    }
+    if (!$exists) {
+      die('File ' . $template . ' not found!');
+    }
+    return $app['twig']->render($template, $vars);
   }
 
 }

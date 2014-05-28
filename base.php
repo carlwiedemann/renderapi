@@ -27,8 +27,10 @@ function delegate_response($build, Request $request, Application $app) {
     return $app->json($accessor->value());
   }
   else {
+    // Set application to leverage proper theme engine.
+    RenderAPI::setApp($app);
     // Return rendered HTML.
-    return render($build);
+    return $build->render();
   }
 }
 

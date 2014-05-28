@@ -7,10 +7,7 @@
 use RenderAPI\AbstractRenderable;
 
 class ThemeFoo extends AbstractRenderable {
-  // Provide template via some dummy registry.
-  function getRegisteredTemplate() {
-    return './fake-drupal/modules/mymodule/foo.tpl.php';
-  }
+  protected $templateName = 'foo';
 
   // Prepare variables for the foo.tpl.php template.
   function prepare() {

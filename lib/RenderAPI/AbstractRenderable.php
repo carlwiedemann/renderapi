@@ -12,6 +12,11 @@ use RenderAPI\AbstractCollection;
 abstract class AbstractRenderable extends AbstractCollection {
 
   /**
+   * The filename of the template to be used.
+   */
+  protected $templateName;
+
+  /**
    * Whether the template variables have been prepared or not.
    *
    * @var boolean
@@ -83,35 +88,35 @@ abstract class AbstractRenderable extends AbstractCollection {
    */
   abstract public function prepare();
 
+  public function getTemplateName() {
+    return $this->templateName;
+  }
+
+  public function isTemplateNameSet() {
+    return isset($this->templateName);
+  }
+
+  public function getTemplateDir() {
+    $reflection = new \ReflectionClass($this);
+    return dirname($reflection->getFileName());
+  }
+
   /**
    *  Invoke the given template and render. Will later depend on some theme
    * engine.
    *
-   * @todo Dependency inject
    * @return string
    */
   public function render() {
     // Prepare variables.
     $this->prepareOnce();
-
-    $template = $this->getRegisteredTemplate();
-
-    extract($this->getAll(), EXTR_SKIP);
-
-    // Start output buffering.
-    ob_start();
-
-    // Include the template file.
-    include $template;
-
-    // End buffering and return its contents.
-    return ob_get_clean();
+    return RenderAPI::renderFromTemplate($this);
   }
 
   /**
-   * Casting to string invokes render().
+   * Cast to string.
    */
-  function __tostring() {
+  public function __toString() {
     return $this->render();
   }
 

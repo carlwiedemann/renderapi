@@ -113,7 +113,7 @@ class RenderableBuilder extends AbstractCollection implements WeightedInterface 
    * @param mixed $builder
    * @return 
    */
-  static public function create($builder) {
+  public static function create($builder) {
 
     $return = NULL;
 
@@ -157,14 +157,12 @@ class RenderableBuilder extends AbstractCollection implements WeightedInterface 
     return $return;
   }
 
-  /**
-   * Casting the Builder to a string creates the renderable and returns it
-   * as a string.
-   *
-   * @return string
-   */
-  function __toString() {
-    return (string) RenderableBuilder::create($this);
+  public function render() {
+    return RenderableBuilder::create($this)->render();
+  }
+
+  public function __toString() {
+    return $this->render();
   }
 
 }

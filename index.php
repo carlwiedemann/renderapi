@@ -17,6 +17,15 @@ $app = new Silex\Application();
 
 $app['debug'] = TRUE;
 
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+  'twig.path' => getTwigThemeDirectories(),
+  'twig.options' => array(
+    'cache' => __DIR__ . '/_tmp',
+    'autoescape' => FALSE,
+    'auto_reload' => TRUE,
+  ),
+));
+
 /**
  * Show some examples, complete with JSON equivalence.
  */

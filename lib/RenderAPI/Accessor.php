@@ -46,7 +46,7 @@ class Accessor {
    * @param boolean $themed
    * @return Accessor
    */
-  static public function create($value, $themed = FALSE) {
+  public static function create($value, $themed = FALSE) {
     return new Accessor($value, $themed);
   }
 
@@ -94,7 +94,7 @@ class Accessor {
    * @param mixed $variable
    * @return mixed
    */
-  static public function convert($variable, $themed) {
+  public static function convert($variable, $themed) {
     if ($variable instanceOf AbstractRenderable || $variable instanceOf RenderableBuilder) {
       $return = array();
       // Builders get converted into Renderables.

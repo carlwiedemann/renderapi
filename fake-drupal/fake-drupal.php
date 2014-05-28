@@ -4,6 +4,8 @@
  * @file I am fake Drupal!
  */
 
+use Silex\Application;
+
 // Load our fake node module.
 include './fake-drupal/modules/node/node.module.php';
 include './fake-drupal/modules/node/ThemeFullNode.php';
@@ -68,6 +70,26 @@ function getThemeDecoratorClass($renderable) {
   //     break;
   // }
   return $class;
+}
+
+function getModules() {
+  return array(
+    'node' => (object) array(
+      'name' => 'node',
+      'dir' => __DIR__ . '/modules/node',
+    )
+  );
+}
+
+function getTwigThemeDirectories() {
+  $directories = array(
+    './views',
+    './fake-drupal/includes/theme',
+  );
+  foreach (getModules() as $name => $moduleData) {
+    $directories[] = $moduleData->dir;
+  }
+  return $directories;
 }
 
 /**

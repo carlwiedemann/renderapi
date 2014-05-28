@@ -103,7 +103,7 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
    * @see AbstractWeightedCollection::sortParameters().
    * @return int
    */
-  static public function sort($a, $b) {
+  public static function sort($a, $b) {
     $a_weight = $a instanceOf WeightedInterface ? $a->getWeight() : 0;
     $b_weight = $b instanceOf WeightedInterface ? $b->getWeight() : 0;
     return ($a_weight == $b_weight) ? 0 : (($a_weight < $b_weight) ? -1 : 1);
@@ -115,7 +115,7 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
    * @param array $array
    * @return boolean
    */
-  static public function isAssociative($array) {
+  public static function isAssociative($array) {
     for ($k = 0, reset($array) ; $k === key($array) ; next($array)) ++$k;
     return $k !== count($array);
   }
