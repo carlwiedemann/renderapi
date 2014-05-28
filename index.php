@@ -5,84 +5,20 @@
  */
 
 $loader = require_once __DIR__ . '/vendor/autoload.php';
-// $loader->add('RenderAPI', __DIR__ . '/lib/RenderAPIa');
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use RenderAPI\RenderableBuilder;
-use RenderAPI\RenderableBuilderCollection;
+
 use RenderAPI\Accessor;
+use RenderAPI\RenderAPI;
 
 // Let's pretend we are Drupal, at least vaguely. :)
-include('./fake-drupal/fake-drupal.php');
+include './fake-drupal/fake-drupal.php';
+include './base.php';
 
 $app = new Silex\Application();
 
 $app['debug'] = TRUE;
-
-/**
- * Provides a Silex response per rendered HTML, or an JSON response.
- */
-function delegate_response($build, Request $request, Application $app) {
-  // If we have ?path set, we'll return as JSON.
-  if ($request->query->get('path')) {
-    // If we have ?themed set, we'll delegate to Renderables.
-    $accessor = Accessor::create($build, $request->query->get('themed'));
-    // Parse path to send to accessor.
-    $params = array_filter(explode('.', $request->query->get('path')), function($a) { return $a !== ''; });
-    // Churn through accessor.
-    foreach ($params as $param) {
-      $accessor = $accessor->get($param);
-    }
-    // Return value as JSON.
-    return $app->json($accessor->value());
-  }
-  else {
-    // Return rendered HTML.
-    return render($build);
-  }
-}
-
-/**
- * Shortcut for factory for DX purposes.
- *
- * @param mixed
- *   The first parameter could be either the classname (if creating a
- *   RenderableBuilder object) or an array of RenderableBuilder objects (if creating
- *   a RenderableBuilderCollection object).
- *
- * @param mixed
- *   The second parameter could either be the array of arguments (if creating a
- *   RenderableBuilder object) or the weight (if creating a
- *   RenderableBuilderCollection object).
- *
- * @param mixed
- *   The third parameter is the weight if creating a RenderableBuilder object.
- *
- * @return Will either return a RenderableBuilder or a
- * RenderableBuilderCollection depending on arguments.
- */
-function r() {
-  $args = func_get_args();
-  // If the first argument is a string, this follows what we'd expect for
-  // a RenderableBuilder.
-  if (is_string($args[0])) {
-    $class = $args[0];
-    $params = isset($args[1]) ? $args[1] : NULL;
-    $weight = isset($args[2]) ? $args[2] : NULL;
-    return new RenderableBuilder($class, $params, $weight);
-  }
-  // If the first argument is an array, this follows what we'd expect for
-  // a RenderableBuilderCollection.
-  elseif (is_array($args[0])) {
-    $params = $args[0];
-    $weight = isset($args[1]) ? $args[1] : NULL;
-    return new RenderableBuilderCollection($params, $weight);
-  }
-  else {
-    return NULL;
-  }
-}
 
 /**
  * Show some examples, complete with JSON equivalence.
