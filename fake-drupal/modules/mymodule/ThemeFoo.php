@@ -4,6 +4,8 @@
  * @file Theme class for foo.tpl.php.
  */
 
+use RenderAPI\AbstractRenderable;
+
 class ThemeFoo extends AbstractRenderable {
   // Provide template via some dummy registry.
   function getRegisteredTemplate() {

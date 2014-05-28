@@ -1,5 +1,7 @@
 <?php
 
+namespace RenderAPI;
+
 abstract class AbstractCollection {
 
   /**

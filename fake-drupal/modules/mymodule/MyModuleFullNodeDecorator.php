@@ -4,6 +4,8 @@
  * @file Theme decorator class for ThemeFullNode.
  */
 
+use RenderAPI\AbstractRenderableDecorator;
+
 class MyModuleFullNodeDecorator extends AbstractRenderableDecorator {
   // Simply use parent template definition.
   function getRegisteredTemplate() {

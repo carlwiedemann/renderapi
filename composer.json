@@ -1,6 +1,11 @@
 {
-    "require": {
-        "silex/silex": "1.*"
-        "twig/twig": "1.12.*",
+  "require": {
+      "silex/silex": "1.*",
+      "twig/twig": "1.15.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "RenderAPI\\": "lib/RenderAPI"
     }
+  }
 }

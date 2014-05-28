@@ -1,5 +1,7 @@
 <?php
 
+namespace RenderAPI;
+
 /**
  * @file A builder class to generate a renderable object.
  *

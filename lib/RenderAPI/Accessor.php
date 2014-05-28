@@ -1,5 +1,7 @@
 <?php
 
+namespace RenderAPI;
+
 /**
  * @file Accessor class.
  *

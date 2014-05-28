@@ -1,5 +1,9 @@
 <?php
 
+namespace RenderAPI;
+
+use RenderAPI\AbstractCollection;
+
 /**
  * @file Abstract class for a Renderable object.
  *

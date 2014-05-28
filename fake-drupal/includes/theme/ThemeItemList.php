@@ -4,6 +4,8 @@
  * @file Theme callback for an item list.
  */
 
+use RenderAPI\AbstractRenderable;
+
 class ThemeItemList extends AbstractRenderable {
   // Provide template via some dummy registry.
   function getRegisteredTemplate() {

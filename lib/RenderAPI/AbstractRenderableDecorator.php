@@ -1,5 +1,7 @@
 <?php
 
+namespace RenderAPI;
+
 /**
  * @file Decorator class to allow modules and themes to alter parameters for
  * templates.

@@ -4,6 +4,8 @@
  * @file Theme class for node.tpl.php
  */
 
+use RenderAPI\AbstractRenderable;
+
 class ThemeFullNode extends AbstractRenderable {
   // Provide template via some dummy registry.
   function getRegisteredTemplate() {

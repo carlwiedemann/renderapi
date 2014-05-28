@@ -4,10 +4,14 @@
  * @file Demo index script for renderable.
  */
 
-require_once __DIR__ . '/vendor/autoload.php';
+$loader = require_once __DIR__ . '/vendor/autoload.php';
+// $loader->add('RenderAPI', __DIR__ . '/lib/RenderAPIa');
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use RenderAPI\RenderableBuilder;
+use RenderAPI\RenderableBuilderCollection;
+use RenderAPI\Accessor;
 
 // Let's pretend we are Drupal, at least vaguely. :)
 include('./fake-drupal/fake-drupal.php');

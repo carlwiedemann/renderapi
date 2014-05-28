@@ -1,5 +1,7 @@
 <?php
 
+namespace RenderAPI;
+
 /**
  * @file Collection of AbstractRenderable (or subclasses).
  */

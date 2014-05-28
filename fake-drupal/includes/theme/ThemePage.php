@@ -3,6 +3,9 @@
 /**
  * @file Handler for page.tpl.php
  */
+
+use RenderAPI\AbstractRenderable;
+
 class ThemePage extends AbstractRenderable {
   // Provide template via some dummy registry.
   function getRegisteredTemplate() {

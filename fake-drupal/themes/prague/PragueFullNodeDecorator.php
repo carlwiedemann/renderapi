@@ -4,6 +4,8 @@
  * @file Theme decorator class for ThemeFullNode.
  */
 
+use RenderAPI\AbstractRenderableDecorator;
+
 class PragueFullNodeDecorator extends AbstractRenderableDecorator {
   // Provide template override.
   function getRegisteredTemplate() {

@@ -1,22 +1,8 @@
 <?php
 
 /**
- * @file I am fake Drupal.
+ * @file I am fake Drupal!
  */
-
-// Dummy load our renderable classes.
-
-include './lib/WeightedInterface.php';
-include './lib/AbstractCollection.php';
-include './lib/AbstractWeightedCollection.php';
-include './lib/AbstractRenderable.php';
-include './lib/AbstractRenderableDecorator.php';
-
-include './lib/RenderableBuilder.php';
-include './lib/RenderableBuilderCollection.php';
-include './lib/RenderableCollection.php';
-
-include './lib/Accessor.php';
 
 // Load our fake node module.
 include './fake-drupal/modules/node/node.module.php';

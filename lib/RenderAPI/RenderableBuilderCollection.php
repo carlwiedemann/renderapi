@@ -1,5 +1,7 @@
 <?php
 
+namespace RenderAPI;
+
 /**
  * @file Provides collections class for RemderableBuilder
  */
