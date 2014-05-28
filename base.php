@@ -4,6 +4,8 @@
  * @file Functions for the sake of our Silex example.
  */
 
+use RenderAPI\Accessor;
+use RenderAPI\RenderAPI;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 

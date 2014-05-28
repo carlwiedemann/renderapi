@@ -9,9 +9,6 @@ $loader = require_once __DIR__ . '/vendor/autoload.php';
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
-use RenderAPI\Accessor;
-use RenderAPI\RenderAPI;
-
 // Let's pretend we are Drupal, at least vaguely. :)
 include './fake-drupal/fake-drupal.php';
 include './base.php';
