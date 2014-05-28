@@ -24,7 +24,7 @@ include './fake-drupal/includes/theme/ThemePage.php';
 include './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
 
 /**
- * Dummy registry for callbacks that would alter our builder.
+ * Fakes a registry for callbacks that would alter our builder.
  */
 function getAlterCallbacks($builder) {
   $callbacks = array();
@@ -44,7 +44,7 @@ function getAlterCallbacks($builder) {
 }
 
 /**
- * Dummy registry for modules that may be decorating the renderable.
+ * Fakes a registry for modules that may be decorating the renderable.
  */
 function getModuleDecoratorClasses($renderable) {
   $classes = array();
@@ -59,7 +59,7 @@ function getModuleDecoratorClasses($renderable) {
 }
 
 /**
- * A registry for decorators that may apply to the renderable.
+ * Fakes registry for decorators that may apply to the renderable.
  */
 function getThemeDecoratorClass($renderable) {
   $class = NULL;
@@ -72,6 +72,9 @@ function getThemeDecoratorClass($renderable) {
   return $class;
 }
 
+/**
+ * Fakes module registry.
+ */
 function getModules() {
   return array(
     'node' => (object) array(
@@ -81,20 +84,15 @@ function getModules() {
   );
 }
 
+/**
+ * Fakes theme directory registry.
+ */
 function getTwigThemeDirectories() {
   $directories = array(
-    './views',
     './fake-drupal/includes/theme',
   );
   foreach (getModules() as $name => $moduleData) {
     $directories[] = $moduleData->dir;
   }
   return $directories;
-}
-
-/**
- * Convert string to build.
- */
-function render($build) {
-  return (string) $build;
 }

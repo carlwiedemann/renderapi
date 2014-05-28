@@ -29,7 +29,7 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## @todo
 
-* Twig integration
+* Remove PHPTemplate
 * Front-end template example
 * Optimization
 * DX
