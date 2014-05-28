@@ -58,9 +58,6 @@ class Accessor {
    */
   public function get($key) {
 
-    // Return null for scalars and anything else.
-    $return = NULL;
-
     if ($this->value instanceOf RenderableCollection || $this->value instanceOf RenderableBuilderCollection) {
       // If this is a component of an array, recurse.
       $return = Accessor::create($this->value->get($key), $this->themed);
@@ -82,6 +79,11 @@ class Accessor {
     elseif (is_array($this->value) && isset($this->value[$key])) {
       $return = Accessor::create($this->value[$key], $this->themed);
     }
+    else {
+      // This didn't find anything, so it must be invalid key.
+      $return = Accessor::create(NULL);
+    }
+
     return $return;
   }
 
