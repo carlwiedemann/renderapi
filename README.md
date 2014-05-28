@@ -60,6 +60,7 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## Changelog
 
+* 2014-05-28 Version 2.2 Better code structure and autoloading
 * 2013-10-08 Version 2.1 Accessor class and URL-based API to access for themed
   and non-themed structure.
 * 2013-10-05 Drillable syntax via find() method to delegate from
