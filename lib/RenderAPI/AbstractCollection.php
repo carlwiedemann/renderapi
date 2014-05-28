@@ -23,7 +23,7 @@ abstract class AbstractCollection {
    * @return mixed
    */
   public function get($key) {
-    return $this->parameters[$key];
+    return isset($this->parameters[$key]) ? $this->parameters[$key] : NULL;
   }
 
   /**
