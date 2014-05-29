@@ -107,15 +107,7 @@ class RenderAPI {
       // throw new Exception('No theme engine defined!');
       die('No theme engine defined!');
     }
-    // Check if template exists?
-    $exists = FALSE;
-    foreach (array_reverse(FakeDrupal::getTemplateDirectories($renderable)) as $dir) {
-      if (file_exists($dir . '/' . $template)) {
-        $exists = TRUE;
-        break;
-      }
-    }
-    if (!$exists) {
+    if (!FakeDrupal::templateExists($renderable)) {
       // throw new Exception('File ' . $template . ' not found!');
       die('File ' . $template . ' not found!');
     }

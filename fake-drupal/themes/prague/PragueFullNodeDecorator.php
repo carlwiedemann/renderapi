@@ -6,6 +6,11 @@
 
 use RenderAPI\AbstractRenderableDecorator;
 
+/**
+ * @ThemeDecorator(
+ *   decorates = "ThemeFullNode"
+ * )
+ */
 class PragueFullNodeDecorator extends AbstractRenderableDecorator {
 
   function prepare() {

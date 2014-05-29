@@ -11,123 +11,137 @@ use RenderAPI\RenderableInterface;
 
 class FakeDrupal {
 
+  private static $enabledModules;
+  private static $enabledThemes;
+  private static $extensionFileRegistry;
+  private static $extensionPathRegistry;
+
+  public static function setEnabledModules(Array $enabledModules) {
+    static::$enabledModules = $enabledModules;
+  }
+
+  public static function getEnabledModules() {
+    return static::$enabledModules;
+  }
+
+  public static function setEnabledThemes(Array $enabledThemes) {
+    static::$enabledThemes = $enabledThemes;
+  }
+
+  public static function getEnabledThemes() {
+    return static::$enabledThemes;
+  }
+
+  public static function getEnabledExtensions() {
+    return array_merge(FakeDrupal::getEnabledModules(), FakeDrupal::getEnabledThemes());
+  }
+
+  public static function getExtensionPathRegistry() {
+    $registry = (object) array();
+    foreach (FakeDrupal::getEnabledModules() as $moduleName) {
+      $registry->$moduleName = './fake-drupal/modules/' . $moduleName;
+    }
+    foreach (FakeDrupal::getEnabledThemes() as $themeName) {
+      $registry->$themeName = './fake-drupal/themes/' . $themeName;
+    }
+    return $registry;
+  }
+
+  public static function getExtensionFileRegistry() {
+    if (!isset(static::$extensionFileRegistry)) {
+      static::$extensionFileRegistry = (object) array();
+      foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+        static::$extensionFileRegistry->$extensionName = array();
+        if ($h = opendir(FakeDrupal::getExtensionPath($extensionName))) {
+          while (FALSE !== ($entry = readdir($h))) {
+            static::$extensionFileRegistry->{$extensionName}[] = $entry;
+          }
+          closedir($h);
+        }
+      }
+    }
+    return static::$extensionFileRegistry;
+  }
+
+  public static function getExtensionFiles($extensionName) {
+    $registry = FakeDrupal::getExtensionFileRegistry();
+    return $registry->$extensionName;
+  }
+
+  public static function getExtensionPath($extensionName) {
+    $registry = FakeDrupal::getExtensionPathRegistry();
+    return $registry->$extensionName;
+  }
+
   /**
-   * @todo Some enable/disable feature for demo purposes.
+   * Include PHP files.
    */
   public static function bootstrap() {
-    // Load our fake system module.
-    include_once './fake-drupal/modules/system/system.module.php';
-    include_once './fake-drupal/modules/system/ThemeItemList.php';
-    include_once './fake-drupal/modules/system/ThemePage.php';
-
-    // Load our fake node module.
-    include_once './fake-drupal/modules/node/node.module.php';
-    include_once './fake-drupal/modules/node/ThemeFullNode.php';
-
-    // Load our fake custom module.
-    include_once './fake-drupal/modules/mymodule/mymodule.module.php';
-    include_once './fake-drupal/modules/mymodule/ThemeFoo.php';
-    include_once './fake-drupal/modules/mymodule/ThemeSomeExamples.php';
-    include_once './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
-
-    // Load our fake theme.
-    include_once './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
+    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+      foreach (FakeDrupal::getExtensionFiles($extensionName) as $file) {
+        if (preg_match('/.php$/', $file) === 1) {
+          include_once FakeDrupal::getExtensionPath($extensionName) . '/' . $file;
+        }
+      }
+    }
   }
 
   /**
-   * This fakes out a registry that would otherwise be populated via some config
-   * or auto-discovery.
+   * Call out to alter hooks.
    */
-  public static function getRegistry() {
-    $baseTemplateDirectories = array(
-      './fake-drupal/themes/prague',
-    );
-    return (object) array(
-      'ThemeFullNode' => (object) array(
-        'sourceName' => 'node',
-        'sourceType' => 'module',
-        'alterCallbacks' => array(
-          'mymodule_alter_node_view',
-        ),
-        'decoratorClasses' => array(
-          'MyModuleFullNodeDecorator',
-          'PragueFullNodeDecorator',
-        ),
-        'templateDirectories' => array(
-          './fake-drupal/modules/node',
-        ) + $baseTemplateDirectories,
-      ),
-      'ThemeItemList' => (object) array(
-        'sourceName' => 'system',
-        'sourceType' => 'module',
-        'alterCallbacks' => array(
-          'mymodule_alter_item_list',
-        ),
-        'decoratorClasses' => array(),
-        'templateDirectories' => array(
-          './fake-drupal/modules/system',
-          ) + $baseTemplateDirectories,
-      ),
-      'ThemeSomeExamples' => (object) array(
-        'sourceName' => 'mymodule',
-        'sourceType' => 'module',
-        'alterCallbacks' => array(),
-        'decoratorClasses' => array(),
-        'templateDirectories' => array(
-          './fake-drupal/modules/mymodule',
-        ) + $baseTemplateDirectories,
-      ),
-      'ThemePage' => (object) array(
-        'sourceName' => 'system',
-        'sourceType' => 'module',
-        'alterCallbacks' => array(),
-        'decoratorClasses' => array(),
-        'templateDirectories' => array(
-          './fake-drupal/modules/system',
-        ) + $baseTemplateDirectories,
-      ),
-      'ThemeFoo' => (object) array(
-        'sourceName' => 'mymodule',
-        'sourceType' => 'module',
-        'alterCallbacks' => array(),
-        'decoratorClasses' => array(),
-        'templateDirectories' => array(
-          './fake-drupal/modules/mymodule',
-        ) + $baseTemplateDirectories,
-      ),
-    );
-  }
-
-  public static function getRegistryEntry($className) {
-    $registry = FakeDrupal::getRegistry();
-    return isset($registry->$className) ? $registry->$className : NULL;
-  }
-
   public static function getAlterCallbacks(RenderableBuilderInterface $builder) {
-    $entry = FakeDrupal::getRegistryEntry($builder->getBuildClass());
-    return isset($entry) ? $entry->alterCallbacks : array();
+    $callbacks = array();
+    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+      $hook_name = str_replace('Theme', $extensionName . '_alter_', $builder->getBuildClass());
+      if (function_exists($hook_name)) {
+        $callbacks[] = $hook_name;
+      }
+    }
+    return $callbacks;
   }
 
+  /**
+   * Classes used to decorate the given Renderable.
+   */
   public static function getDecoratorClasses(RenderableInterface $renderable) {
-    $entry = FakeDrupal::getRegistryEntry($renderable->getBuildClass());
-    return isset($entry) ? $entry->decoratorClasses : array();
+    $classes = array();
+    $suffix = str_replace('Theme', '' , $renderable->getBuildClass() . 'Decorator.php');
+    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+      foreach (FakeDrupal::getExtensionFiles($extensionName) as $entry) {
+        if (FALSE !== strpos($entry, $suffix)) {
+          $classes[] = str_replace('.php', '', $entry);
+        }
+      }
+    }
+    return $classes;
   }
 
-  public static function getTemplateDirectories(RenderableInterface $renderable) {
-    $entry = FakeDrupal::getRegistryEntry($renderable->getBuildClass());
-    return isset($entry) ? $entry->templateDirectories : array();
+  /**
+   * Whether the template file exists for the given Renderable.
+   */
+  public static function templateExists(RenderableInterface $renderable) {
+    $classFile = $renderable->getBuildClass() . '.php';
+    $template = $renderable->getTemplateName() . '.html.twig';
+    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+      foreach (FakeDrupal::getExtensionFiles($extensionName) as $file) {
+        if ($classFile === $file) {
+          // Make sure template file exists for path.
+          return file_exists(FakeDrupal::getExtensionPath($extensionName) . '/' . $template);
+        }
+      }
+    }
+    return FALSE;
   }
 
   /**
    * Returns a fake ranking of directories in which to look for templates.
    */
   public static function getWeightedTemplateDirectories() {
-    return array_reverse(array(
-      './fake-drupal/modules/system',
-      './fake-drupal/modules/node',
-      './fake-drupal/modules/mymodule',
-      './fake-drupal/themes/prague',
-    ));
+    $directories = array();
+    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+      $directories[] = FakeDrupal::getExtensionPath($extensionName);
+    }
+    return array_reverse($directories);
   }
 
 }

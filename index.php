@@ -12,6 +12,14 @@ use FakeDrupal\FakeDrupal;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
+FakeDrupal::setEnabledModules(array(
+  'system',
+  'node',
+  'mymodule',
+));
+FakeDrupal::setEnabledThemes(array(
+  'prague',
+));
 FakeDrupal::bootstrap();
 
 $app = new Silex\Application();

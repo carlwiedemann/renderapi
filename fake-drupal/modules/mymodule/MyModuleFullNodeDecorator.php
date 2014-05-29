@@ -6,6 +6,11 @@
 
 use RenderAPI\AbstractRenderableDecorator;
 
+/**
+ * @ThemeDecorator(
+ *   decorates = "ThemeFullNode"
+ * )
+ */
 class MyModuleFullNodeDecorator extends AbstractRenderableDecorator {
 
   function prepare() {
