@@ -88,17 +88,18 @@ abstract class AbstractRenderable extends AbstractCollection {
    */
   abstract public function prepare();
 
+  /**
+   * Returns set template name.
+   */
   public function getTemplateName() {
     return $this->templateName;
   }
 
+  /**
+   * Whether templateName has been set.
+   */
   public function isTemplateNameSet() {
     return isset($this->templateName);
-  }
-
-  public function getTemplateDir() {
-    $reflection = new \ReflectionClass($this);
-    return dirname($reflection->getFileName());
   }
 
   /**

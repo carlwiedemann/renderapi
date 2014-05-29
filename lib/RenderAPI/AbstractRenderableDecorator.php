@@ -84,4 +84,22 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable {
     $this->renderable->prepare();
   }
 
+  /**
+   * Delegates to child.
+   *
+   * @return string
+   */
+  public function getTemplateName() {
+    return $this->renderable->getTemplateName();
+  }
+
+  /**
+   * Delegates to child.
+   *
+   * @return string
+   */
+  public function isTemplateNameSet() {
+    return $this->renderable->isTemplateNameSet();
+  }
+
 }

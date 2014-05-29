@@ -24,7 +24,7 @@ include './fake-drupal/includes/theme/ThemePage.php';
 include './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
 
 /**
- * Fakes a registry for callbacks that would alter our builder.
+ * Fakes a registry for callbacks that would alter our builder. @todo Revise.
  */
 function getAlterCallbacks($builder) {
   $callbacks = array();
@@ -44,7 +44,7 @@ function getAlterCallbacks($builder) {
 }
 
 /**
- * Fakes a registry for modules that may be decorating the renderable.
+ * Fakes a registry for modules that may be decorating the renderable. @todo Revise.
  */
 function getModuleDecoratorClasses($renderable) {
   $classes = array();
@@ -59,7 +59,7 @@ function getModuleDecoratorClasses($renderable) {
 }
 
 /**
- * Fakes registry for decorators that may apply to the renderable.
+ * Fakes registry for decorators that may apply to the renderable. @todo Revise.
  */
 function getThemeDecoratorClass($renderable) {
   $class = NULL;
@@ -73,14 +73,25 @@ function getThemeDecoratorClass($renderable) {
 }
 
 /**
- * Fakes module registry.
+ * Fakes module and theme registry. @todo Revise.
  */
-function getModules() {
+function getTemplateDirectories() {
   return array(
     'node' => (object) array(
+      'type' => 'module',
       'name' => 'node',
       'dir' => __DIR__ . '/modules/node',
-    )
+    ),
+    // 'mymodule' => (object) array(
+    //   'type' => 'module',
+    //   'name' => 'mymodule',
+    //   'dir' => __DIR__ . '/modules/mymodule',
+    // ),
+    // 'prague' => (object) array(
+    //   'type' => 'theme',
+    //   'name' => 'prague',
+    //   'dir' => __DIR__ . '/themes/prague',
+    // ),
   );
 }
 
@@ -88,10 +99,11 @@ function getModules() {
  * Fakes theme directory registry.
  */
 function getTwigThemeDirectories() {
+  // 'core' theme directory.
   $directories = array(
     './fake-drupal/includes/theme',
   );
-  foreach (getModules() as $name => $moduleData) {
+  foreach (array_reverse(getTemplateDirectories()) as $name => $moduleData) {
     $directories[] = $moduleData->dir;
   }
   return $directories;

@@ -29,7 +29,6 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## @todo
 
-* Remove PHPTemplate
 * Front-end template example
 * Optimization
 * DX
@@ -40,7 +39,7 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 * Logical template-based markup that can be extended and overridden.
    * `hook_theme()`, PHPTemplate (Twig), `template_preprocess()`, hook
-     suggestions, theme registry
+     suggestions, theme registry.
 * Abstracted, alterable structure.
    * Render arrays, `hook_node_view()`, `hook_page_alter()`
 * Sensible, accessible, API.

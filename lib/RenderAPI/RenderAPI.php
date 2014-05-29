@@ -8,8 +8,6 @@ use RenderAPI\RenderableBuilderCollection;
 
 class RenderAPI {
 
-  const ENGINE_NAME = 'twig';
-
   /**
    * Render factory method.
    *
@@ -51,10 +49,6 @@ class RenderAPI {
     }
   }
 
-  public function getEngineName() {
-    return RenderAPI::ENGINE_NAME;
-  }
-
   public static function setApp(Application $app = NULL) {
     static $_app;
     if (isset($app)) {
@@ -68,48 +62,13 @@ class RenderAPI {
   }
 
   public static function renderFromTemplate($renderable) {
-
-    $templates = RenderAPI::getTemplateNames($renderable);
-    $template = $templates[RenderAPI::getEngineName()];
-    $vars = $renderable->getAll();
-
-    switch (RenderAPI::getEngineName()) {
-      case 'phptemplate':
-        return RenderAPI::renderPHPTemplateTemplate($template, $vars);
-        break;
-      case 'twig':
-        return RenderAPI::renderTwigTemplate($template, $vars);
-        break;
-    }
-  }
-
-  /**
-   * Get template file names based on various engines.
-   */
-  public function getTemplateNames($renderable) {
     if (!$renderable->isTemplateNameSet()) {
       // throw new Exception('No templateName defined!');
       die('No templateName defined in ' . get_class($renderable) . '!');
     }
-
-    return array(
-      'phptemplate' => $renderable->getTemplateDir() . '/' . $renderable->getTemplateName() . '.tpl.php',
-      'twig' => $renderable->getTemplateName()   . '.html.twig',
-    );
-  }
-
-  private static function renderPHPTemplateTemplate($template, $vars) {
-    // This is PHPTemplate for now.
-    extract($vars, EXTR_SKIP);
-
-    // Start output buffering.
-    ob_start();
-
-    // Include the template file.
-    include $template;
-
-    // End buffering and return its contents.
-    return ob_get_clean();
+    $template = $renderable->getTemplateName()   . '.html.twig';
+    $vars = $renderable->getAll();
+    return RenderAPI::renderTwigTemplate($template, $vars);
   }
 
   private static function renderTwigTemplate($template, $vars) {
