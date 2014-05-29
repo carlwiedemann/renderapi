@@ -10,7 +10,7 @@ use RenderAPI\RenderableBuilderInterface;
 /**
  * An example of an alter callback.
  */
-function mymodule_alter_FullNode(RenderableBuilderInterface $build) {
+function colorado_alter_FullNode(RenderableBuilderInterface $build) {
   // $build->setBuildClass('ThemeFoo');
   // $build->set('foo', 'bar');
 }
@@ -18,7 +18,7 @@ function mymodule_alter_FullNode(RenderableBuilderInterface $build) {
 /**
  * Some other alter callback.
  */
-function mymodule_alter_ItemList(RenderableBuilderInterface $build) {
+function colorado_alter_ItemList(RenderableBuilderInterface $build) {
   // $items = $build->get('items');
   // $items[] = r('ThemeFullNode', array(
   //   'node' => node_load(789),

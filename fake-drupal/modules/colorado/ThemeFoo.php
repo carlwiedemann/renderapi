@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file Theme class for foo.tpl.php.
+ * @file Theme class for foo template.
  */
 
 use RenderAPI\AbstractRenderable;

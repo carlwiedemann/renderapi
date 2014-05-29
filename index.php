@@ -15,7 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 FakeDrupal::setEnabledModules(array(
   'system',
   'node',
-  'mymodule',
+  'someexamples',
+  'colorado',
 ));
 FakeDrupal::setEnabledThemes(array(
   'prague',
