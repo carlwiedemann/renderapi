@@ -9,24 +9,26 @@ namespace FakeDrupal;
 use RenderAPI\RenderableBuilderInterface;
 use RenderAPI\RenderableInterface;
 
-// Load our fake node module. @todo Revise.
-include './fake-drupal/modules/node/node.module.php';
-include './fake-drupal/modules/node/ThemeFullNode.php';
-
-// Load our fake custom module. @todo Revise.
-include './fake-drupal/modules/mymodule/mymodule.module.php';
-include './fake-drupal/modules/mymodule/ThemeFoo.php';
-include './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
-
-// Load fake common components. @todo Revise.
-include './fake-drupal/includes/theme/ThemeItemList.php';
-include './fake-drupal/includes/theme/ThemePage.php';
-include './fake-drupal/includes/theme/ThemeSomeExamples.php';
-
-// Load our fake theme. @todo Revise.
-include './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
-
 class FakeDrupal {
+
+  public static function bootstrap() {
+    // Load our fake node module.
+    include_once './fake-drupal/modules/node/node.module.php';
+    include_once './fake-drupal/modules/node/ThemeFullNode.php';
+
+    // Load our fake custom module.
+    include_once './fake-drupal/modules/mymodule/mymodule.module.php';
+    include_once './fake-drupal/modules/mymodule/ThemeFoo.php';
+    include_once './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
+
+    // Load fake common components.
+    include_once './fake-drupal/includes/theme/ThemeItemList.php';
+    include_once './fake-drupal/includes/theme/ThemePage.php';
+    include_once './fake-drupal/includes/theme/ThemeSomeExamples.php';
+
+    // Load our fake theme.
+    include_once './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
+  }
 
   /**
    * This fakes out a registry that would otherwise be populated via some config

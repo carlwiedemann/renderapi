@@ -6,12 +6,13 @@
 
 $loader = require_once __DIR__ . '/vendor/autoload.php';
 
+require_once './base.php';
+
 use FakeDrupal\FakeDrupal;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
-// Let's pretend we are Drupal, at least vaguely. :)
-include './base.php';
+FakeDrupal::bootstrap();
 
 $app = new Silex\Application();
 
