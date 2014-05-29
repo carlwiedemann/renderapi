@@ -119,12 +119,12 @@ class FakeDrupal {
    * Returns a fake ranking of directories in which to look for templates.
    */
   public static function getWeightedTemplateDirectories() {
-    return array(
+    return array_reverse(array(
       './fake-drupal/modules/system',
       './fake-drupal/modules/node',
       './fake-drupal/modules/mymodule',
       './fake-drupal/themes/prague',
-    );
+    ));
   }
 
 }
