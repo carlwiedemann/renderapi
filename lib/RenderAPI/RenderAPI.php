@@ -88,6 +88,7 @@ class RenderAPI {
     foreach (FakeDrupal::getDecoratorClasses($renderable) as $decoratorClass) {
       $renderable = new $decoratorClass($renderable);
     }
+    return $renderable;
   }
 
   /**

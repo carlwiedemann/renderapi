@@ -135,7 +135,7 @@ class RenderableBuilder extends AbstractCollection implements RenderableBuilderI
       $buildClass = $builder->getBuildClass();
       $renderable = new $buildClass($builder->getAll());
 
-      RenderAPI::decorate($renderable);
+      $renderable = RenderAPI::decorate($renderable);
 
       $return = $renderable;
     }
