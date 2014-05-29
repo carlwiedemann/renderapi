@@ -2,4 +2,6 @@
 
 <h2><code>{% verbatim %}{{ title }}{% endverbatim %}:</code> {{ title }}</h2>
 
+{% if subtitle is defined %}
 <h2><code>{% verbatim %}{{ subtitle }}{% endverbatim %}:</code> {{ subtitle }}</h2>
+{% endif %}
