@@ -8,7 +8,7 @@ use Silex\Application;
 class RenderAPI {
 
   /**
-   * The engine in question.
+   * The theme engine being used.
    */
   protected static $themeEngine;
 
@@ -99,18 +99,11 @@ class RenderAPI {
       // throw new Exception('No templateName defined!');
       die('No templateName defined in ' . get_class($renderable) . '!');
     }
-    return RenderAPI::renderTwigTemplate($renderable);
-  }
 
-  /**
-   * @param $renderable RenderableInterface
-   * @return string
-   */
-  private static function renderTwigTemplate(RenderableInterface $renderable) {
     $template = $renderable->getTemplateName()   . '.html.twig';
-    $vars = $renderable->getAll();
     $twig = RenderAPI::getThemeEngine();
     if (!isset($twig)) {
+      // throw new Exception('No theme engine defined!');
       die('No theme engine defined!');
     }
     // Check if template exists?
@@ -122,9 +115,10 @@ class RenderAPI {
       }
     }
     if (!$exists) {
+      // throw new Exception('File ' . $template . ' not found!');
       die('File ' . $template . ' not found!');
     }
-    return $twig->render($template, $vars);
+    return $twig->render($template, $renderable->getAll());
   }
 
 }
