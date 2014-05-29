@@ -6,11 +6,11 @@
 
 $loader = require_once __DIR__ . '/vendor/autoload.php';
 
+use FakeDrupal\FakeDrupal;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 // Let's pretend we are Drupal, at least vaguely. :)
-include './fake-drupal/fake-drupal.php';
 include './base.php';
 
 $app = new Silex\Application();
@@ -18,7 +18,7 @@ $app = new Silex\Application();
 $app['debug'] = TRUE;
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-  'twig.path' => getTwigThemeDirectories(),
+  'twig.path' => FakeDrupal::getTwigThemeDirectories(),
   'twig.options' => array(
     'cache' => __DIR__ . '/_tmp',
     'autoescape' => FALSE,

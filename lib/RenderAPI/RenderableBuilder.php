@@ -7,7 +7,7 @@ namespace RenderAPI;
  *
  * Essentially is the equivalent of the storage component of a D8 render array.
  */
-class RenderableBuilder extends AbstractCollection implements WeightedInterface {
+class RenderableBuilder extends AbstractCollection implements RenderableBuilderInterface {
 
   /**
    * Class name of the eventually built renderable.
@@ -128,28 +128,14 @@ class RenderableBuilder extends AbstractCollection implements WeightedInterface 
       $return = new RenderableCollection($parameters);
     }
     elseif ($builder instanceOf RenderableBuilder) {
-      // Builder model: Call any altering functions.
-      foreach (getAlterCallbacks($builder) as $alterCallback) {
-        // Alter callbacks receive the RenderableBuilder, can call methods, and
-        // change build class.
-        $alterCallback($builder);
-      }
+
+      RenderAPI::alter($builder);
 
       // Build the renderable based on the parsed parameters.
       $buildClass = $builder->getBuildClass();
       $renderable = new $buildClass($builder->getAll());
 
-      // Decorator model. Given some registry, decorate the renderable via
-      // applicable modules.
-      foreach (getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
-        $renderable = new $moduleDecoratorClass($renderable);
-      }
-
-      // Decorator model. Given some registry, decorate the renderable via the
-      // theme.
-      if ($themeDecoratorClass = getThemeDecoratorClass($renderable)) {
-        $renderable = new $themeDecoratorClass($renderable);
-      }
+      RenderAPI::decorate($renderable);
 
       $return = $renderable;
     }

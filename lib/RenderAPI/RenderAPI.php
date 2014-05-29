@@ -2,9 +2,8 @@
 
 namespace RenderAPI;
 
+use FakeDrupal\FakeDrupal;
 use Silex\Application;
-use RenderAPI\RenderableBuilder;
-use RenderAPI\RenderableBuilderCollection;
 
 class RenderAPI {
 
@@ -61,6 +60,29 @@ class RenderAPI {
     return RenderAPI::setApp();
   }
 
+  public static function alter(RenderableBuilderInterface $builder) {
+    // Builder model: Call any altering functions.
+    foreach (FakeDrupal::getAlterCallbacks($builder) as $alterCallback) {
+      // Alter callbacks receive the RenderableBuilder, can call methods, and
+      // change build class.
+      $alterCallback($builder);
+    }
+  }
+
+  public static function decorate(RenderableInterface $renderable) {
+    // Decorator model. Given some registry, decorate the renderable via
+    // applicable modules.
+    foreach (FakeDrupal::getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
+      $renderable = new $moduleDecoratorClass($renderable);
+    }
+
+    // Decorator model. Given some registry, decorate the renderable via the
+    // theme.
+    if ($themeDecoratorClass = FakeDrupal::getThemeDecoratorClass($renderable)) {
+      $renderable = new $themeDecoratorClass($renderable);
+    }
+  }
+
   public static function renderFromTemplate($renderable) {
     if (!$renderable->isTemplateNameSet()) {
       // throw new Exception('No templateName defined!');
@@ -78,7 +100,7 @@ class RenderAPI {
     }
     // Check if template exists?
     $exists = FALSE;
-    foreach (getTwigThemeDirectories() as $dir) {
+    foreach (FakeDrupal::getTwigThemeDirectories() as $dir) {
       if (file_exists($dir . '/' . $template)) {
         $exists = TRUE;
         break;

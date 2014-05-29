@@ -2,14 +2,12 @@
 
 namespace RenderAPI;
 
-use RenderAPI\AbstractCollection;
-
 /**
  * @file Abstract class for a Renderable object.
  *
  * Represents the runtime content and execution of a render array.
  */
-abstract class AbstractRenderable extends AbstractCollection {
+abstract class AbstractRenderable extends AbstractCollection implements RenderableInterface {
 
   /**
    * The filename of the template to be used.
