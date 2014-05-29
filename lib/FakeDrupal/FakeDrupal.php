@@ -11,6 +11,9 @@ use RenderAPI\RenderableInterface;
 
 class FakeDrupal {
 
+  /**
+   * @todo Some enable/disable feature for demo purposes.
+   */
   public static function bootstrap() {
     // Load our fake system module.
     include_once './fake-drupal/modules/system/system.module.php';
