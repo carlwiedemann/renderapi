@@ -16,7 +16,7 @@ class ColoradoFullNodeDecorator extends AbstractRenderableDecorator {
   function prepare() {
     parent::prepare();
     // Change title variable.
-    $this->set('title', $this->get('node')->title . ' modified by ColoradoFullNodeDecorator');
+    $this->set('title', $this->get('node')->title . ' from Colorado');
   }
 
 }
