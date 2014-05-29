@@ -4,12 +4,16 @@
     <title>{{ head_title }}</title>
     <style type="text/css" media="screen">
       body {
-        padding: 2em;
+        font-family: "Verdana";
+        max-width: 1200px;
+        margin: 0 auto;
       }
       header,
       footer {
-        background-color: deepskyblue;
+        background-color: #DDD;
+        min-height: 10em;
       }
+
       #main:before,
       #main:after {
         content: "";
@@ -18,8 +22,8 @@
       #main:after {
         clear: both;
       }
+
       #content {
-        background-color: blanchedalmond;
         float: left;
         width: 50%;
         margin-left: 25%;
@@ -27,7 +31,7 @@
       }
       #sidebar-first,
       #sidebar-second {
-        background-color: darkorange;
+        background-color: cadetblue;
         float: left;
         width: 25%;
       }
@@ -40,7 +44,7 @@
         margin-right: -100%;
       }
       .inner {
-        padding: 2em;
+        padding: 1em;
       }
     </style>
   </head>

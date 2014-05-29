@@ -16,11 +16,13 @@ FakeDrupal::setEnabledModules(array(
   'system',
   'node',
   'someexamples',
-  'colorado',
+  // 'colorado', // Comment/uncomment this line to see effects.
 ));
+
 FakeDrupal::setEnabledThemes(array(
-  'austin',
+  // 'austin', // Comment/uncomment this line to see effects.
 ));
+
 FakeDrupal::bootstrap();
 
 $app = new Silex\Application();
@@ -113,8 +115,8 @@ $app->get('/built-page', function(Request $request, Application $app) {
       )),
     )),
     'sidebar_second' => 'Some other block',
-    'header' => 'Some header',
-    'footer' => 'Some footer',
+    'header' => 'Welcome to my site!',
+    'footer' => 'See more: <a href="http://github.com/c4rl/renderapi">http://github.com/c4rl/renderapi</a>',
   ));
 
   return delegate_response($build, $request, $app);
