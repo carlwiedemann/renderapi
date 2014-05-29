@@ -7,11 +7,11 @@
 use RenderAPI\AbstractRenderableDecorator;
 
 class PragueFullNodeDecorator extends AbstractRenderableDecorator {
-  // Provide variable overrides.
+
   function prepare() {
-    // Prepare variables from parent objects.
     parent::prepare();
     // Create a new variable.
     $this->set('subtitle', 'Here is a subtitle.');
   }
+
 }

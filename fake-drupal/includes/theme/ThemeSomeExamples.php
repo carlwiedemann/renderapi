@@ -7,8 +7,9 @@
 use RenderAPI\AbstractRenderable;
 
 class ThemeSomeExamples extends AbstractRenderable {
+
   protected $templateName = 'some-examples';
 
-  function prepare() {
-  }
+  function prepare() {}
+
 }

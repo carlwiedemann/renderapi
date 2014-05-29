@@ -18,9 +18,9 @@ $app = new Silex\Application();
 $app['debug'] = TRUE;
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-  'twig.path' => FakeDrupal::getTwigThemeDirectories(),
+  'twig.path' => FakeDrupal::getWeightedTemplateDirectories(),
   'twig.options' => array(
-    'cache' => __DIR__ . '/_tmp',
+    // 'cache' => __DIR__ . '/_tmp',
     'autoescape' => FALSE,
     'auto_reload' => TRUE,
   ),

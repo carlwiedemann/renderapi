@@ -32,7 +32,7 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
    * Constructed for weighted collection.
    *
    * @param array $parameters
-   * @param int $weight
+   * @param integer $weight
    * @return void
    */
   function __construct(Array $parameters, $weight = 0) {
@@ -41,7 +41,7 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
   }
 
   /**
-   * @param int $weight
+   * @param integer $weight
    * @return void
    */
   public function setWeight($weight) {
@@ -49,7 +49,7 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
   }
 
   /**
-   * @return int
+   * @return integer
    */
   public function getWeight() {
     return $this->weight;
@@ -101,7 +101,7 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
    * Callback for usort().
    *
    * @see AbstractWeightedCollection::sortParameters().
-   * @return int
+   * @return integer
    */
   public static function sort($a, $b) {
     $a_weight = $a instanceOf WeightedInterface ? $a->getWeight() : 0;

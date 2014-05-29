@@ -48,18 +48,28 @@ class RenderAPI {
     }
   }
 
-  public static function setApp(Application $app = NULL) {
-    static $_app;
-    if (isset($app)) {
-      $_app = $app;
+  /**
+   * @param object
+   */
+  public static function setThemeEngine($engine = NULL) {
+    static $_engine;
+    if (isset($engine)) {
+      $_engine = $engine;
     }
-    return $_app;
+    return $_engine;
   }
 
-  public static function getApp() {
-    return RenderAPI::setApp();
+  /**
+   * @return object
+   */
+  public static function getThemeEngine() {
+    return RenderAPI::setThemeEngine();
   }
 
+  /**
+   * @param $builder RenderableBuilderInterface
+   * @return void
+   */
   public static function alter(RenderableBuilderInterface $builder) {
     // Builder model: Call any altering functions.
     foreach (FakeDrupal::getAlterCallbacks($builder) as $alterCallback) {
@@ -69,38 +79,42 @@ class RenderAPI {
     }
   }
 
+  /**
+   * @param $renderable RenderableInterface
+   * @return void
+   */
   public static function decorate(RenderableInterface $renderable) {
-    // Decorator model. Given some registry, decorate the renderable via
-    // applicable modules.
-    foreach (FakeDrupal::getModuleDecoratorClasses($renderable) as $moduleDecoratorClass) {
-      $renderable = new $moduleDecoratorClass($renderable);
-    }
-
-    // Decorator model. Given some registry, decorate the renderable via the
-    // theme.
-    if ($themeDecoratorClass = FakeDrupal::getThemeDecoratorClass($renderable)) {
-      $renderable = new $themeDecoratorClass($renderable);
+    foreach (FakeDrupal::getDecoratorClasses($renderable) as $decoratorClass) {
+      $renderable = new $decoratorClass($renderable);
     }
   }
 
-  public static function renderFromTemplate($renderable) {
+  /**
+   * @param $renderable RenderableInterface
+   * @return string
+   */
+  public static function renderFromTemplate(RenderableInterface $renderable) {
     if (!$renderable->isTemplateNameSet()) {
       // throw new Exception('No templateName defined!');
       die('No templateName defined in ' . get_class($renderable) . '!');
     }
-    $template = $renderable->getTemplateName()   . '.html.twig';
-    $vars = $renderable->getAll();
-    return RenderAPI::renderTwigTemplate($template, $vars);
+    return RenderAPI::renderTwigTemplate($renderable);
   }
 
-  private static function renderTwigTemplate($template, $vars) {
-    $app = RenderAPI::getApp();
-    if (!isset($app)) {
-      die('No application defined!');
+  /**
+   * @param $renderable RenderableInterface
+   * @return string
+   */
+  private static function renderTwigTemplate(RenderableInterface $renderable) {
+    $template = $renderable->getTemplateName()   . '.html.twig';
+    $vars = $renderable->getAll();
+    $twig = RenderAPI::getThemeEngine();
+    if (!isset($twig)) {
+      die('No theme engine defined!');
     }
     // Check if template exists?
     $exists = FALSE;
-    foreach (FakeDrupal::getTwigThemeDirectories() as $dir) {
+    foreach (array_reverse(FakeDrupal::getTemplateDirectories($renderable)) as $dir) {
       if (file_exists($dir . '/' . $template)) {
         $exists = TRUE;
         break;
@@ -109,7 +123,7 @@ class RenderAPI {
     if (!$exists) {
       die('File ' . $template . ' not found!');
     }
-    return $app['twig']->render($template, $vars);
+    return $twig->render($template, $vars);
   }
 
 }

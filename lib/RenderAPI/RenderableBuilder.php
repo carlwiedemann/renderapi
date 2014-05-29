@@ -110,8 +110,8 @@ class RenderableBuilder extends AbstractCollection implements RenderableBuilderI
   /**
    * Factory to build the subclassed instance.
    *
-   * @param mixed $builder
-   * @return 
+   * @param mixed
+   * @return mixed
    */
   public static function create($builder) {
 
@@ -143,10 +143,16 @@ class RenderableBuilder extends AbstractCollection implements RenderableBuilderI
     return $return;
   }
 
+  /**
+   * @return string
+   */
   public function render() {
     return RenderableBuilder::create($this)->render();
   }
 
+  /**
+   * @return string
+   */
   public function __toString() {
     return $this->render();
   }

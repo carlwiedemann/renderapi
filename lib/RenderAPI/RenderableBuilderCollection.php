@@ -5,16 +5,16 @@ namespace RenderAPI;
 /**
  * @file Provides collections class for RemderableBuilder
  */
-class RenderableBuilderCollection extends AbstractWeightedCollection {
+class RenderableBuilderCollection extends AbstractWeightedCollection implements RenderableBuilderInterface {
 
   /**
    *  If this doesn't exist, assume it will be invoked in the preprocessor.
    *  Therefore, create the renderable. It is feasible that the renderable
    *  could be statically cached as a property of the instance for
    *  performance reasons.
-   *   read the spanish version via __CODE__ in query string
    *
-   * @param $key
+   * @param $key string
+   * @return mixed
    */
   public function find($key) {
     if (!$this->exists($key)) {
@@ -28,6 +28,9 @@ class RenderableBuilderCollection extends AbstractWeightedCollection {
     return $return;
   }
 
+  /**
+   * @return string
+   */
   public function render() {
     return (string) RenderableBuilder::create($this);
   }

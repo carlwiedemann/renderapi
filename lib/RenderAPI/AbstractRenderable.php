@@ -11,6 +11,8 @@ abstract class AbstractRenderable extends AbstractCollection implements Renderab
 
   /**
    * The filename of the template to be used.
+   *
+   * @var string
    */
   protected $templateName;
 
@@ -88,6 +90,8 @@ abstract class AbstractRenderable extends AbstractCollection implements Renderab
 
   /**
    * Returns set template name.
+   *
+   * @return string
    */
   public function getTemplateName() {
     return $this->templateName;
@@ -95,6 +99,8 @@ abstract class AbstractRenderable extends AbstractCollection implements Renderab
 
   /**
    * Whether templateName has been set.
+   *
+   * @return boolean
    */
   public function isTemplateNameSet() {
     return isset($this->templateName);
@@ -114,6 +120,8 @@ abstract class AbstractRenderable extends AbstractCollection implements Renderab
 
   /**
    * Cast to string.
+   *
+   * @return string
    */
   public function __toString() {
     return $this->render();

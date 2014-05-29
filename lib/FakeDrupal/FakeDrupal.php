@@ -6,6 +6,9 @@
 
 namespace FakeDrupal;
 
+use RenderAPI\RenderableBuilderInterface;
+use RenderAPI\RenderableInterface;
+
 // Load our fake node module. @todo Revise.
 include './fake-drupal/modules/node/node.module.php';
 include './fake-drupal/modules/node/ThemeFullNode.php';
@@ -16,99 +19,109 @@ include './fake-drupal/modules/mymodule/ThemeFoo.php';
 include './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
 
 // Load fake common components. @todo Revise.
-include './fake-drupal/includes/theme/ThemeSomeExamples.php';
 include './fake-drupal/includes/theme/ThemeItemList.php';
 include './fake-drupal/includes/theme/ThemePage.php';
+include './fake-drupal/includes/theme/ThemeSomeExamples.php';
 
 // Load our fake theme. @todo Revise.
 include './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
 
-
 class FakeDrupal {
 
   /**
-   * Fakes a registry for callbacks that would alter our builder. @todo Revise.
+   * This fakes out a registry that would otherwise be populated via some config
+   * or auto-discovery.
    */
-  public function getAlterCallbacks($builder) {
-    $callbacks = array();
-    // switch ($builder->getBuildClass()) {
-    //   case 'ThemeFullNode':
-    //     $callbacks = array(
-    //       'mymodule_alter_node_view',
-    //     );
-    //     break;
-    //   case 'ThemeItemList':
-    //     $callbacks = array(
-    //       'mymodule_alter_item_list',
-    //     );
-    //     break;
-    // }
-    return $callbacks;
-  }
-
-  /**
-   * Fakes a registry for modules that may be decorating the renderable. @todo Revise.
-   */
-  public function getModuleDecoratorClasses($renderable) {
-    $classes = array();
-    // switch ($renderable->getBuildClass()) {
-    //   case 'ThemeFullNode':
-    //     $classes = array(
-    //       'MyModuleFullNodeDecorator',
-    //     );
-    //     break;
-    // }
-    return $classes;
-  }
-
-  /**
-   * Fakes registry for decorators that may apply to the renderable. @todo Revise.
-   */
-  public function getThemeDecoratorClass($renderable) {
-    $class = NULL;
-    // switch ($renderable->getBuildClass()) {
-    //   case 'ThemeFullNode':
-    //   case 'MyModuleFullNodeDecorator':
-    //     $class = 'PragueFullNodeDecorator';
-    //     break;
-    // }
-    return $class;
-  }
-
-  /**
-   * Fakes module and theme registry. @todo Revise.
-   */
-  public function getTemplateDirectories() {
-    return array(
-      'node' => (object) array(
-        'type' => 'module',
-        'name' => 'node',
-        'dir' => './fake-drupal/modules/node',
+  public static function getRegistry() {
+    $baseTemplateDirectories = array(
+      './fake-drupal/themes/prague',
+    );
+    return (object) array(
+      'ThemeFullNode' => (object) array(
+        'sourceName' => 'node',
+        'sourceType' => 'module',
+        'alterCallbacks' => array(
+          'mymodule_alter_node_view',
+        ),
+        'decoratorClasses' => array(
+          'MyModuleFullNodeDecorator',
+          'PragueFullNodeDecorator',
+        ),
+        'templateDirectories' => array(
+          './fake-drupal/modules/node',
+        ) + $baseTemplateDirectories,
       ),
-      // 'mymodule' => (object) array(
-      //   'type' => 'module',
-      //   'name' => 'mymodule',
-      //   'dir' => __DIR__ . '/modules/mymodule',
-      // ),
-      // 'prague' => (object) array(
-      //   'type' => 'theme',
-      //   'name' => 'prague',
-      //   'dir' => __DIR__ . '/themes/prague',
-      // ),
+      'ThemeItemList' => (object) array(
+        'sourceName' => 'core',
+        'sourceType' => 'module',
+        'alterCallbacks' => array(
+          'mymodule_alter_item_list',
+        ),
+        'decoratorClasses' => array(),
+        'templateDirectories' => array(
+          './fake-drupal/includes/theme',
+          ) + $baseTemplateDirectories,
+      ),
+      'ThemeSomeExamples' => (object) array(
+        'sourceName' => 'core',
+        'sourceType' => 'module',
+        'alterCallbacks' => array(),
+        'decoratorClasses' => array(),
+        'templateDirectories' => array(
+          './fake-drupal/includes/theme',
+        ) + $baseTemplateDirectories,
+      ),
+      'ThemePage' => (object) array(
+        'sourceName' => 'core',
+        'sourceType' => 'module',
+        'alterCallbacks' => array(),
+        'decoratorClasses' => array(),
+        'templateDirectories' => array(
+          './fake-drupal/includes/theme',
+        ) + $baseTemplateDirectories,
+      ),
+      'ThemeFoo' => (object) array(
+        'sourceName' => 'mymodule',
+        'sourceType' => 'module',
+        'alterCallbacks' => array(),
+        'decoratorClasses' => array(),
+        'templateDirectories' => array(
+          './fake-drupal/modules/mymodule',
+        ) + $baseTemplateDirectories,
+      ),
     );
   }
 
-  /**
-   * Fakes theme directory registry.
-   */
-  public function getTwigThemeDirectories() {
-    // 'core' theme directory.
-    $directories = array(
-      './fake-drupal/includes/theme',
-    );
-    foreach (array_reverse(FakeDrupal::getTemplateDirectories()) as $name => $moduleData) {
-      $directories[] = $moduleData->dir;
-    }
-    return $directories;
+  public static function getRegistryEntry($className) {
+    $registry = FakeDrupal::getRegistry();
+    return isset($registry->$className) ? $registry->$className : NULL;
   }
+
+  public static function getAlterCallbacks(RenderableBuilderInterface $builder) {
+    $entry = FakeDrupal::getRegistryEntry($builder->getBuildClass());
+    return isset($entry) ? $entry->alterCallbacks : array();
+  }
+
+  public static function getDecoratorClasses(RenderableInterface $renderable) {
+    $entry = FakeDrupal::getRegistryEntry($renderable->getBuildClass());
+    return isset($entry) ? $entry->decoratorClasses : array();
+  }
+
+  public static function getTemplateDirectories(RenderableInterface $renderable) {
+    $entry = FakeDrupal::getRegistryEntry($renderable->getBuildClass());
+    return isset($entry) ? $entry->templateDirectories : array();
+  }
+
+  /**
+   * Returns a fake ranking of directories in which to look for templates.
+   */
+  public static function getWeightedTemplateDirectories() {
+    return array(
+      './fake-drupal/includes/theme',
+      './fake-drupal/modules/node',
+      './fake-drupal/modules/mymodule',
+      './fake-drupal/themes/prague',
+    );
+  }
+
 }
