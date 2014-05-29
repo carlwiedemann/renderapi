@@ -12,6 +12,11 @@ use RenderAPI\RenderableInterface;
 class FakeDrupal {
 
   public static function bootstrap() {
+    // Load our fake system module.
+    include_once './fake-drupal/modules/system/system.module.php';
+    include_once './fake-drupal/modules/system/ThemeItemList.php';
+    include_once './fake-drupal/modules/system/ThemePage.php';
+
     // Load our fake node module.
     include_once './fake-drupal/modules/node/node.module.php';
     include_once './fake-drupal/modules/node/ThemeFullNode.php';
@@ -19,12 +24,8 @@ class FakeDrupal {
     // Load our fake custom module.
     include_once './fake-drupal/modules/mymodule/mymodule.module.php';
     include_once './fake-drupal/modules/mymodule/ThemeFoo.php';
+    include_once './fake-drupal/modules/mymodule/ThemeSomeExamples.php';
     include_once './fake-drupal/modules/mymodule/MyModuleFullNodeDecorator.php';
-
-    // Load fake common components.
-    include_once './fake-drupal/includes/theme/ThemeItemList.php';
-    include_once './fake-drupal/includes/theme/ThemePage.php';
-    include_once './fake-drupal/includes/theme/ThemeSomeExamples.php';
 
     // Load our fake theme.
     include_once './fake-drupal/themes/prague/PragueFullNodeDecorator.php';
@@ -54,32 +55,32 @@ class FakeDrupal {
         ) + $baseTemplateDirectories,
       ),
       'ThemeItemList' => (object) array(
-        'sourceName' => 'core',
+        'sourceName' => 'system',
         'sourceType' => 'module',
         'alterCallbacks' => array(
           'mymodule_alter_item_list',
         ),
         'decoratorClasses' => array(),
         'templateDirectories' => array(
-          './fake-drupal/includes/theme',
+          './fake-drupal/modules/system',
           ) + $baseTemplateDirectories,
       ),
       'ThemeSomeExamples' => (object) array(
-        'sourceName' => 'core',
+        'sourceName' => 'mymodule',
         'sourceType' => 'module',
         'alterCallbacks' => array(),
         'decoratorClasses' => array(),
         'templateDirectories' => array(
-          './fake-drupal/includes/theme',
+          './fake-drupal/modules/mymodule',
         ) + $baseTemplateDirectories,
       ),
       'ThemePage' => (object) array(
-        'sourceName' => 'core',
+        'sourceName' => 'system',
         'sourceType' => 'module',
         'alterCallbacks' => array(),
         'decoratorClasses' => array(),
         'templateDirectories' => array(
-          './fake-drupal/includes/theme',
+          './fake-drupal/modules/system',
         ) + $baseTemplateDirectories,
       ),
       'ThemeFoo' => (object) array(
@@ -119,7 +120,7 @@ class FakeDrupal {
    */
   public static function getWeightedTemplateDirectories() {
     return array(
-      './fake-drupal/includes/theme',
+      './fake-drupal/modules/system',
       './fake-drupal/modules/node',
       './fake-drupal/modules/mymodule',
       './fake-drupal/themes/prague',
