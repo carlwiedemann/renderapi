@@ -11,12 +11,12 @@ use RenderAPI\AbstractRenderableDecorator;
  *   decorates = "ThemeFullNode"
  * )
  */
-class PragueFullNodeDecorator extends AbstractRenderableDecorator {
+class AustinFullNodeDecorator extends AbstractRenderableDecorator {
 
   function prepare() {
     parent::prepare();
     // Create a new variable.
-    $this->set('subtitle', 'Here is a subtitle.');
+    $this->set('subtitle', 'Here is a subtitle, yeehaw!');
   }
 
 }

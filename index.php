@@ -19,7 +19,7 @@ FakeDrupal::setEnabledModules(array(
   'colorado',
 ));
 FakeDrupal::setEnabledThemes(array(
-  'prague',
+  'austin',
 ));
 FakeDrupal::bootstrap();
 
