@@ -18,6 +18,9 @@ $app = new Silex\Application();
 
 $app['debug'] = TRUE;
 
+/**
+ * Twig service provider.
+ */
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
   'twig.path' => FakeDrupal::getWeightedTemplateDirectories(),
   'twig.options' => array(
@@ -26,49 +29,6 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'auto_reload' => TRUE,
   ),
 ));
-
-/**
- * Show some examples, complete with JSON equivalence.
- */
-$app->get('/', function(Request $request, Application $app) {
-
-  foreach (array(
-      array(
-        '/node/123',
-        'Node via ThemeFullNode',
-      ),
-      array(
-        '/itemList/first,second,third',
-        'Item list via ThemeItemList'
-      ),
-      array(
-        '/something-fancy',
-        'Compound builder',
-      ),
-      array(
-        '/built-page',
-        'Sample page template',
-      ),
-    ) as $callback) {
-      $items[] = r(array(
-        '<strong>' . $callback[1] . '</strong>',
-        r('ThemeItemList', array(
-        'items' => array(
-          '<a href="' . $callback[0] . '">HTML</a>',
-          '<a href="' . $callback[0] . '?path=.">As JSON</a>',
-          '<a href="' . $callback[0] . '?path=.&themed=1">As JSON with template variables</a>',
-        ))),
-      ));
-  }
-
-  $build = r('ThemeSomeExamples', array(
-      'examples' => r('ThemeItemList', array(
-        'items' => $items,
-      )),
-    ));
-
-  return delegate_response($build, $request, $app);
-});
 
 /**
  * Simply a node.
@@ -147,6 +107,49 @@ $app->get('/built-page', function(Request $request, Application $app) {
     'header' => 'Some header',
     'footer' => 'Some footer',
   ));
+
+  return delegate_response($build, $request, $app);
+});
+
+/**
+ * Show some examples, complete with JSON equivalence.
+ */
+$app->get('/', function(Request $request, Application $app) {
+
+  foreach (array(
+      array(
+        '/node/123',
+        'Node via ThemeFullNode',
+      ),
+      array(
+        '/itemList/first,second,third',
+        'Item list via ThemeItemList'
+      ),
+      array(
+        '/something-fancy',
+        'Compound builder',
+      ),
+      array(
+        '/built-page',
+        'Sample page template',
+      ),
+    ) as $callback) {
+      $items[] = r(array(
+        '<strong>' . $callback[1] . '</strong>',
+        r('ThemeItemList', array(
+        'items' => array(
+          '<a href="' . $callback[0] . '">HTML</a>',
+          '<a href="' . $callback[0] . '?path=.">As JSON</a>',
+          '<a href="' . $callback[0] . '?path=.&themed=1">As JSON with template variables</a>',
+        ))),
+      ));
+  }
+
+  $build = r('ThemeSomeExamples', array(
+      'examples' => r('ThemeItemList', array(
+        'items' => $items,
+      )),
+    ));
 
   return delegate_response($build, $request, $app);
 });
