@@ -11,6 +11,10 @@ use RenderAPI\RenderableInterface;
 
 class FakeDrupal {
 
+  private static $requiredModules = array(
+    'node',
+    'system',
+  );
   private static $enabledModules;
   private static $enabledThemes;
   private static $extensionFileRegistry;
@@ -21,7 +25,7 @@ class FakeDrupal {
   }
 
   public static function getEnabledModules() {
-    return static::$enabledModules;
+    return array_merge(static::$requiredModules, static::$enabledModules);
   }
 
   public static function setEnabledThemes(Array $enabledThemes) {
@@ -38,11 +42,14 @@ class FakeDrupal {
 
   public static function getExtensionPathRegistry() {
     $registry = (object) array();
-    foreach (FakeDrupal::getEnabledModules() as $moduleName) {
+    foreach (static::$requiredModules as $moduleName) {
       $registry->$moduleName = './core/modules/' . $moduleName;
     }
-    foreach (FakeDrupal::getEnabledThemes() as $themeName) {
-      $registry->$themeName = './core/themes/' . $themeName;
+    foreach (static::$enabledThemes as $themeName) {
+      $registry->$themeName = './themes/' . $themeName;
+    }
+    foreach (static::$enabledModules as $moduleName) {
+      $registry->$moduleName = './modules/' . $moduleName;
     }
     return $registry;
   }

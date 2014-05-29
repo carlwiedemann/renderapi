@@ -13,8 +13,6 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 FakeDrupal::setEnabledModules(array(
-  'system',
-  'node',
   'someexamples',
   // 'colorado', // Comment/uncomment this line to see effects.
 ));

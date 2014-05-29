@@ -3,7 +3,6 @@
 namespace RenderAPI;
 
 use FakeDrupal\FakeDrupal;
-use Silex\Application;
 
 class RenderAPI {
 
