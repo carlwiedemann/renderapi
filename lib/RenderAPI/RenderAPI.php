@@ -8,6 +8,11 @@ use Silex\Application;
 class RenderAPI {
 
   /**
+   * The engine in question.
+   */
+  protected static $themeEngine;
+
+  /**
    * Render factory method.
    *
    * @param mixed
@@ -51,19 +56,15 @@ class RenderAPI {
   /**
    * @param object
    */
-  public static function setThemeEngine($engine = NULL) {
-    static $_engine;
-    if (isset($engine)) {
-      $_engine = $engine;
-    }
-    return $_engine;
+  public static function setThemeEngine($themeEngine = NULL) {
+    static::$themeEngine = $themeEngine;
   }
 
   /**
    * @return object
    */
   public static function getThemeEngine() {
-    return RenderAPI::setThemeEngine();
+    return static::$themeEngine;
   }
 
   /**
