@@ -39,10 +39,10 @@ class FakeDrupal {
   public static function getExtensionPathRegistry() {
     $registry = (object) array();
     foreach (FakeDrupal::getEnabledModules() as $moduleName) {
-      $registry->$moduleName = './fake-drupal/modules/' . $moduleName;
+      $registry->$moduleName = './core/modules/' . $moduleName;
     }
     foreach (FakeDrupal::getEnabledThemes() as $themeName) {
-      $registry->$themeName = './fake-drupal/themes/' . $themeName;
+      $registry->$themeName = './core/themes/' . $themeName;
     }
     return $registry;
   }

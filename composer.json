@@ -5,8 +5,8 @@
   },
   "autoload": {
     "psr-4": {
-      "RenderAPI\\": "lib/RenderAPI",
-      "FakeDrupal\\": "lib/FakeDrupal"
+      "RenderAPI\\": "core/lib/RenderAPI",
+      "FakeDrupal\\": "core/lib/FakeDrupal"
     }
   }
 }
