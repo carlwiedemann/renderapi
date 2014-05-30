@@ -10,7 +10,7 @@ class FakeDrupalRenderManager implements RenderManagerInterface {
 
   public function alter(RenderableBuilderInterface $builder) {
     // Builder model: Call any altering functions.
-    foreach (FakeDrupal::getAlterCallbacks($builder) as $alterCallback) {
+    foreach (FakeDrupalRenderManager::getAlterCallbacks($builder) as $alterCallback) {
       // Alter callbacks receive the RenderableBuilder, can call methods, and
       // change build class.
       $alterCallback($builder);
@@ -18,7 +18,7 @@ class FakeDrupalRenderManager implements RenderManagerInterface {
   }
 
   public function decorate(RenderableInterface $renderable) {
-    foreach (FakeDrupal::getDecoratorClasses($renderable) as $decoratorClass) {
+    foreach (FakeDrupalRenderManager::getDecoratorClasses($renderable) as $decoratorClass) {
       $renderable = new $decoratorClass($renderable);
     }
     return $renderable;
@@ -36,6 +36,47 @@ class FakeDrupalRenderManager implements RenderManagerInterface {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Call out to alter hooks.
+   */
+  public static function getAlterCallbacks(RenderableBuilderInterface $builder) {
+    $callbacks = array();
+    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+      $hook_name = str_replace('Theme', $extensionName . '_alter_', $builder->getBuildClass());
+      if (function_exists($hook_name)) {
+        $callbacks[] = $hook_name;
+      }
+    }
+    return $callbacks;
+  }
+
+  /**
+   * Classes used to decorate the given Renderable.
+   */
+  public static function getDecoratorClasses(RenderableInterface $renderable) {
+    $classes = array();
+    $suffix = str_replace('Theme', '' , $renderable->getBuildClass() . 'Decorator.php');
+    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+      foreach (FakeDrupal::getExtensionFiles($extensionName) as $entry) {
+        if (FALSE !== strpos($entry, $suffix)) {
+          $classes[] = str_replace('.php', '', $entry);
+        }
+      }
+    }
+    return $classes;
+  }
+
+  /**
+   * Returns a fake ranking of directories in which to look for templates.
+   */
+  public static function getWeightedTemplateDirectories() {
+    $directories = array();
+    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
+      $directories[] = FakeDrupal::getExtensionPath($extensionName);
+    }
+    return array_reverse($directories);
   }
 
 }

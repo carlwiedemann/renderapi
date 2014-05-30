@@ -33,7 +33,7 @@ FakeDrupal::bootstrap();
  * Twig service provider.
  */
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-  'twig.path' => FakeDrupal::getWeightedTemplateDirectories(),
+  'twig.path' => FakeDrupalRenderManager::getWeightedTemplateDirectories(),
   'twig.options' => array(
     // 'cache' => __DIR__ . '/_tmp',
     'autoescape' => FALSE,
