@@ -56,16 +56,19 @@ class RenderAPI {
   }
 
   /**
-   * @param $themeEngine object
+   * @param $themeEngine ThemeEngineInterface
    */
-  public static function setThemeEngine($themeEngine = NULL) {
+  public static function setThemeEngine(ThemeEngineInterface $themeEngine) {
     static::$themeEngine = $themeEngine;
   }
 
   /**
-   * @return object
+   * @return ThemeEngineInterface
    */
   public static function getThemeEngine() {
+    if (!isset(static::$themeEngine)) {
+      RenderAPI::setThemeEngine(new ThemeEngine());
+    }
     return static::$themeEngine;
   }
 
@@ -80,6 +83,9 @@ class RenderAPI {
    * @return RenderManagerInterface
    */
   public static function getRenderManager() {
+    if (!isset(static::$renderManager)) {
+      RenderAPI::setRenderManager(new RenderManager());
+    }
     return static::$renderManager;
   }
 
@@ -93,17 +99,14 @@ class RenderAPI {
       die('No templateName defined in ' . get_class($renderable) . '!');
     }
 
-    $template = $renderable->getTemplateName()   . '.html.twig';
     $themeEngine = RenderAPI::getThemeEngine();
-    if (!isset($themeEngine)) {
-      // throw new Exception('No theme engine defined!');
-      die('No theme engine defined!');
-    }
-    if (!RenderAPI::getRenderManager()->templateExists($renderable)) {
+
+    if (!RenderAPI::getRenderManager()->baseTemplateExists($renderable)) {
       // throw new Exception('File ' . $template . ' not found!');
-      die('File ' . $template . ' not found!');
+      die('Base template ' . $renderable->getTemplateName() . $themeEngine::FILENAME_EXTENSION . ' not found!');
     }
-    return $themeEngine->render($template, $renderable->getAll());
+
+    return $themeEngine->render($renderable);
   }
 
 }
