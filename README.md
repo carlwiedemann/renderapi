@@ -29,11 +29,11 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## @todo
 
-* Front-end template example
-* Optimization
-* DX
+* Drillability
 * Unit tests
 * Drupal sandbox integration
+* Front-end template example
+* Benchmarking
 
 ## Things we need
 
