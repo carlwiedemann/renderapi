@@ -2,15 +2,16 @@
 
 namespace FakeDrupal;
 
-use RenderAPI\RenderManagerInterface;
+use RenderAPI\RenderAPI;
+use RenderAPI\RenderManager;
 use RenderAPI\RenderableBuilderInterface;
 use RenderAPI\RenderableInterface;
 
-class FakeDrupalRenderManager implements RenderManagerInterface {
+class FakeDrupalRenderManager extends RenderManager {
 
   public function alter(RenderableBuilderInterface $builder) {
     // Builder model: Call any altering functions.
-    foreach (FakeDrupalRenderManager::getAlterCallbacks($builder) as $alterCallback) {
+    foreach ($this->getAlterCallbacks($builder) as $alterCallback) {
       // Alter callbacks receive the RenderableBuilder, can call methods, and
       // change build class.
       $alterCallback($builder);
@@ -18,30 +19,40 @@ class FakeDrupalRenderManager implements RenderManagerInterface {
   }
 
   public function decorate(RenderableInterface $renderable) {
-    foreach (FakeDrupalRenderManager::getDecoratorClasses($renderable) as $decoratorClass) {
+    foreach ($this->getDecoratorClasses($renderable) as $decoratorClass) {
       $renderable = new $decoratorClass($renderable);
     }
     return $renderable;
   }
 
-  public function templateExists(RenderableInterface $renderable) {
+  public function baseTemplateExists(RenderableInterface $renderable) {
     $classFile = $renderable->getBuildClass() . '.php';
-    $template = $renderable->getTemplateName() . '.html.twig';
+    $themeEngine = RenderAPI::getThemeEngine();
+    $template = $renderable->getTemplateName() . $themeEngine::FILENAME_EXTENSION;
     foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
       foreach (FakeDrupal::getExtensionFiles($extensionName) as $file) {
         if ($classFile === $file) {
           // Make sure template file exists for path.
-          return file_exists(FakeDrupal::getExtensionPath($extensionName) . '/' . $template);
+          return file_exists(FakeDrupal::getExtensionPath($extensionName) . '/templates/' . $template);
         }
       }
     }
     return FALSE;
   }
 
+  public function getTemplateDirectory(RenderableInterface $renderable) {
+    $themeEngine = RenderAPI::getThemeEngine();
+    foreach ($this->getWeightedTemplateDirectories() as $templateDirectory) {
+      if (file_exists($templateDirectory . '/' . $renderable->getTemplateName() . $themeEngine::FILENAME_EXTENSION)) {
+        return $templateDirectory;
+      }
+    }
+  }
+
   /**
    * Call out to alter hooks.
    */
-  public static function getAlterCallbacks(RenderableBuilderInterface $builder) {
+  public function getAlterCallbacks(RenderableBuilderInterface $builder) {
     $callbacks = array();
     foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
       $hook_name = str_replace('Theme', $extensionName . '_alter_', $builder->getBuildClass());
@@ -55,7 +66,7 @@ class FakeDrupalRenderManager implements RenderManagerInterface {
   /**
    * Classes used to decorate the given Renderable.
    */
-  public static function getDecoratorClasses(RenderableInterface $renderable) {
+  public function getDecoratorClasses(RenderableInterface $renderable) {
     $classes = array();
     $suffix = str_replace('Theme', '' , $renderable->getBuildClass() . 'Decorator.php');
     foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
@@ -71,10 +82,10 @@ class FakeDrupalRenderManager implements RenderManagerInterface {
   /**
    * Returns a fake ranking of directories in which to look for templates.
    */
-  public static function getWeightedTemplateDirectories() {
+  public function getWeightedTemplateDirectories() {
     $directories = array();
     foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
-      $directories[] = FakeDrupal::getExtensionPath($extensionName);
+      $directories[] = FakeDrupal::getExtensionPath($extensionName) . '/templates';
     }
     return array_reverse($directories);
   }

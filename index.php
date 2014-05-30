@@ -10,6 +10,7 @@ require_once './base.php';
 
 use FakeDrupal\FakeDrupal;
 use FakeDrupal\FakeDrupalRenderManager;
+use FakeDrupal\FakeDrupalThemeEngine;
 use RenderAPI\RenderAPI;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,11 +30,14 @@ FakeDrupal::setEnabledThemes(array(
 
 FakeDrupal::bootstrap();
 
+// Set render manager to use Drupal (will default to looking in ./templates).
+RenderAPI::setRenderManager(new FakeDrupalRenderManager());
+
 /**
  * Twig service provider.
  */
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-  'twig.path' => FakeDrupalRenderManager::getWeightedTemplateDirectories(),
+  'twig.path' => RenderAPI::getRenderManager()->getWeightedTemplateDirectories(),
   'twig.options' => array(
     // 'cache' => __DIR__ . '/_tmp',
     'autoescape' => FALSE,
@@ -41,9 +45,8 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
   ),
 ));
 
-// Set application to leverage proper theme engine.
-RenderAPI::setThemeEngine($app['twig']);
-RenderAPI::setRenderManager(new FakeDrupalRenderManager());
+// Set theme engine to use twig (will default to PHPTemplate).
+RenderAPI::setThemeEngine(new FakeDrupalThemeEngine($app['twig']));
 
 /**
  * Simply a node.

@@ -8,6 +8,10 @@ interface RenderManagerInterface {
 
   public function decorate(RenderableInterface $renderable);
 
-  public function templateExists(RenderableInterface $renderable);
+  public function baseTemplateExists(RenderableInterface $renderable);
+
+  public function getTemplateDirectory(RenderableInterface $renderable);
+
+  public function getWeightedTemplateDirectories();
 
 }

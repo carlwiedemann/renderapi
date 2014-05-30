@@ -12,8 +12,8 @@ use RenderAPI\RenderableInterface;
 class FakeDrupal {
 
   private static $requiredModules = array(
-    'node',
     'system',
+    'node',
   );
   private static $enabledModules;
   private static $enabledThemes;

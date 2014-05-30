@@ -28,7 +28,7 @@ function delegate_response($build, Request $request, Application $app) {
   }
   else {
     // Return rendered HTML.
-    return (string) $build;
+    return $build->render();
   }
 }
 
