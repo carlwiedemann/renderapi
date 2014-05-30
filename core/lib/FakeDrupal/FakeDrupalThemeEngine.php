@@ -23,7 +23,7 @@ class FakeDrupalThemeEngine extends ThemeEngine {
    * We'll use our twig configuration.
    */
   public function render(RenderableInterface $renderable) {
-    $tag = self::DEBUG ? '<!-- ' . RenderAPI::getRenderManager()->getTemplateDirectory($renderable) . '/' . $renderable->getTemplateName() . self::FILENAME_EXTENSION . '-->'  . PHP_EOL . PHP_EOL : '';
+    $tag = self::DEBUG ? '<!-- Template: ' . RenderAPI::getRenderManager()->getTemplateDirectory($renderable) . '/' . $renderable->getTemplateName() . self::FILENAME_EXTENSION . '-->'  . PHP_EOL . PHP_EOL : '';
     return $tag . $this->proxyEngine->render($renderable->getTemplateName() . self::FILENAME_EXTENSION, $renderable->getAll());
   }
 
