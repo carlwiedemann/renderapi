@@ -76,19 +76,21 @@ class RenderableBuilder extends AbstractCollection implements RenderableBuilderI
    */
   public function find($key) {
     $return = NULL;
+
     if ($this->exists($key)) {
       $return = $this->get($key);
     }
-    elseif (!isset($this->renderable)) {
-      // If this doesn't exist, assume it will be invoked in the preprocessor.
-      // Therefore, create the renderable. It is feasible that the renderable
-      // *could* be statically cached as a property of the instance for
-      // performance reasons.
-      $this->renderable = RenderableBuilder::create($this);
+    else {
+      if (!isset($this->renderable)) {
+        // If this doesn't exist, assume it will be invoked in the preprocessor.
+        // Therefore, create the renderable. It is feasible that the renderable
+        // *could* be statically cached as a property of the instance for
+        // performance reasons.
+        $this->renderable = RenderableBuilder::create($this);
+      }
+      $return = $this->renderable->get($key);
     }
-    if ($this->renderable->exists($key)) {
-      $return = $this->renderable->get($get);
-    }
+
     return $return;
   }
 
