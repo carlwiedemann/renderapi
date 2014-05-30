@@ -94,8 +94,8 @@ class RenderAPI {
     }
 
     $template = $renderable->getTemplateName()   . '.html.twig';
-    $twig = RenderAPI::getThemeEngine();
-    if (!isset($twig)) {
+    $themeEngine = RenderAPI::getThemeEngine();
+    if (!isset($themeEngine)) {
       // throw new Exception('No theme engine defined!');
       die('No theme engine defined!');
     }
@@ -103,7 +103,7 @@ class RenderAPI {
       // throw new Exception('File ' . $template . ' not found!');
       die('File ' . $template . ' not found!');
     }
-    return $twig->render($template, $renderable->getAll());
+    return $themeEngine->render($template, $renderable->getAll());
   }
 
 }
