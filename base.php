@@ -27,8 +27,6 @@ function delegate_response($build, Request $request, Application $app) {
     return $app->json($accessor->value());
   }
   else {
-    // Set application to leverage proper theme engine.
-    RenderAPI::setThemeEngine($app['twig']);
     // Return rendered HTML.
     return $build->render();
   }

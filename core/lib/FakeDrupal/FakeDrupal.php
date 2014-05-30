@@ -124,23 +124,6 @@ class FakeDrupal {
   }
 
   /**
-   * Whether the template file exists for the given Renderable.
-   */
-  public static function templateExists(RenderableInterface $renderable) {
-    $classFile = $renderable->getBuildClass() . '.php';
-    $template = $renderable->getTemplateName() . '.html.twig';
-    foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
-      foreach (FakeDrupal::getExtensionFiles($extensionName) as $file) {
-        if ($classFile === $file) {
-          // Make sure template file exists for path.
-          return file_exists(FakeDrupal::getExtensionPath($extensionName) . '/' . $template);
-        }
-      }
-    }
-    return FALSE;
-  }
-
-  /**
    * Returns a fake ranking of directories in which to look for templates.
    */
   public static function getWeightedTemplateDirectories() {

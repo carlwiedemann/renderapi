@@ -9,8 +9,14 @@ $loader = require_once __DIR__ . '/vendor/autoload.php';
 require_once './base.php';
 
 use FakeDrupal\FakeDrupal;
+use FakeDrupal\FakeDrupalRenderManager;
+use RenderAPI\RenderAPI;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+
+$app = new Silex\Application();
+
+$app['debug'] = TRUE;
 
 FakeDrupal::setEnabledModules(array(
   'someexamples',
@@ -23,10 +29,6 @@ FakeDrupal::setEnabledThemes(array(
 
 FakeDrupal::bootstrap();
 
-$app = new Silex\Application();
-
-$app['debug'] = TRUE;
-
 /**
  * Twig service provider.
  */
@@ -38,6 +40,10 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'auto_reload' => TRUE,
   ),
 ));
+
+// Set application to leverage proper theme engine.
+RenderAPI::setThemeEngine($app['twig']);
+RenderAPI::setRenderManager(new FakeDrupalRenderManager());
 
 /**
  * Simply a node.

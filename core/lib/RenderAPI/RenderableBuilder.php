@@ -129,13 +129,13 @@ class RenderableBuilder extends AbstractCollection implements RenderableBuilderI
     }
     elseif ($builder instanceOf RenderableBuilder) {
 
-      RenderAPI::alter($builder);
+      RenderAPI::getRenderManager()->alter($builder);
 
       // Build the renderable based on the parsed parameters.
       $buildClass = $builder->getBuildClass();
       $renderable = new $buildClass($builder->getAll());
 
-      $renderable = RenderAPI::decorate($renderable);
+      $renderable = RenderAPI::getRenderManager()->decorate($renderable);
 
       $return = $renderable;
     }

@@ -2,14 +2,17 @@
 
 namespace RenderAPI;
 
-use FakeDrupal\FakeDrupal;
-
 class RenderAPI {
 
   /**
    * The theme engine being used.
    */
   protected static $themeEngine;
+
+  /**
+   * The render manager being used.
+   */
+  protected static $renderManager;
 
   /**
    * Render factory method.
@@ -53,7 +56,7 @@ class RenderAPI {
   }
 
   /**
-   * @param object
+   * @param $themeEngine object
    */
   public static function setThemeEngine($themeEngine = NULL) {
     static::$themeEngine = $themeEngine;
@@ -67,27 +70,17 @@ class RenderAPI {
   }
 
   /**
-   * @param $builder RenderableBuilderInterface
-   * @return void
+   * @param $renderManager RenderManagerInterface
    */
-  public static function alter(RenderableBuilderInterface $builder) {
-    // Builder model: Call any altering functions.
-    foreach (FakeDrupal::getAlterCallbacks($builder) as $alterCallback) {
-      // Alter callbacks receive the RenderableBuilder, can call methods, and
-      // change build class.
-      $alterCallback($builder);
-    }
+  public static function setRenderManager(RenderManagerInterface $renderManager) {
+    static::$renderManager = $renderManager;
   }
 
   /**
-   * @param $renderable RenderableInterface
-   * @return void
+   * @return RenderManagerInterface
    */
-  public static function decorate(RenderableInterface $renderable) {
-    foreach (FakeDrupal::getDecoratorClasses($renderable) as $decoratorClass) {
-      $renderable = new $decoratorClass($renderable);
-    }
-    return $renderable;
+  public static function getRenderManager() {
+    return static::$renderManager;
   }
 
   /**
@@ -106,7 +99,7 @@ class RenderAPI {
       // throw new Exception('No theme engine defined!');
       die('No theme engine defined!');
     }
-    if (!FakeDrupal::templateExists($renderable)) {
+    if (!RenderAPI::getRenderManager()->templateExists($renderable)) {
       // throw new Exception('File ' . $template . ' not found!');
       die('File ' . $template . ' not found!');
     }
