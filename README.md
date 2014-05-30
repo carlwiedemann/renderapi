@@ -59,6 +59,9 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## Changelog
 
+* 2014-05-30 Version 2.3 Clean-up structure, revise "Fake Drupal" integration,
+  revise interfaces, addition of dependency-injected RenderManager and
+  ThemeEngine.
 * 2014-05-28 Version 2.2 Better code structure and autoloading
 * 2013-10-08 Version 2.1 Accessor class and URL-based API to access for themed
   and non-themed structure.
