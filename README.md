@@ -10,11 +10,13 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## Getting started
 
-* ./index.php returns some a sample renderables at various URLs.
-* ./fake-drupal is just a dummy Drupal skeleton to give some conceptual basis. 
-  In fake-drupal.php, explore un-commenting the lines in: `getAlterCallbacks()`,
-  `getModuleDecoratorClasses()`, and `getThemeDecoratorClass()` to explore how
-  extensibility via Builder and Decorator methods.
+* ./index.php Shows how some sample renderables are built.
+* This project isn't yet in Drupal core, it's using a skeleton (FakeDrupal) to
+  simulate some of Drupal's behavior and concepts.
+* In ./index.php, uncomment the lines within `FakeDrupal::setEnabledModules()`
+  and `FakeDrupal::setEnabledThemes()` to see module and theme overrides in
+  action. Check out `colorado.module.php` for examples of how alter-like hooks
+  can affect builders.
 * Querystring parameters:
   * `path` delegates the response to return JSON per an accessor-like syntax
     to represent the hierarchical tree of a given renderable. For example:
@@ -30,8 +32,8 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 ## @todo
 
 * Drillability
-* Unit tests
 * Drupal sandbox integration
+* Unit tests
 * Front-end template example
 * Benchmarking
 
