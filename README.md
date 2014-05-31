@@ -31,7 +31,6 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
 
 ## @todo
 
-* Drillability
 * Drupal sandbox integration
 * Unit tests
 * Front-end template example
