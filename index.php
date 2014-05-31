@@ -66,8 +66,8 @@ $app->get('/node/{id}', function($id, Request $request, Application $app) {
 $app->get('/itemList/{items}', function($items, Request $request, Application $app) {
 
   $build = r('ThemeItemList', array(
-    'items' => explode(',', $items),
-  ));
+             'items' => explode(',', $items),
+           ));
 
   return delegate_response($build, $request, $app);
 });
@@ -78,23 +78,23 @@ $app->get('/itemList/{items}', function($items, Request $request, Application $a
 $app->get('/something-fancy', function(Request $request, Application $app) {
 
   $build = r(array(
-      r('ThemeFullNode', array(
-        'node' => node_load(123),
-      ), -1),
-      r('ThemeFullNode', array(
-        'node' => node_load(456),
-      ), 3),
-      r('ThemeFullNode', array(
-        'node' => node_load(789),
-      ), 0),
-      r('ThemeItemList', array(
-        'items' => array(
-          'red',
-          'green',
-          'blue',
-        ),
-      ), -1),
-    ));
+             r('ThemeFullNode', array(
+               'node' => node_load(123),
+             ), -1),
+             r('ThemeFullNode', array(
+               'node' => node_load(456),
+             ), 3),
+             r('ThemeFullNode', array(
+               'node' => node_load(789),
+             ), 0),
+             r('ThemeItemList', array(
+               'items' => array(
+                 'red',
+                 'green',
+                 'blue',
+               ),
+             ), -1),
+           ));
 
   return delegate_response($build, $request, $app);
 });
@@ -105,26 +105,26 @@ $app->get('/something-fancy', function(Request $request, Application $app) {
 $app->get('/built-page', function(Request $request, Application $app) {
 
   $build = r('ThemePage', array(
-    'head_title' => 'Hello',
-    'content' => r('ThemeFullNode', array(
-      'node' => node_load(123),
-    )),
-    'sidebar_first' => r(array(
-      'Some block',
-      r('ThemeItemList', array(
-        'items' => array(
-          'first',
-          'second',
-          r('ThemeFullNode', array(
-            'node' => node_load(456),
-          )),
-        ),
-      )),
-    )),
-    'sidebar_second' => 'Some other block',
-    'header' => 'Welcome to my site!',
-    'footer' => 'See more: <a href="http://github.com/c4rl/renderapi">http://github.com/c4rl/renderapi</a>',
-  ));
+             'head_title' => 'Hello',
+             'content' => r('ThemeFullNode', array(
+               'node' => node_load(123),
+             )),
+             'sidebar_first' => r(array(
+               'Some block',
+               r('ThemeItemList', array(
+                 'items' => array(
+                   'alpha',
+                   'beta',
+                   r('ThemeFullNode', array(
+                     'node' => node_load(456),
+                   )),
+                 ),
+               )),
+             )),
+             'sidebar_second' => 'Some other block',
+             'header' => 'Welcome to my site!',
+             'footer' => 'See more: <a href="http://github.com/c4rl/renderapi">http://github.com/c4rl/renderapi</a>',
+           ));
 
   return delegate_response($build, $request, $app);
 });
@@ -164,10 +164,10 @@ $app->get('/', function(Request $request, Application $app) {
   }
 
   $build = r('ThemeSomeExamples', array(
-      'examples' => r('ThemeItemList', array(
-        'items' => $items,
-      )),
-    ));
+             'examples' => r('ThemeItemList', array(
+               'items' => $items,
+             )),
+           ));
 
   return delegate_response($build, $request, $app);
 });
