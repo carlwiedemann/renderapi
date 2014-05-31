@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ head_title }}</title>
+    <title><?php print $head_title; ?></title>
     <style type="text/css" media="screen">
       body {
         font-family: "Verdana";
@@ -50,20 +50,20 @@
   </head>
   <body>
     <header><div class="inner">
-      {{ header }}
-      <div>The subtitle of the node in the block is: {{ sidebar_first.1.items.2.subtitle }}</div>
+      <?php print $header; ?>
+      <div>The subtitle of the node in the block is: <?php print $sidebar_first->find(1)->find('items')[2]->find('subtitle'); ?></div>
     </div></header>
     <div id="main">
       <section id="content"><div class="inner">
-        {{ content }}
+        <?php print $content; ?>
       </div></section>
       <aside>
-        <section id="sidebar-first"><div class="inner">{{ sidebar_first }}</div></section>
-        <section id="sidebar-second"><div class="inner">{{ sidebar_second }}</div></section>
+        <section id="sidebar-first"><div class="inner"><?php print $sidebar_first; ?></div></section>
+        <section id="sidebar-second"><div class="inner"><?php print $sidebar_second; ?></div></section>
       </aside>
     </div>
     <footer><div class="inner">
-      {{ footer }}
+      <?php print $footer; ?>
     </div></footer>
   </body>
 </html>

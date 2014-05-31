@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ head_title }}</title>
+    <title><?php print $head_title; ?></title>
     <style type="text/css" media="screen">
       body {
-        font-family: "Verdana";
-        max-width: 1200px;
-        margin: 0 auto;
+        padding: 2em;
       }
       header,
       footer {
-        background-color: #DDD;
-        min-height: 10em;
+        background-color: deepskyblue;
       }
-
       #main:before,
       #main:after {
         content: "";
@@ -22,8 +18,8 @@
       #main:after {
         clear: both;
       }
-
       #content {
+        background-color: blanchedalmond;
         float: left;
         width: 50%;
         margin-left: 25%;
@@ -31,7 +27,7 @@
       }
       #sidebar-first,
       #sidebar-second {
-        background-color: cadetblue;
+        background-color: darkorange;
         float: left;
         width: 25%;
       }
@@ -44,26 +40,26 @@
         margin-right: -100%;
       }
       .inner {
-        padding: 1em;
+        padding: 2em;
       }
     </style>
   </head>
   <body>
     <header><div class="inner">
-      {{ header }}
-      <div>The subtitle of the node in the block is: {{ sidebar_first.1.items.2.subtitle }}</div>
+      <?php print $header; ?>
+      <div>The first item in the block is: <?php var_dump($sidebar_first->find(1)->find('items')[2]->find('title')); ?></div>
     </div></header>
     <div id="main">
       <section id="content"><div class="inner">
-        {{ content }}
+        <?php print $content; ?>
       </div></section>
       <aside>
-        <section id="sidebar-first"><div class="inner">{{ sidebar_first }}</div></section>
-        <section id="sidebar-second"><div class="inner">{{ sidebar_second }}</div></section>
+        <section id="sidebar-first"><div class="inner"><?php print $sidebar_first; ?></div></section>
+        <section id="sidebar-second"><div class="inner"><?php print $sidebar_second; ?></div></section>
       </aside>
     </div>
     <footer><div class="inner">
-      {{ footer }}
+      <?php print $footer; ?>
     </div></footer>
   </body>
 </html>
