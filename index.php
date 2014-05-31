@@ -40,6 +40,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
   'twig.path' => RenderAPI::getRenderManager()->getWeightedTemplateDirectories(),
   'twig.options' => array(
     // 'cache' => __DIR__ . '/_tmp',
+    'base_template_class' => 'FakeDrupal\AbstractFakeDrupalTwigTemplate',
     'autoescape' => FALSE,
     'auto_reload' => TRUE,
   ),
