@@ -17,7 +17,8 @@ class RenderableBuilder extends AbstractCollection implements RenderableBuilderI
   private $buildClass;
 
   /**
-   * The renderable this represents. This is stored for later access.
+   * The renderable this builder will generate. Once generated, this is stored
+   * as a parameter.
    *
    * @var AbstractRenderable
    */
@@ -115,34 +116,31 @@ class RenderableBuilder extends AbstractCollection implements RenderableBuilderI
    * @param mixed
    * @return mixed
    */
-  public static function create($builder) {
+  public static function create(RenderableBuilderInterface $builder) {
 
-    $return = NULL;
-
-    if (is_scalar($builder)) {
-      $return = $builder;
-    }
-    elseif ($builder instanceOf RenderableBuilderCollection) {
-      $parameters = array();
-      foreach ($builder->getAllByWeight() as $key => $value) {
-        $parameters[$key] = RenderableBuilder::create($value);
+    if (!isset($builder->renderable)) {
+      if ($builder instanceOf RenderableBuilderCollection) {
+        $parameters = array();
+        foreach ($builder->getAllByWeight() as $key => $value) {
+          $parameters[$key] = ($value instanceOf RenderableBuilderInterface) ? RenderableBuilder::create($value) : $value;
+        }
+        $builder->renderable = new RenderableCollection($parameters);
       }
-      $return = new RenderableCollection($parameters);
+      elseif ($builder instanceOf RenderableBuilder) {
+
+        RenderAPI::getRenderManager()->alter($builder);
+
+        // Build the renderable based on the parsed parameters.
+        $buildClass = $builder->getBuildClass();
+        $renderable = new $buildClass($builder->getAll());
+
+        $renderable = RenderAPI::getRenderManager()->decorate($renderable);
+
+        $builder->renderable = $renderable;
+      }
     }
-    elseif ($builder instanceOf RenderableBuilder) {
 
-      RenderAPI::getRenderManager()->alter($builder);
-
-      // Build the renderable based on the parsed parameters.
-      $buildClass = $builder->getBuildClass();
-      $renderable = new $buildClass($builder->getAll());
-
-      $renderable = RenderAPI::getRenderManager()->decorate($renderable);
-
-      $return = $renderable;
-    }
-
-    return $return;
+    return $builder->renderable;
   }
 
   /**
