@@ -62,16 +62,6 @@ class Accessor {
       // If this is a component of an array, recurse.
       $return = Accessor::create($this->value->get($key), $this->themed);
     }
-    elseif ($this->value instanceOf RenderableInterface || $this->value instanceOf RenderableBuilderInterface) {
-      // If this is a AbstractRenderable or a RenderableBuilder, call the get() method.
-      if ($this->themed && $this->value instanceOf RenderableBuilder) {
-        $value = RenderableBuilder::create($this->value);
-      }
-      else {
-        $value = $this->value;
-      }
-      $return = Accessor::create($value->get($key), $this->themed);
-    }
     elseif (is_object($this->value) && isset($this->value->$key)) {
       // If this is a struct, treat as much.
       $return = Accessor::create($this->value->$key, $this->themed);
@@ -95,27 +85,12 @@ class Accessor {
    * @return mixed
    */
   public static function convert($variable, $themed) {
-    if ($variable instanceOf RenderableInterface || $variable instanceOf RenderableBuilderInterface) {
+    if ($variable instanceOf RenderableBuilderInterface || $variable instanceOf RenderableInterface) {
       $return = array();
-      // Builders get converted into Renderables.
-      if ($themed && $variable instanceOf RenderableBuilder) {
-        $variable = RenderableBuilder::create($variable);
-        $variable->prepare();
+      // For themed output, build renderable.
+      if ($themed && $variable instanceOf RenderableBuilderInterface) {
+        $variable = $variable->getRenderable();
       }
-      foreach ($variable->getAll() as $key => $value) {
-        $return[$key] = Accessor::convert($value, $themed);
-      }
-    }
-    elseif ($variable instanceOf RenderableBuilderCollection) {
-      // An array of potential values.
-      $return = array();
-      foreach ($variable->getAllByWeight() as $key => $value) {
-        $return[$key] = Accessor::convert($value, $themed);
-      }
-    }
-    elseif ($variable instanceOf RenderableCollection) {
-      // An array of potential values.
-      $return = array();
       foreach ($variable->getAll() as $key => $value) {
         $return[$key] = Accessor::convert($value, $themed);
       }
