@@ -120,8 +120,9 @@ class RenderAPI {
     if (!$builder->renderableBuilt()) {
       if ($builder instanceOf RenderableBuilderCollection) {
         $parameters = array();
-        foreach ($builder->getAllByWeight() as $key => $value) {
-          $parameters[$key] = ($value instanceOf RenderableBuilderInterface) ? RenderAPI::createRenderable($value) : $value;
+        // RenderableCollections contain Renderables.
+        foreach ($builder->getAll() as $key => $value) {
+          $parameters[$key] = ($value instanceOf RenderableBuilderInterface) ? $value->getRenderable() : $value;
         }
         $builder->setRenderable(new RenderableCollection($parameters));
       }

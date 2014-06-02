@@ -10,7 +10,7 @@ trait RenderableBuilderTrait {
    *
    * @var AbstractRenderable
    */
-  protected $renderable;
+  private $renderable;
 
   public function setRenderable(RenderableInterface $renderable) {
     $this->renderable = $renderable;
@@ -21,43 +21,38 @@ trait RenderableBuilderTrait {
   }
 
   public function getRenderable() {
+    if (!isset($this->renderable)) {
+      $this->buildRenderable();
+    }
     return $this->renderable;
   }
 
+  public function buildRenderable() {
+    $this->renderable = RenderAPI::createRenderable($this);
+  }
+
   /**
-   * Suppose we have a separate method similar to get() that is used
-   * exclusively via the them layer. Consider whether there should exist a
-   * global constraint.
+   * Looks for $key in parameters, then the parameters of the renderable.
+   * Used for drillability purposes.
    *
    * @param string $key
    * @return mixed
    */
   public function find($key) {
-    $return = NULL;
-
     if ($this->exists($key)) {
-      $return = $this->get($key);
+      return $this->get($key);
     }
     else {
-      if (!isset($this->renderable)) {
-        // If this doesn't exist, assume it will be invoked in the preprocessor.
-        // Therefore, create the renderable. It is feasible that the renderable
-        // *could* be statically cached as a property of the instance for
-        // performance reasons.
-        $this->renderable = RenderAPI::createRenderable($this);
-      }
-      $return = $this->renderable->get($key);
+      // If this doesn't exist, assume it will be invoked in the preprocessor.
+      return $this->getRenderable()->get($key);
     }
-
-    return $return;
   }
 
   /**
    * @return string
    */
   public function render() {
-    $renderable = RenderAPI::createRenderable($this);
-    return $renderable->render();
+    return $this->getRenderable()->render();
   }
 
   /**
