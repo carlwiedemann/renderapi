@@ -5,7 +5,7 @@ namespace RenderAPI;
 /**
  * @file AbstractWeightedCollection.
  */
-abstract class AbstractWeightedCollection extends AbstractCollection implements WeightedInterface {
+abstract class AbstractWeightedCollection implements WeightedInterface {
 
   /**
    * The given parameters for the collection.
@@ -59,7 +59,38 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
    * @return boolean
    */
   public function isWeighted() {
-    return $this->weight !== 0;
+    return $this->getWeight() !== 0;
+  }
+
+  /**
+   * @param string $key
+   * @return mixed
+   */
+  public function get($key) {
+    return isset($this->parameters[$key]) ? $this->parameters[$key] : NULL;
+  }
+
+  /**
+   * @return array
+   */
+  public function getAll() {
+    return $this->parameters;
+  }
+
+  /**
+   * @param string $key
+   * @param mixed $value
+   * @return mixed
+   */
+  public function set($key, $value) {
+    $this->parameters[$key] = $value;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function exists($key) {
+    return isset($this->parameters[$key]);
   }
 
   /**
@@ -88,10 +119,10 @@ abstract class AbstractWeightedCollection extends AbstractCollection implements 
       $this->parameters_sorted = $this->parameters;
       if ($sortable) {
         if (AbstractWeightedCollection::isAssociative($this->parameters)) {
-          uasort($this->parameters_sorted, array('AbstractWeightedCollection', 'sort'));
+          uasort($this->parameters_sorted, array('\RenderAPI\AbstractWeightedCollection', 'sort'));
         }
         else {
-          usort($this->parameters_sorted, array('AbstractWeightedCollection', 'sort'));
+          usort($this->parameters_sorted, array('\RenderAPI\AbstractWeightedCollection', 'sort'));
         }
       }
     }

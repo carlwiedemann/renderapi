@@ -109,4 +109,37 @@ class RenderAPI {
     return $themeEngine->render($renderable);
   }
 
+  /**
+   * Factory to build the subclassed instance.
+   *
+   * @param mixed
+   * @return mixed
+   */
+  public static function createRenderable(RenderableBuilderInterface $builder) {
+
+    if (!$builder->renderableBuilt()) {
+      if ($builder instanceOf RenderableBuilderCollection) {
+        $parameters = array();
+        foreach ($builder->getAllByWeight() as $key => $value) {
+          $parameters[$key] = ($value instanceOf RenderableBuilderInterface) ? RenderAPI::createRenderable($value) : $value;
+        }
+        $builder->setRenderable(new RenderableCollection($parameters));
+      }
+      elseif ($builder instanceOf RenderableBuilder) {
+
+        RenderAPI::getRenderManager()->alter($builder);
+
+        // Build the renderable based on the parsed parameters.
+        $buildClass = $builder->getBuildClass();
+        $renderable = new $buildClass($builder->getAll(), $builder->getWeight());
+
+        $renderable = RenderAPI::getRenderManager()->decorate($renderable);
+
+        $builder->setRenderable($renderable);
+      }
+    }
+
+    return $builder->getRenderable();
+  }
+
 }

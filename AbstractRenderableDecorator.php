@@ -6,7 +6,7 @@ namespace RenderAPI;
  * @file Decorator class to allow modules and themes to alter parameters for
  * templates.
  */
-abstract class AbstractRenderableDecorator extends AbstractRenderable {
+abstract class AbstractRenderableDecorator extends AbstractRenderable implements RenderableInterface {
 
   /**
    * The object to decorate.
@@ -74,6 +74,33 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable {
    */
   public function getAll() {
     return $this->renderable->getAll();
+  }
+
+  /**
+   * Delegates to child.
+   *
+   * @return array
+   */
+  public function getAllByWeight() {
+    return $this->renderable->getAllByWeight();
+  }
+
+  /**
+   * Delegates to child.
+   *
+   * @return array
+   */
+  public function getWeight() {
+    return $this->renderable->getWeight();
+  }
+
+  /**
+   * Delegates to child.
+   *
+   * @return array
+   */
+  public function isWeighted() {
+    return $this->renderable->isWeighted();
   }
 
   /**
