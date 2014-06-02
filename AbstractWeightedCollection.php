@@ -67,7 +67,7 @@ abstract class AbstractWeightedCollection implements WeightedInterface {
    * @return mixed
    */
   public function get($key) {
-    return isset($this->parameters[$key]) ? $this->parameters[$key] : NULL;
+    return $this->exists($key) ? $this->parameters[$key] : NULL;
   }
 
   /**
