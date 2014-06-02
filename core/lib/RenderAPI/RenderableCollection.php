@@ -7,12 +7,17 @@ namespace RenderAPI;
  */
 class RenderableCollection extends AbstractWeightedCollection implements RenderableInterface {
 
+  /**
+   * Concatenates output of sorted parameters.
+   *
+   * @return string
+   */
   public function render() {
-    $return = '';
+    $output = '';
     foreach ($this->getAllByWeight() as $parameter) {
-      $return .= (string) $parameter;
+      $output .= (string) $parameter;
     }
-    return $return;
+    return $output;
   }
 
   /**
