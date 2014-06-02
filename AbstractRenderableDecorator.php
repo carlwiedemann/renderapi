@@ -9,20 +9,20 @@ namespace RenderAPI;
 abstract class AbstractRenderableDecorator extends AbstractRenderable implements RenderableInterface {
 
   /**
-   * The object to decorate.
+   * The renderable to decorate.
    *
    * @var AbstractRenderable
    */
-  private $renderable;
+  private $child;
 
   /**
-   * Receive the renderable to decorate.
+   * Sets renderable to decorate.
    *
    * @param AbstractRenderable
    * @return void
    */
-  function __construct(AbstractRenderable $renderable) {
-    $this->renderable = $renderable;
+  function __construct(AbstractRenderable $child) {
+    $this->child = $child;
   }
 
   /**
@@ -31,7 +31,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return string
    */
   public function getBuildClass() {
-    return $this->renderable->getBuildClass();
+    return $this->child->getBuildClass();
   }
 
   /**
@@ -40,21 +40,22 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return void
    */
   public function set($key, $value) {
-    $this->renderable->set($key, $value);
+    $this->child->set($key, $value);
   }
 
   /**
-   * Delegates to child.
+   * This will mark itself as prepared, even though it is pulling values
+   * from the child.
    *
    * @return mixed
    */
   public function get($key) {
     if ($this->exists($key)) {
-      return $this->renderable->get($key);
+      return $this->child->get($key);
     }
     else {
       $this->prepareOnce();
-      return $this->exists($key) ? $this->renderable->get($key) : NULL;
+      return $this->exists($key) ? $this->child->get($key) : NULL;
     }
   }
 
@@ -64,7 +65,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return boolean
    */
   public function exists($key) {
-    return $this->renderable->exists($key);
+    return $this->child->exists($key);
   }
 
   /**
@@ -73,7 +74,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return array
    */
   public function getAll() {
-    return $this->renderable->getAll();
+    return $this->child->getAll();
   }
 
   /**
@@ -82,7 +83,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return array
    */
   public function getAllByWeight() {
-    return $this->renderable->getAllByWeight();
+    return $this->child->getAllByWeight();
   }
 
   /**
@@ -91,7 +92,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return array
    */
   public function getWeight() {
-    return $this->renderable->getWeight();
+    return $this->child->getWeight();
   }
 
   /**
@@ -100,7 +101,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return array
    */
   public function isWeighted() {
-    return $this->renderable->isWeighted();
+    return $this->child->isWeighted();
   }
 
   /**
@@ -109,7 +110,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return void
    */
   public function prepare() {
-    $this->renderable->prepare();
+    $this->child->prepare();
   }
 
   /**
@@ -118,7 +119,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return string
    */
   public function getTemplateName() {
-    return $this->renderable->getTemplateName();
+    return $this->child->getTemplateName();
   }
 
   /**
@@ -127,7 +128,7 @@ abstract class AbstractRenderableDecorator extends AbstractRenderable implements
    * @return string
    */
   public function isTemplateNameSet() {
-    return $this->renderable->isTemplateNameSet();
+    return $this->child->isTemplateNameSet();
   }
 
 }
