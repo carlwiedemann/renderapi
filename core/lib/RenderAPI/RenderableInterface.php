@@ -2,7 +2,9 @@
 
 namespace RenderAPI;
 
-interface RenderableInterface {
+interface RenderableInterface extends WeightedInterface {
+
+  public function render();
 
   public function __toString();
 

@@ -7,7 +7,7 @@ namespace RenderAPI;
  *
  * Represents the runtime content and execution of a render array.
  */
-abstract class AbstractRenderable extends AbstractCollection implements RenderableInterface {
+abstract class AbstractRenderable extends AbstractWeightedCollection implements RenderableInterface {
 
   /**
    * The filename of the template to be used.

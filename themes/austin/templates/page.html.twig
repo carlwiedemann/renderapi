@@ -46,12 +46,18 @@
       .inner {
         padding: 1em;
       }
+      .highlight {
+        background-color: #FF9;
+        padding: 1em;
+        margin: 1em;
+      }
     </style>
   </head>
   <body>
     <header><div class="inner">
       {{ header }}
-      <div>The subtitle of the node in the block is: {{ sidebar_first.1.items.2.subtitle }}</div>
+      <div class="highlight">The node in the block is: {{ sidebar_first.1.items.2 }}</div>
+      <div class="highlight">The subtitle of the node in the block is: {{ sidebar_first.1.items.2.subtitle }}</div>
     </div></header>
     <div id="main">
       <section id="content"><div class="inner">
