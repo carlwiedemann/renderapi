@@ -57,24 +57,21 @@ class Accessor {
    * @return mixed
    */
   public function get($key) {
-
     if ($this->value instanceOf AbstractWeightedCollection) {
       // If this is a component of an array, recurse.
-      $return = Accessor::create($this->value->get($key), $this->themed);
-    }
-    elseif (is_object($this->value) && isset($this->value->$key)) {
-      // If this is a struct, treat as much.
-      $return = Accessor::create($this->value->$key, $this->themed);
+      return Accessor::create($this->value->get($key), $this->themed);
     }
     elseif (is_array($this->value) && isset($this->value[$key])) {
-      $return = Accessor::create($this->value[$key], $this->themed);
+      return Accessor::create($this->value[$key], $this->themed);
+    }
+    elseif ($this->value instanceOf stdClass && isset($this->value->$key)) {
+      // If this is a struct, treat as much.
+      return Accessor::create($this->value->$key, $this->themed);
     }
     else {
       // This didn't find anything, so it must be invalid key.
-      $return = Accessor::create(NULL);
+      return Accessor::create(NULL);
     }
-
-    return $return;
   }
 
   /**
@@ -94,6 +91,7 @@ class Accessor {
       foreach ($variable->getAll() as $key => $value) {
         $return[$key] = Accessor::convert($value, $themed);
       }
+      return $return;
     }
     elseif (is_array($variable)) {
       // An array of potential values.
@@ -101,12 +99,20 @@ class Accessor {
       foreach ($variable as $key => $value) {
         $return[$key] = Accessor::convert($value, $themed);
       }
+      return $return;
+    }
+    elseif ($variable instanceOf stdClass) {
+      // Iterate through stdClass parameters.
+      $return = array();
+      foreach ((array) $variable as $key => $value) {
+        $return[$key] = Accessor::convert($value, $themed);
+      }
+      return (object) $return;
     }
     else {
       // This is likely a scalar or stdClass.
-      $return = $variable;
+      return $variable;
     }
-    return $return;
   }
 
   /**
