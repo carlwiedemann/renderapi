@@ -116,39 +116,16 @@ abstract class AbstractWeightedCollection implements WeightedInterface {
           break;
         }
       }
-      $this->parameters_sorted = $this->parameters;
+      // This will (purposively) disassciociate the keys.
+      $this->parameters_sorted = array_values($this->parameters);
       if ($sortable) {
-        if (AbstractWeightedCollection::isAssociative($this->parameters)) {
-          uasort($this->parameters_sorted, array('\RenderAPI\AbstractWeightedCollection', 'sort'));
-        }
-        else {
-          usort($this->parameters_sorted, array('\RenderAPI\AbstractWeightedCollection', 'sort'));
-        }
+        usort($this->parameters_sorted, function($a, $b) {
+          $a_weight = $a instanceOf WeightedInterface ? $a->getWeight() : 0;
+          $b_weight = $b instanceOf WeightedInterface ? $b->getWeight() : 0;
+          return ($a_weight == $b_weight) ? 0 : (($a_weight < $b_weight) ? -1 : 1);
+        });
       }
     }
-  }
-
-  /**
-   * Callback for usort().
-   *
-   * @see AbstractWeightedCollection::sortParameters().
-   * @return integer
-   */
-  public static function sort($a, $b) {
-    $a_weight = $a instanceOf WeightedInterface ? $a->getWeight() : 0;
-    $b_weight = $b instanceOf WeightedInterface ? $b->getWeight() : 0;
-    return ($a_weight == $b_weight) ? 0 : (($a_weight < $b_weight) ? -1 : 1);
-  }
-
-  /**
-   * Check whether a given array is associative or not.
-   *
-   * @param array $array
-   * @return boolean
-   */
-  public static function isAssociative($array) {
-    for ($k = 0, reset($array) ; $k === key($array) ; next($array)) ++$k;
-    return $k !== count($array);
   }
 
 }
