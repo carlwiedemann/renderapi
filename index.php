@@ -25,7 +25,7 @@ FakeDrupal::setEnabledModules(array(
 ));
 
 FakeDrupal::setEnabledThemes(array(
-  'austin', // Comment/uncomment this line to see effects.
+  // 'austin', // Comment/uncomment this line to see effects.
 ));
 
 FakeDrupal::bootstrap();
