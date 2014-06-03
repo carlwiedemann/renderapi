@@ -49,46 +49,61 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 // Set theme engine to use twig (will default to PHPTemplate).
 RenderAPI::setThemeEngine(new FakeDrupalThemeEngine($app['twig']));
 
+
+
 /**
  * Simply a node.
  */
 $app->get('/node/{id}', function($id, Request $request, Application $app) {
 
-  $build = r('ThemeFullNode', array(
-    'node' => node_load($id),
-  ));
+
+  $build = RenderAPI::create('ThemeNode', array(
+             'node' => node_load($id),
+           ));
+
 
   return delegate_response($build, $request, $app);
 });
+
+
 
 /**
  * Simply an ItemList.
  */
-$app->get('/itemList/{items}', function($items, Request $request, Application $app) {
+$app->get('/itemList', function(Request $request, Application $app) {
 
-  $build = r('ThemeItemList', array(
-             'items' => explode(',', $items),
+
+  $build = RenderAPI::create('ThemeItemList', array(
+             'items' => array(
+               'first',
+               'second',
+               'third',
+             ),
            ));
+
 
   return delegate_response($build, $request, $app);
 });
+
+
 
 /**
  * A compound builder showing weights, similar to a view.
  */
 $app->get('/something-fancy', function(Request $request, Application $app) {
 
-  $build = r(array(
-             r('ThemeFullNode', array(
+
+  $build = RenderAPI::create(array(
+             RenderAPI::create('ThemeNode', array(
                'node' => node_load(123),
              ), -1),
-             r('ThemeFullNode', array(
+             RenderAPI::create('ThemeNode', array(
                'node' => node_load(456),
              ), 3),
-             r('ThemeFullNode', array(
+             RenderAPI::create('ThemeNode', array(
                'node' => node_load(789),
              ), 0),
-             r('ThemeItemList', array(
+             RenderAPI::create('ThemeItemList', array(
                'items' => array(
                  'red',
                  'green',
@@ -97,51 +112,68 @@ $app->get('/something-fancy', function(Request $request, Application $app) {
              ), -1),
            ));
 
+
   return delegate_response($build, $request, $app);
 });
+
+
 
 /**
  * A more involved page.
  */
 $app->get('/built-page', function(Request $request, Application $app) {
 
-  $build = r('ThemePage', array(
+
+  $build = RenderAPI::create('ThemePage', array(
+
              'head_title' => 'Hello',
-             'content' => r('ThemeFullNode', array(
+
+             'content' => r('ThemeNode', array(
                'node' => node_load(123),
              )),
-             'sidebar_first' => r(array(
-               'Some block',
-               r('ThemeItemList', array(
-                 'items' => array(
-                   'alpha',
-                   'beta',
-                   r('ThemeFullNode', array(
-                     'node' => node_load(456),
-                   )),
-                 ),
+
+             'sidebar_first' => RenderAPI::create(array(
+
+               'nodes' => RenderAPI::create(array(
+                 RenderAPI::create('ThemeNode', array(
+                   'node' => node_load(456),
+                 )),
+                 RenderAPI::create('ThemeNode', array(
+                   'node' => node_load(789),
+                 )),
                )),
+
+               'more_link' => '<a href="#">See more</a>',
+
              )),
+
              'sidebar_second' => 'Some other block',
+
              'header' => 'Welcome to my site!',
-             'footer' => 'See more: <a href="http://github.com/c4rl/renderapi">http://github.com/c4rl/renderapi</a>',
+
+             'footer' => '<a href="http://github.com/c4rl/renderapi">http://github.com/c4rl/renderapi</a>',
+
            ));
+
 
   return delegate_response($build, $request, $app);
 });
+
+
 
 /**
  * Show some examples, complete with JSON equivalence.
  */
 $app->get('/', function(Request $request, Application $app) {
 
+
   foreach (array(
       array(
         '/node/123',
-        'Node via ThemeFullNode',
+        'Node via ThemeNode',
       ),
       array(
-        '/itemList/first,second,third',
+        '/itemList',
         'Item list via ThemeItemList'
       ),
       array(
@@ -153,9 +185,9 @@ $app->get('/', function(Request $request, Application $app) {
         'Sample page template',
       ),
     ) as $callback) {
-      $items[] = r(array(
+      $items[] = RenderAPI::create(array(
         '<strong>' . $callback[1] . '</strong>',
-        r('ThemeItemList', array(
+        RenderAPI::create('ThemeItemList', array(
         'items' => array(
           '<a href="' . $callback[0] . '">HTML</a>',
           '<a href="' . $callback[0] . '?path=.">As JSON</a>',
@@ -164,13 +196,16 @@ $app->get('/', function(Request $request, Application $app) {
       ));
   }
 
-  $build = r('ThemeSomeExamples', array(
+  $build = RenderAPI::create('ThemeSomeExamples', array(
              'examples' => r('ThemeItemList', array(
                'items' => $items,
              )),
            ));
 
+
   return delegate_response($build, $request, $app);
 });
+
+
 
 $app->run();

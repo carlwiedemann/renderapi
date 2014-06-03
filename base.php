@@ -35,9 +35,9 @@ function delegate_response($build, Request $request, Application $app) {
 /**
  * Shortcut.
  */
-function r() {
-  return call_user_func_array('RenderAPI\RenderAPI::create', func_get_args());
-}
+// function r() {
+//   return call_user_func_array('RenderAPI\RenderAPI::create', func_get_args());
+// }
 
 function _log($var) {
   file_put_contents('/tmp/php.log', var_export($var, 1) . PHP_EOL, FILE_APPEND);
