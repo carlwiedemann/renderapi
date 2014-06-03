@@ -128,7 +128,7 @@ $app->get('/built-page', function(Request $request, Application $app) {
 
              'head_title' => 'Hello',
 
-             'content' => r('ThemeNode', array(
+             'content' => RenderAPI::create('ThemeNode', array(
                'node' => node_load(123),
              )),
 
@@ -197,7 +197,7 @@ $app->get('/', function(Request $request, Application $app) {
   }
 
   $build = RenderAPI::create('ThemeSomeExamples', array(
-             'examples' => r('ThemeItemList', array(
+             'examples' => RenderAPI::create('ThemeItemList', array(
                'items' => $items,
              )),
            ));
