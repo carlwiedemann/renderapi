@@ -8,6 +8,17 @@ namespace RenderAPI;
 class RenderableCollection extends AbstractWeightedCollection implements RenderableInterface {
 
   /**
+   * Prepare all parameters.
+   */
+  public function prepare() {
+    foreach ($this->getAll() as $value) {
+      if ($value instanceOf RenderableInterface) {
+        $value->prepare();
+      }
+    }
+  }
+
+  /**
    * Concatenates output of sorted parameters.
    *
    * @return string
