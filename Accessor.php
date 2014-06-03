@@ -81,12 +81,13 @@ class Accessor {
    * @param mixed $variable
    * @return mixed
    */
-  public static function convert($variable, $themed) {
+  public static function convert($variable, $themed = FALSE) {
     if ($variable instanceOf RenderableBuilderInterface || $variable instanceOf RenderableInterface) {
       $return = array();
-      // For themed output, build renderable.
+      // For themed output, build renderable and prepare.
       if ($themed && $variable instanceOf RenderableBuilderInterface) {
         $variable = $variable->getRenderable();
+        $variable->prepare();
       }
       foreach ($variable->getAll() as $key => $value) {
         $return[$key] = Accessor::convert($value, $themed);
