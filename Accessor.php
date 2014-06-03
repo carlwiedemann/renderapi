@@ -26,28 +26,28 @@ class Accessor {
    *
    * @var boolean
    */
-  private $themed;
+  private $prepare;
 
   /**
-   * Constructor receives value and whether the output should be themed or not.
+   * Constructor receives value and whether the output should be prepared or not.
    *
    * @param mixed $value
-   * @param boolean $themed
+   * @param boolean $prepare
    */
-  function __construct($value, $themed = FALSE) {
+  function __construct($value, $prepare = FALSE) {
     $this->value = $value;
-    $this->themed = $themed;
+    $this->prepare = $prepare;
   }
 
   /**
    * Factory class method.
    *
    * @param mixed $value
-   * @param boolean $themed
+   * @param boolean $prepare
    * @return Accessor
    */
-  public static function create($value, $themed = FALSE) {
-    return new Accessor($value, $themed);
+  public static function create($value, $prepare = FALSE) {
+    return new Accessor($value, $prepare);
   }
 
   /**
@@ -59,14 +59,14 @@ class Accessor {
   public function get($key) {
     if ($this->value instanceOf AbstractWeightedCollection) {
       // If this is a component of an array, recurse.
-      return Accessor::create($this->value->get($key), $this->themed);
+      return Accessor::create($this->value->get($key), $this->prepare);
     }
     elseif (is_array($this->value) && isset($this->value[$key])) {
-      return Accessor::create($this->value[$key], $this->themed);
+      return Accessor::create($this->value[$key], $this->prepare);
     }
     elseif ($this->value instanceOf stdClass && isset($this->value->$key)) {
       // If this is a struct, treat as much.
-      return Accessor::create($this->value->$key, $this->themed);
+      return Accessor::create($this->value->$key, $this->prepare);
     }
     else {
       // This didn't find anything, so it must be invalid key.
@@ -81,16 +81,16 @@ class Accessor {
    * @param mixed $variable
    * @return mixed
    */
-  public static function convert($variable, $themed = FALSE) {
+  public static function convert($variable, $prepare = FALSE) {
     if ($variable instanceOf RenderableBuilderInterface || $variable instanceOf RenderableInterface) {
       $return = array();
-      // For themed output, build renderable and prepare.
-      if ($themed && $variable instanceOf RenderableBuilderInterface) {
+      // For prepared output, build renderable and prepare.
+      if ($prepare && $variable instanceOf RenderableBuilderInterface) {
         $variable = $variable->getRenderable();
         $variable->prepare();
       }
       foreach ($variable->getAll() as $key => $value) {
-        $return[$key] = Accessor::convert($value, $themed);
+        $return[$key] = Accessor::convert($value, $prepare);
       }
       return $return;
     }
@@ -98,7 +98,7 @@ class Accessor {
       // An array of potential values.
       $return = array();
       foreach ($variable as $key => $value) {
-        $return[$key] = Accessor::convert($value, $themed);
+        $return[$key] = Accessor::convert($value, $prepare);
       }
       return $return;
     }
@@ -106,7 +106,7 @@ class Accessor {
       // Iterate through stdClass parameters.
       $return = array();
       foreach ((array) $variable as $key => $value) {
-        $return[$key] = Accessor::convert($value, $themed);
+        $return[$key] = Accessor::convert($value, $prepare);
       }
       return (object) $return;
     }
@@ -122,7 +122,7 @@ class Accessor {
    * @return mixed
    */
   public function value() {
-    return Accessor::convert($this->value, $this->themed);
+    return Accessor::convert($this->value, $this->prepare);
   }
 
 }
