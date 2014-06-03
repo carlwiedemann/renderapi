@@ -36,7 +36,7 @@ class Accessor {
    */
   function __construct($value, $themed = FALSE) {
     $this->value = $value;
-    $this->themed = (bool) $themed;
+    $this->themed = $themed;
   }
 
   /**
