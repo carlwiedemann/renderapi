@@ -1,5 +1,9 @@
-<h3>Austin! <code>{% verbatim %}{{ title }}{% endverbatim %}:</code> {{ title }}</h3>
+<article class="node">
+  <h3>Austin! <code>{% verbatim %}{{ title }}{% endverbatim %}:</code> {{ title }}</h3>
 
-{% if subtitle is defined %}
-<h3><code>{% verbatim %}{{ subtitle }}{% endverbatim %}:</code> {{ subtitle }}</h3>
-{% endif %}
+  {% if subtitle is defined %}
+  <h4><code>{% verbatim %}{{ subtitle }}{% endverbatim %}:</code> {{ subtitle }}</h4>
+  {% endif %}
+
+  <div> {{ content }} </div>
+</article>

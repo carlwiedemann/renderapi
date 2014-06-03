@@ -50,8 +50,7 @@
   </head>
   <body>
     <header><div class="inner">
-      <?php print $header; ?>
-      <div>The subtitle of the node in the block is: <?php print $sidebar_first->find(1)->find('items')[2]->find('subtitle'); ?></div>
+      <h1><?php print $header; ?></h1>
     </div></header>
     <div id="main">
       <section id="content"><div class="inner">

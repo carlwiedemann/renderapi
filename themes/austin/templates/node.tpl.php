@@ -1,3 +1,7 @@
-<h2>Austin! <code>title:</code> <?php print $title; ?></h2>
+<article class="node">
+  <h3>Austin! <code>title:</code> <?php print $title; ?></h3>
 
-<h3><code>subtitle:</code> <?php print $subtitle; ?></h2>
+  <h4><code>subtitle:</code> <?php print $subtitle; ?></h4>
+
+  <div> <?php print $content; ?> </div>
+</article>
