@@ -55,7 +55,7 @@ class FakeDrupalRenderManager extends RenderManager {
   public function getAlterCallbacks(RenderableBuilderInterface $builder) {
     $callbacks = array();
     foreach (FakeDrupal::getEnabledExtensions() as $extensionName) {
-      $hook_name = str_replace('Theme', $extensionName . '_alter_', $builder->getBuildClass());
+      $hook_name = $extensionName . '_alter_' . $builder->getBuildClass();
       if (function_exists($hook_name)) {
         $callbacks[] = $hook_name;
       }

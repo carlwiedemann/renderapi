@@ -10,7 +10,7 @@ use RenderAPI\RenderableBuilderInterface;
 /**
  * An example of an alter callback.
  */
-function colorado_alter_FullNode(RenderableBuilderInterface $build) {
+function colorado_alter_ThemeNode(RenderableBuilderInterface $build) {
   // $build->setBuildClass('ThemeFoo');
   // $build->set('foo', 'bar');
 }
