@@ -190,8 +190,8 @@ $app->get('/', function(Request $request, Application $app) {
         RenderAPI::create('ThemeItemList', array(
         'items' => array(
           '<a href="' . $callback[0] . '">HTML</a>',
-          '<a href="' . $callback[0] . '?path=.">As JSON</a>',
-          '<a href="' . $callback[0] . '?path=.&themed=1">As JSON with template variables</a>',
+          '<a href="' . $callback[0] . '?rendervar=.">As JSON</a>',
+          '<a href="' . $callback[0] . '?rendervar=.&themed=1">As JSON with template variables</a>',
         ))),
       ));
   }

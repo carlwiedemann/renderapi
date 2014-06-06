@@ -18,16 +18,16 @@ You'll need to download [Silex](http://silex.sensiolabs.org/) via [Composer](htt
   action. Check out `colorado.module.php` for examples of how alter-like hooks
   can affect builders.
 * Querystring parameters:
-  * `path` delegates the response to return JSON per an accessor-like syntax
+  * `rendervar` delegates the response to return JSON per an accessor-like syntax
     to represent the hierarchical tree of a given renderable. For example:
-    `/node/123?path=.` will return a JSON interpretation of the
-    renderable, while `/node/123?path=node.title` will just return the title
+    `/node/123?rendervar=.` will return a JSON interpretation of the
+    renderable, while `/node/123?rendervar=node.title` will just return the title
     of the node. (This does not yet distinguish sanitized variables).
-  * `themed` provided along with `path` processes the RenderableBuilder as a
+  * `themed` provided along with `rendervar` processes the RenderableBuilder as a
     Renderable preparing any relevant template variables per the final
     rendered state. For example: if a later preprocessor provides a `subtitle`
     variable to the node template, this can be available via
-    `/node/123?path=subtitle&themed=1`.
+    `/node/123?rendervar=subtitle&themed=1`.
 
 ## @todo
 
