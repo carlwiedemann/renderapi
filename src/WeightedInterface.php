@@ -10,7 +10,7 @@ interface WeightedInterface {
   /**
    * Sets weight.
    *
-   * @param $integer
+   * @param integer $weight
    */
   public function setWeight($weight);
 
@@ -23,5 +23,4 @@ interface WeightedInterface {
    * Whether this object has a non-zero weight.
    */
   public function isWeighted();
-
 }
