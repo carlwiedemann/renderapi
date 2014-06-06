@@ -64,7 +64,7 @@ class Accessor {
     elseif (is_array($this->value) && isset($this->value[$key])) {
       return Accessor::create($this->value[$key], $this->prepare);
     }
-    elseif ($this->value instanceOf stdClass && isset($this->value->$key)) {
+    elseif ($this->value instanceOf \stdClass && isset($this->value->$key)) {
       // If this is a struct, treat as much.
       return Accessor::create($this->value->$key, $this->prepare);
     }
@@ -102,7 +102,7 @@ class Accessor {
       }
       return $return;
     }
-    elseif ($variable instanceOf stdClass) {
+    elseif ($variable instanceOf \stdClass) {
       // Iterate through stdClass parameters.
       $return = array();
       foreach ((array) $variable as $key => $value) {
