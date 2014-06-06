@@ -34,6 +34,7 @@ abstract class AbstractRenderable extends AbstractWeightedCollection implements 
   /**
    * Returns a parameter by key.
    *
+   * @param string $key
    * @return mixed
    */
   public function get($key) {

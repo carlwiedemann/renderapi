@@ -5,5 +5,13 @@
         "psr-4": {
             "RenderAPI\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RenderAPI\\": "tests"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0.0"
     }
 }
