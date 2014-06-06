@@ -1,0 +1,9 @@
+{
+    "name": "c4rl/renderapi",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "C4rl\\": "src"
+        }
+    }
+}
